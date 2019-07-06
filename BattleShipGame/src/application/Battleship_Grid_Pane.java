@@ -1,6 +1,8 @@
 package application;
 	
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
@@ -15,6 +17,11 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -28,8 +35,8 @@ public class Battleship_Grid_Pane extends Application {
 	
 	Scene scene1;
 	Scene scene2;
-	 GridPane g_pane;
-	
+	 GridPane g_pane, g_pane2;
+	 VBox v_box1, v_box2;
 	
 	//Stage stage;
 	@Override
@@ -42,8 +49,9 @@ public class Battleship_Grid_Pane extends Application {
 	  
 	            SplitPane split_pane = new SplitPane();
 	            g_pane=new GridPane();
-	            VBox v_box1 = new VBox();
-	            VBox v_box2 = new VBox();
+	            g_pane2=new GridPane();
+	            v_box1 = new VBox();
+	            v_box2 = new VBox();
 	            
 	            Image image = new Image(new FileInputStream("bombs.png"));
 	            ImageView imageView = new ImageView(image); 
@@ -66,12 +74,14 @@ public class Battleship_Grid_Pane extends Application {
 	            v_box1.getChildren().addAll(menuBar, g_pane);
 	            
 	            v_box2.setStyle("-fx-background-color: #000000;");
-	            v_box2.getChildren().addAll(imageView);  
+	            v_box2.getChildren().addAll(imageView, g_pane2);  
+	            
+	            split_pane.setDividerPositions(0.7);
 	            
 	            split_pane.getItems().add(v_box1);
 	            split_pane.getItems().add(v_box2);
 	            seeResult();
-	            scene1 = new Scene(split_pane, 800, 800); 
+	            scene1 = new Scene(split_pane, 800, 700); 
 	            //stage.setScene(scene1); 
 	            stage.show(); 
 	        } 
@@ -160,10 +170,10 @@ public void setUserShipGrid(int rowButtonCount, int columnButtonCount) {
 	public void seeResult() {
 		Label resultLabel = new Label("Result: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
-		resultLabel.setTextFill(Color.web("#000000"));
+		resultLabel.setTextFill(Color.web("#c40831"));
       TextField resultTextField = new TextField ();
-      g_pane.add(resultLabel, 0, 25);
-      g_pane.add(resultTextField, 1, 25);
+      g_pane2.add(resultLabel, 0, 9);
+      g_pane2.add(resultTextField, 1, 25);
 	}
 
 public MenuBar battleMenu(VBox v_box1, Stage stage) {
@@ -223,27 +233,44 @@ public MenuBar battleMenu(VBox v_box1, Stage stage) {
 
 	
 	
-	public void launchStartupWindow(Stage stg) {
+	public void launchStartupWindow(Stage stg) throws Exception {
 		
 		GridPane root1=new GridPane();
 		scene2 = new Scene(root1,800,600);
 		root1.setVgap(10); 
         root1.setHgap(10);
-		Text text = new Text("The Battleship Game!");
-		text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
-		Button btn1 = new Button("Start New Game!(Vs. CPU)");
+        
+        Image image = new Image(new FileInputStream("battleship.png"));
+        
+        BackgroundImage backgroundimage = new BackgroundImage(image,  
+                BackgroundRepeat.ROUND,  
+                BackgroundRepeat.ROUND,  
+                BackgroundPosition.DEFAULT,  
+                   BackgroundSize.DEFAULT); 
+        
+        Background background = new Background(backgroundimage); 
+        
+        root1.setBackground(background);
+        
+		//Text text = new Text("The Battleship Game!");
+	//	text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+		Button btn1 = new Button("Start New Game! (Vs. CPU)");
+		btn1.setStyle("-fx-background-color: #a3a0a0; ");
 		Button btn2 = new Button("Exit Game");
-		root1.setStyle("-fx-background-color: #0000FF;");
+		btn2.setStyle("-fx-background-color: #a3a0a0; ");
+		//root1.setStyle("-fx-background-color: #0000FF;");
 		btn1.setOnAction((ActionEvent event) -> {
     		stg.setScene(scene1);
     	});
 		btn2.setOnAction((ActionEvent event) -> {
-    		stg.close(); 
+			 Boolean res = ConfirmBox.display("Confirmation box", "Are you sure?");
+             if(res)
+            	 stg.close();
     	});
 		root1.setAlignment(Pos.CENTER);
 		root1.add(btn1, 0, 1);
 		root1.add(btn2, 0, 2);
-		root1.add(text, 0, 0);
+	//	root1.add(text, 0, 0);
 		stg.setScene(scene2);
 	}
 	
