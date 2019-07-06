@@ -1,7 +1,7 @@
 package application;
 	
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -23,9 +23,11 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -94,7 +96,7 @@ public class Battleship_Grid_Pane extends Application {
 	
 public void setUserRadarGrid(int rowButtonCount, int columnButtonCount) {
 		
-		double r = 3.5;
+		double r = 7.5;
 		Text t = new Text("Radar Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		g_pane.add(t, columnButtonCount, rowButtonCount);
@@ -131,7 +133,12 @@ public void setUserRadarGrid(int rowButtonCount, int columnButtonCount) {
 	
 public void setUserShipGrid(int rowButtonCount, int columnButtonCount) {
 		
-	    double r = 3.5;
+		StackPane s_pane = new StackPane();
+		Rectangle rectangle = new Rectangle(0, 0, 20, 20);
+		rectangle.setFill(Color.AQUA);
+		s_pane.getChildren().add(rectangle);
+		
+	    double r = 7.5;
 	    Text t = new Text("Ship Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		g_pane.add(t, columnButtonCount, 11);
@@ -141,11 +148,14 @@ public void setUserShipGrid(int rowButtonCount, int columnButtonCount) {
 			Text text1 = new Text(Integer.toString(ch - rowButtonCount));
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
-	    
+	//    String prefix1,prefix2, btn_name;
 	    rowButtonCount = 12;
 	    //placing the buttons or holes on the grid
 	    for(;rowButtonCount < 21; rowButtonCount += 1) {
-	    	for(columnButtonCount = 1;columnButtonCount < 12; columnButtonCount += 1) { 
+	    	for(columnButtonCount = 1;columnButtonCount < 12; columnButtonCount += 1) {
+	    		//prefix1 = Integer.toString(rowButtonCount);
+	    		//prefix2 = Integer.toString(columnButtonCount);
+	    		//btn_name = "btn"+prefix1+prefix2;
 	        	Button btn = new Button();
 	        	btn.setStyle("-fx-background-color: #000000; ");
 	        	btn.setShape(new Circle(r));
@@ -154,6 +164,7 @@ public void setUserShipGrid(int rowButtonCount, int columnButtonCount) {
 	            btn.setOnAction((ActionEvent event) -> {
 	        		btn.setStyle("-fx-background-color: #FFFFFF; "); 
 	        	});
+	           // s_pane.getChildren().addAll(btn);
 	            g_pane.add(btn, columnButtonCount, rowButtonCount);
 	    	}
 	    }
