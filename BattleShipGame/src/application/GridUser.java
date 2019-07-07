@@ -6,6 +6,7 @@ import java.util.Map;
 /**
  * 
  * @author Prateek
+ * 
  *
  */
 public class GridUser {
