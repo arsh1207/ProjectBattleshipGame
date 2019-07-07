@@ -55,6 +55,7 @@ public class Battleship_Grid_Pane extends Application {
 			userButton = new Button[9][11];
 			SplitPane split_pane = new SplitPane();
 			g_pane = new GridPane();
+			g_pane.setId("glass-grey");
 			v_box3 = new VBox();
 			v_box1 = new VBox();
 			v_box2 = new VBox();
@@ -68,7 +69,7 @@ public class Battleship_Grid_Pane extends Application {
 			
 			MenuBar menuBar = obj.battleMenu(v_box1, stage);
 			
-			g_pane.setStyle("-fx-background-color: #35E7DB;");
+			//g_pane.setStyle("-fx-background-color: #35E7DB;");
 			g_pane.setVgap(10);
 			g_pane.setHgap(10);
 			
@@ -76,7 +77,11 @@ public class Battleship_Grid_Pane extends Application {
 			
 			setUserShipGrid();
 			
-			v_box1.getChildren().addAll(menuBar, g_pane);
+			//changes
+			
+			VBox v_box4 = new VBox();
+			
+			v_box1.getChildren().addAll(g_pane);
 			
 			v_box2.setStyle("-fx-background-color: #000000;");
 			v_box2.getChildren().addAll(imageView, v_box3);
@@ -87,7 +92,11 @@ public class Battleship_Grid_Pane extends Application {
 			split_pane.getItems().add(v_box2);
 			seeResult("Computer ");
 			seeResult("User ");
-			scene1 = new Scene(split_pane, 800, 700);
+			
+			v_box4.getChildren().addAll(menuBar, split_pane);
+			
+			scene1 = new Scene(v_box4, 800, 700);
+			g_pane.getStylesheets().add("application/application.css");
 			// stage.setScene(scene1);
 			stage.show();
 			
@@ -168,7 +177,7 @@ public class Battleship_Grid_Pane extends Application {
 		double r = 7.5;
 		Text t = new Text("Ship Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
-		g_pane.add(t, columnButtonCount, 11);
+		g_pane.add(t, 0, 11);
 		rowButtonCount = 19;
 		columnButtonCount = 0;
 		// placing the numbers for the grid
