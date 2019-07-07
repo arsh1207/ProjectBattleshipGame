@@ -3,18 +3,29 @@ package application;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @author Prateek
+ *
+ */
 public class GridUser {
 
 	public static int rows = 9;
 	public static int cols = 11;
-	
-	public static boolean Userwon=false;
-	public static boolean Compwon=false;
-	
-	
+
+	public static boolean Userwon = false;
+	public static boolean Compwon = false;
+
+	// original Grid that remains unchanged throughout the game
 	public static Integer[][] userGrid = new Integer[rows][cols];
 
 	public static Integer[][] computerGrid = new Integer[rows][cols];
+
+	// below are the grids that will be changed during the game
+	public static Integer[][] ChangedUserGrid = new Integer[rows][cols];
+
+	public static Integer[][] ChangedComputerGrid = new Integer[rows][cols];
+
 	public static HashMap<String, Integer> convert = new HashMap<>();
 
 	GridUser() {
@@ -68,7 +79,6 @@ public class GridUser {
 				} else if ((y1 < 0 || y1 >= rows) || (y2 < 0 || y2 >= rows) || (x1 < 0 || x1 >= cols)) {
 					return "You can't place ships outside the " + rows + " by " + cols + " grid";
 				}
-				
 
 			}
 
@@ -93,10 +103,15 @@ public class GridUser {
 			}
 
 		}
-		
+
+		else {// case when anything Diagonal
+
+			return "Sorry!! you can only place shits vertical or Horizontal";
+
+		}
+
 		// blank space signifies some other error
-	return " ";
-	
+		return " ";
 
 	}
 
@@ -158,85 +173,146 @@ public class GridUser {
 
 		}
 
+		// set the computerGrid to be changed grid
+		ChangedUserGrid = computerGrid;
+
 	}
 
-	
-	
-	public void startTurns()
-	{
-		
-		
-		
-		Userturn();
-		
-		CheckIfWon();
-		Computerturn();
-		
-		
-		
-		
-		
+	/**
+	 * Takes the input based on the event listener Provides the hit or miss while
+	 * hitting on the computer grid
+	 * 
+	 * @return
+	 */
+
+	public String Userturn(String request) {
+		// get the X and y coordinate from the input
+		int x = 0;
+
+		int y = 0;
+
+		if (ChangedComputerGrid[x][y] == 1) {
+			// change the grid value from 1 to 2 to signify hit
+
+			ChangedComputerGrid[x][y] = 2;
+
+			return "It's a Hit!!!!!";
+
+		} else if (ChangedComputerGrid[x][y] == 0) {
+
+			return "It's a miss!!!!!";
+
+		} else if (ChangedComputerGrid[x][y] == 2) {
+
+			return "The location has been hit earlier";
+
+		}
+
+		// check if User won or computer won
+		CheckIfUserWon();
+
+		// some other case or error
+		return " ";
+
 	}
-	
-	
+
 	/**
 	 * Provides the hit or miss while hitting on the computer grid
 	 * 
 	 * @return
 	 */
-	
-	
-	public String Userturn()
-	{
-		
-		
-		
+
+	public String Computerturn() {
+		// get the X and y coordinate from the input
+		int x = 0;
+
+		int y = 0;
+
+		if (ChangedUserGrid[x][y] == 1) {
+			// change the grid value from 1 to 2 to signify hit
+
+			ChangedUserGrid[x][y] = 2;
+
+			return "It's a Hit!!!!!";
+
+		} else if (ChangedUserGrid[x][y] == 0) {
+
+			return "It's a miss!!!!!";
+
+		} else if (ChangedUserGrid[x][y] == 2) {
+
+			return "The location has been hit earlier";
+
+		}
+
+		// check if User won or computer won
+		CheckIfCompWon();
+
+		// some other case or error
 		return " ";
-		
+
 	}
-	
+
 	/**
-	 * Provides the  hit or miss while hitting on the computer grid
-	 * @return
-	 */
-	
-	public String Computerturn()
-	{
-		
-		
-		
-		return " ";
-		
-	}
-	
-	
-	/**
-	 * checks both the grid of the User and the computer to verify if they won or not 
-	 * sets the static flag true if someone wins
-	 * @return
-	 */
-	
-	public String CheckIfWon()
-	{
-		
-		
-		
-		return " ";
-		
-	}
-	
-	
-	
-	
-	/**
-	 * Function to check the grid print of user and computer on the console
+	 * checks both the grid of the User and the computer to verify if they won or
+	 * not sets the static flag true if someone wins
 	 * 
+	 * @return
 	 */
-	
-	public void PrintGrid() {
-		
-		
-		
+
+	public void CheckIfUserWon() {
+
+		boolean flaguser = false;
+
+		// check the computer grid if all the 1 are converted to 2
+		for (int i = 0; i < rows; i++) {
+
+			for (int j = 0; j < cols; j++) {
+
+				if (!(computerGrid[i][j] == 1 && ChangedComputerGrid[i][j] == 2)) {
+					// set the flag as true
+					flaguser = true;
+
+				}
+
+			}
+		}
+
+		if (!flaguser) {// set that user has won
+
+			Userwon = true;
+		} else {
+			// do nothing
+
+		}
+
+	}
+
+	public void CheckIfCompWon() {
+
+		boolean flagcomp = false;
+
+		// check the computer grid if all the 1 are converted to 2
+		for (int i = 0; i < rows; i++) {
+
+			for (int j = 0; j < cols; j++) {
+
+				if (!(userGrid[i][j] == 1 && ChangedUserGrid[i][j] == 2)) {
+					// set the flag as true
+					flagcomp = true;
+
+				}
+
+			}
+		}
+
+		if (!flagcomp) {// set that user has won
+
+			Compwon = true;
+		} else {
+			// do nothing
+
+		}
 
 	}
 
