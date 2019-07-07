@@ -56,7 +56,7 @@ public class GridUser {
 		String str[] = coordinates.split("\\s");
 
 		int x1 = convert.get(str[0]);
-
+		System.out.println(x1);
 		// decrease the value of Y since the coordinated start from 0 in grid
 		int y1 = Integer.parseInt(str[1]) - 1;
 		int x2 = convert.get(str[2]);

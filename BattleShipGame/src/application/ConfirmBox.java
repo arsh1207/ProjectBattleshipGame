@@ -20,6 +20,7 @@ public class ConfirmBox {
 	stage.initModality(Modality.APPLICATION_MODAL);
 	stage.setTitle(title);
 	stage.setMinWidth(550);
+	stage.setMinHeight(300);
 	
 	Label label1 = new Label(msg);
 	

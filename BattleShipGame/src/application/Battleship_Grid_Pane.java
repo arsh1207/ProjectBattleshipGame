@@ -12,7 +12,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -24,6 +23,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -34,8 +34,8 @@ public class Battleship_Grid_Pane extends Application {
 
 	Scene scene1;
 	Scene scene2;
-	GridPane g_pane, g_pane2;
-	VBox v_box1, v_box2;
+	GridPane g_pane;
+	VBox v_box1, v_box2, v_box3;
 	Button[][] radarButton;
 	Button[][] userButton;
 	int rowButtonCount;
@@ -55,7 +55,7 @@ public class Battleship_Grid_Pane extends Application {
 			userButton = new Button[9][11];
 			SplitPane split_pane = new SplitPane();
 			g_pane = new GridPane();
-			g_pane2 = new GridPane();
+			v_box3 = new VBox();
 			v_box1 = new VBox();
 			v_box2 = new VBox();
 			
@@ -79,13 +79,14 @@ public class Battleship_Grid_Pane extends Application {
 			v_box1.getChildren().addAll(menuBar, g_pane);
 			
 			v_box2.setStyle("-fx-background-color: #000000;");
-			v_box2.getChildren().addAll(imageView, g_pane2);
+			v_box2.getChildren().addAll(imageView, v_box3);
 			
 			split_pane.setDividerPositions(0.7);
 			
 			split_pane.getItems().add(v_box1);
 			split_pane.getItems().add(v_box2);
-			seeResult();
+			seeResult("Computer ");
+			seeResult("User ");
 			scene1 = new Scene(split_pane, 800, 700);
 			// stage.setScene(scene1);
 			stage.show();
@@ -100,7 +101,7 @@ public class Battleship_Grid_Pane extends Application {
 	
 	public void setUserRadarGrid() {
 		//System.out.println("here");
-		double r = 3.5;
+		double r = 7.5;
 		Text t = new Text("Radar Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		g_pane.add(t, columnButtonCount, rowButtonCount);
@@ -153,7 +154,18 @@ public class Battleship_Grid_Pane extends Application {
 	
 	public void setUserShipGrid() {
 		//System.out.println("here");
-		double r = 3.5;
+		
+		Rectangle carrier1 = new Rectangle(20, 30, Color.BLUE);
+		Rectangle carrier2 = new Rectangle(20, 30, Color.BLUE);
+		Rectangle carrier3 = new Rectangle(20, 30, Color.BLUE);
+		Rectangle carrier4 = new Rectangle(20, 30, Color.BLUE);
+		Rectangle carrier5 = new Rectangle(20, 30, Color.BLUE);
+		
+		Rectangle battleship1 = new Rectangle(20, 30, Color.BROWN);
+		Rectangle battleship2 = new Rectangle(20, 30, Color.BROWN);
+		
+		
+		double r = 7.5;
 		Text t = new Text("Ship Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		g_pane.add(t, columnButtonCount, 11);
@@ -165,6 +177,15 @@ public class Battleship_Grid_Pane extends Application {
 			Text text1 = new Text(Integer.toString(ch - rowButtonCount));
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
+		
+		g_pane.add(carrier1, 2, 15);
+		g_pane.add(carrier2, 3, 15);
+		g_pane.add(carrier3, 4, 15);
+		g_pane.add(carrier4, 5, 15);
+		g_pane.add(carrier5, 6, 15);
+		
+		g_pane.add(battleship1, 5, 13);
+		g_pane.add(battleship2, 5, 12);
 		
 		//initializing the radar grid buttons of 9*11 size
 		//so that they can be accessed via ID
@@ -205,15 +226,26 @@ public class Battleship_Grid_Pane extends Application {
 	}
 	
 	//places the Result for the hit or miss in the bottom of the window
-	public void seeResult() {
-		Label resultLabel = new Label("Result: ");
+	public void seeResult(String title) {
+		Label resultLabel = new Label(title+ "Result: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		resultLabel.setTextFill(Color.web("#c40831"));
 		TextField resultTextField = new TextField();
-		g_pane2.add(resultLabel, 0, 9);
-		g_pane2.add(resultTextField, 1, 25);
+		//Label resulttext = new Label();
+		//resulttext.setStyle("-fx-background-color: white;");
+		v_box3.getChildren().addAll(resultLabel, resultTextField);
+		
+		//g_pane2.add(resultLabel, 0, 9);
+		//g_pane2.add(resultTextField, 1, 25);
 	}
 	
+	/**
+	 * Menubar displaying the menu for the game including placment of battleships
+	 * 
+	 * @param v_box1
+	 * @param stage
+	 * @return
+	 */
 	public MenuBar battleMenu(VBox v_box1, Stage stage) {
 		Menu menu1 = new Menu("Game");
 		Menu menu2 = new Menu("BattleShip");
@@ -235,10 +267,15 @@ public class Battleship_Grid_Pane extends Application {
 		
 		Menu place_ship = new Menu("Place");
 		MenuItem Carrier = new MenuItem("Carrier");
+		Carrier.setGraphic(new ImageView("file:images/blue1.png"));
 		MenuItem Battleship = new MenuItem("Battleship");
+		Battleship.setGraphic(new ImageView("file:images/brown.png"));
 		MenuItem Cruiser = new MenuItem("Cruiser");
+		Cruiser.setGraphic(new ImageView("file:images/green.png"));
 		MenuItem Submarine = new MenuItem("Submarine");
+		Submarine.setGraphic(new ImageView("file:images/orange.png"));
 		MenuItem Destroyer = new MenuItem("Destroyer");
+		Destroyer.setGraphic(new ImageView("file:images/yellow.png"));
 		place_ship.getItems().add(Carrier);
 		place_ship.getItems().add(Battleship);
 		place_ship.getItems().add(Cruiser);
@@ -250,59 +287,41 @@ public class Battleship_Grid_Pane extends Application {
 		GridUser ob = new GridUser();
 		
 		Carrier.setOnAction(e -> {
-		
-			final TextInputDialog dialog = new TextInputDialog();
-			dialog.setTitle("Add cordinates");
-			dialog.setHeaderText("Enter the coordinates:");
-			dialog.setContentText("coordinate:");
-			dialog.showAndWait();
-			// use this value to display on the result box
-			System.out.println((String) dialog.getEditor().getText());
+			
+			// the format of result I have kept same so no need to change anything in grid user related to 
+			//input format
+			
+			String res = InputBox.display("Carrier ship");
+			//System.out.println(res);
+			String value = ob.DeployUserGrid(res);
 		
 		});
 		Battleship.setOnAction(e -> {
+			/*
+			 * final TextInputDialog dialog = new TextInputDialog();
+			 * dialog.setTitle("Add cordinates");
+			 * dialog.setHeaderText("Enter the coordinates:");
+			 * dialog.setContentText("coordinate:"); dialog.showAndWait(); // use this value
+			 * to display on the result box String value = ob.DeployUserGrid((String)
+			 * dialog.getEditor().getText());
+			 */
 			
-			final TextInputDialog dialog = new TextInputDialog();
-			dialog.setTitle("Add cordinates");
-			dialog.setHeaderText("Enter the coordinates:");
-			dialog.setContentText("coordinate:");
-			dialog.showAndWait();
-			// use this value to display on the result box
-			String value = ob.DeployUserGrid((String) dialog.getEditor().getText());
-		
+			String res = InputBox.display("Battleship");
+			String value = ob.DeployUserGrid(res);
 		});
 		Cruiser.setOnAction(e -> {
-			final TextInputDialog dialog = new TextInputDialog();
-			dialog.setTitle("Add cordinates");
-			dialog.setHeaderText("Enter the coordinates:");
-			dialog.setContentText("coordinate:");
-			dialog.showAndWait();
-			
-			String value = ob.DeployUserGrid((String) dialog.getEditor().getText());
-		
+			String res = InputBox.display(" Cruiser ");
+			String value = ob.DeployUserGrid(res);
 		});
 		Submarine.setOnAction(e -> {
-			final TextInputDialog dialog = new TextInputDialog();
-			dialog.setTitle("Add cordinates");
-			dialog.setHeaderText("Enter the coordinates:");
-			dialog.setContentText("coordinate:");
-			dialog.showAndWait();
-			// use this value to display on the result box
-			String value = ob.DeployUserGrid((String) dialog.getEditor().getText());
-		
+			String res = InputBox.display("Submarine");
+			String value = ob.DeployUserGrid(res);
 		});
 		Destroyer.setOnAction(e -> {
-			final TextInputDialog dialog = new TextInputDialog();
-			dialog.setTitle("Add cordinates");
-			dialog.setHeaderText("Enter the coordinates:");
-			dialog.setContentText("coordinate:");
-			dialog.showAndWait();
-			// use this value to display on the result box
-			String value = ob.DeployUserGrid((String) dialog.getEditor().getText());
-		
+			String res = InputBox.display("Destroyer");
+			String value = ob.DeployUserGrid(res);
 		});
 		
-		// deployment has been done start the
 		
 		return menuBar;
 	
