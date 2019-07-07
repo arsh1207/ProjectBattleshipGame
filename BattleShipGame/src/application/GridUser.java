@@ -9,6 +9,8 @@ import java.util.Map;
  *
  */
 public class GridUser {
+	
+	
 
 	public static int rows = 9;
 	public static int cols = 11;
