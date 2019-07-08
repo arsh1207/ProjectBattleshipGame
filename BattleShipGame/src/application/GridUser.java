@@ -10,8 +10,7 @@ import java.util.Map;
  *
  */
 public class GridUser {
-	
-	
+
 	public static int rows = 9;
 	public static int cols = 11;
 
@@ -32,8 +31,10 @@ public class GridUser {
 
 	GridUser() {
 
-		// deploy all the computer ships
+		// assign the values to the grids
+		Initialize();
 
+		// deploy all the computer ships
 		DeployComputerShips();
 
 		// set the hashMap for conversion
@@ -64,16 +65,21 @@ public class GridUser {
 		// decrease the value of Y since the coordinated start from 0 in grid
 		int y2 = Integer.parseInt(str[3]) - 1;
 
-		if (x1 == x2) {
-			// if two X are the same then the line is horizontal
+		System.out.println("values x1 y1 x2 y2  " + x1 + y1 + x2 + y2);
 
+		if (x1 == x2) {
+			// if two X are the same then the line is vertical
 			// increment the Y values to set the ship location
+
+			// count to check if all coordinated were placed successfully
+			int count = 0;
 
 			for (int i = y1; i <= y2; i++) {
 
 				if ((x1 >= 0 && x1 < rows) && (y1 >= 0 && y1 < cols) && (y2 >= 0 && y2 < cols)
 						&& (userGrid[x1][i] == 0)) {
 					userGrid[x1][i] = 1;
+					count++;
 
 				} else if ((x1 >= 0 && x1 < rows) && (y1 >= 0 && y1 < cols) && (y2 >= 0 && y2 < cols)
 						&& userGrid[x1][i] == 1) {
@@ -84,11 +90,19 @@ public class GridUser {
 
 			}
 
+			if (((y2 + 1) - (y1 + 1))+1 == count) {
+				//result done signifies everything went right
+
+				return "Done";
+			}
+
 		}
 
 		else if (y1 == y2) {
+			// if two Y are the same then the line is Horizontal
 
-			// if two Y are the same then the line is vertical
+			// count to check if all coordinated were placed successfully
+			int count = 0;
 
 			// increment the X values to set the ship location
 			for (int i = x1; i <= x2; i++) {
@@ -97,23 +111,27 @@ public class GridUser {
 					userGrid[i][y1] = 1;
 
 				} else if ((y1 >= 0 && y1 < cols) && (x1 >= 0 && x1 < rows) && (x2 >= 0 && x2 < rows)
-						&& userGrid[i][y1] == 1)
+						&& userGrid[i][y1] == 1) {
 					return "ships cannot be placed on the same location";
-				else if ((x1 < 0 || x1 >= rows) || (x2 < 0 || x2 >= rows) || (y1 < 0 || y1 >= cols))
+				} else if ((x1 < 0 || x1 >= rows) || (x2 < 0 || x2 >= rows) || (y1 < 0 || y1 >= cols))
 					return "You can't place ships outside the " + rows + " by " + cols + " grid";
 
+			}
+
+			if ((x2 + 1) - (x1 + 1) == count) {
+
+				return "Done";
 			}
 
 		}
 
 		else {// case when anything Diagonal
-
-			return "Sorry!! you can only place shits vertical or Horizontal";
+			return "Can not place ship Diagonal";
 
 		}
 
-		// blank space signifies some other error
-		return " ";
+		//  signifies some other error
+		return "Some other error";
 
 	}
 
@@ -314,6 +332,21 @@ public class GridUser {
 		} else {
 			// do nothing
 
+		}
+
+	}
+
+	public void Initialize() {
+		for (int i = 0; i < rows; i++) {
+
+			for (int j = 0; j < cols; j++) {
+
+				userGrid[i][j] = 0;
+				computerGrid[i][j] = 0;
+				ChangedUserGrid[i][j] = 0;
+				ChangedComputerGrid[i][j] = 0;
+
+			}
 		}
 
 	}
