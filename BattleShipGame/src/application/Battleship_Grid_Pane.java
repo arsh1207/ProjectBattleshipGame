@@ -41,6 +41,7 @@ public class Battleship_Grid_Pane extends Application {
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;
+	Label resulttext1,resulttext2;
 
 	// Stage stage;
 	@Override
@@ -90,9 +91,8 @@ public class Battleship_Grid_Pane extends Application {
 
 			split_pane.getItems().add(v_box1);
 			split_pane.getItems().add(v_box2);
-			seeResult("Computer ");
-			seeResult("User ");
-
+			seeResultUser("User ");
+			seeResultComp("Computer ");
 			v_box4.getChildren().addAll(menuBar, split_pane);
 
 			scene1 = new Scene(v_box4, 800, 700);
@@ -116,7 +116,7 @@ public class Battleship_Grid_Pane extends Application {
 		rowButtonCount = 0;
 		columnButtonCount = 0;
 		g_pane.add(t, columnButtonCount, rowButtonCount);
-
+		GridUser ob = new GridUser();
 		for (rowButtonCount = 10; rowButtonCount >= 1; rowButtonCount--) {
 			int ch = 10;
 			Text text1 = new Text(Integer.toString(ch - rowButtonCount));
@@ -131,28 +131,38 @@ public class Battleship_Grid_Pane extends Application {
 			}
 		}
 
-		buttonRowIndex = 8;
+		buttonRowIndex = 0;
 
 		// placing the buttons or holes on the grid
-		for (rowButtonCount = 1; rowButtonCount < 10; rowButtonCount += 1) {
+		for (rowButtonCount = 9; rowButtonCount >= 1; rowButtonCount -= 1) {
 			columnButtonCount = 1;
 			// columnButtonCount = 0; columnButtonCount < 11; columnButtonCount += 1
 			for (Button b : radarButton[buttonRowIndex]) {
 				b.setStyle("-fx-background-color: #000000; ");
+				b.setId((buttonRowIndex)+":"+(columnButtonCount-1));
 				b.setShape(new Circle(r));
 				b.setMinSize(2 * r, 2 * r);
 				b.setMaxSize(2 * r, 2 * r);
 				b.setOnAction((ActionEvent event) -> {
-					b.setStyle("-fx-background-color: #FFFFFF; ");
+					//b.setStyle("-fx-background-color: #FFFFFF; ");
+					String xy[] = b.getId().split(":");
+					String res = ob.Userturn(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
+					//System.out.println("After hit :" + res);
+					resulttext2.setText(res);
+					if(res.contains("miss"))
+						b.setStyle("-fx-background-color: #FFFFFF; ");
+					else if(res.contains("Hit"))
+						b.setStyle("-fx-background-color: #ff1100; ");
+
 				});
 				g_pane.add(b, columnButtonCount, rowButtonCount);
 				columnButtonCount++;
 			}
-			if (buttonRowIndex > 0) {
-				buttonRowIndex--;
+			if (buttonRowIndex < 9) {
+				buttonRowIndex++;
 			}
 		}
-
+		rowButtonCount = 10;
 		// placing the letters on the grid
 		for (columnButtonCount = 1; columnButtonCount < 12; columnButtonCount += 1) {
 			char ch = (char) ('A' + columnButtonCount - 1);
@@ -197,7 +207,7 @@ public class Battleship_Grid_Pane extends Application {
 		 * g_pane.add(carrier5, 6, 15);
 		 * 
 		 * g_pane.add(battleship1, 5, 13); g_pane.add(battleship2, 5, 12);
-		 */
+		 */ 
 
 		// initializing the radar grid buttons of 9*11 size
 		// so that they can be accessed via ID
@@ -238,18 +248,31 @@ public class Battleship_Grid_Pane extends Application {
 	}
 
 	// places the Result for the hit or miss in the bottom of the window
-	public void seeResult(String title) {
+	public void seeResultUser(String title) {
 		Label resultLabel = new Label(title + "Result: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		TextField resultTextField = new TextField();
-		// Label resulttext = new Label();
-		// resulttext.setStyle("-fx-background-color: white;");
-		v_box3.getChildren().addAll(resultLabel, resultTextField);
+		//TextField resultTextField = new TextField();
+		 resulttext1 = new Label();
+		 resulttext1.setStyle("-fx-background-color: white;");
+		v_box3.getChildren().addAll(resultLabel, resulttext1);
 
 		// g_pane2.add(resultLabel, 0, 9);
 		// g_pane2.add(resultTextField, 1, 25);
 	}
+	public void seeResultComp(String title) {
+		Label resultLabel = new Label(title + "Result: ");
+		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
+		resultLabel.setTextFill(Color.web("#c40831"));
+		//TextField resultTextField = new TextField();
+		 resulttext2 = new Label();
+		 resulttext2.setStyle("-fx-background-color: white;");
+		v_box3.getChildren().addAll(resultLabel, resulttext2);
+
+		// g_pane2.add(resultLabel, 0, 9);
+		// g_pane2.add(resultTextField, 1, 25);
+	}
+
 
 	/**
 	 * Menubar displaying the menu for the game including placment of battleships
@@ -416,7 +439,12 @@ public class Battleship_Grid_Pane extends Application {
 	 * @param color
 	 */
 	public void colorShipYCoords(int[] coords, String color) {
-		
+
+		/*
+		 * Rectangle shp = new Rectangle(20, 30, Color.BLUE);
+		 * shp.setArcHeight(20.0d); shp.setArcWidth(20.0d);
+		 */
+
 		for(int i = coords[1]; i <= coords[3]; i++) {
 			userButton[i][coords[0]].setStyle("-fx-background-color: "+color+"; ");
 		}
