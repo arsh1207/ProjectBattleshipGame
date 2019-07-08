@@ -36,8 +36,8 @@ public class Battleship_Grid_Pane extends Application {
 	Scene scene2;
 	GridPane g_pane;
 	VBox v_box1, v_box2, v_box3;
-	Button[][] radarButton;
-	Button[][] userButton;
+	static Button[][] radarButton;
+	static Button[][] userButton;
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;
@@ -311,9 +311,8 @@ public class Battleship_Grid_Pane extends Application {
 			// input format
 
 			String res = InputBox.display("Carrier ship");
-			// System.out.println(res);
-			String value = ob.DeployUserGrid(res);
-			
+			System.out.println(res);
+			String value = ob.DeployUserGrid(res, "Carrier");
 			System.out.println(value);
 			//seeResult(ob.DeployUserGrid(res));
 
@@ -321,25 +320,25 @@ public class Battleship_Grid_Pane extends Application {
 		Battleship.setOnAction(e -> {
 
 			String res = InputBox.display("Battleship");
-			String value = ob.DeployUserGrid(res);
+			String value = ob.DeployUserGrid(res, "Battleship");
 			System.out.println(value);
 			//seeResult(ob.DeployUserGrid(res));
 		});
 		Cruiser.setOnAction(e -> {
 			String res = InputBox.display(" Cruiser ");
-			String value = ob.DeployUserGrid(res);
+			String value = ob.DeployUserGrid(res, "Cruiser");
 			System.out.println(value);
 			//seeResult(ob.DeployUserGrid(res));
 		});
 		Submarine.setOnAction(e -> {
 			String res = InputBox.display("Submarine");
-			String value = ob.DeployUserGrid(res);
+			String value = ob.DeployUserGrid(res, "Submarine");
 			System.out.println(value);
 			//seeResult(ob.DeployUserGrid(res));
 		});
 		Destroyer.setOnAction(e -> {
 			String res = InputBox.display("Destroyer");
-			String value = ob.DeployUserGrid(res);
+			String value = ob.DeployUserGrid(res, "Destroyer");
 			System.out.println(value);
 			//seeResult(ob.DeployUserGrid(res));
 		});
@@ -385,7 +384,62 @@ public class Battleship_Grid_Pane extends Application {
 		// root1.add(text, 0, 0);
 		stg.setScene(scene2);
 	}
-
+	
+	public void deployShipsWithColors(int[] coords, String shipType, String axis) {
+		
+		//if the ship is to be placed along Y-axis
+		if(axis.equals("Y")) {
+			if(shipType.equals("Carrier"))
+				colorShipYCoords(coords, "#000080");
+			if(shipType.equals("Battleship"))
+				colorShipYCoords(coords, "#654321");
+			if(shipType.equals("Cruiser"))
+				colorShipYCoords(coords, "#008000");
+			if(shipType.equals("Submarine"))
+				colorShipYCoords(coords, "#FFC0CB");
+			if(shipType.equals("Destroyer"))
+				colorShipYCoords(coords, "#FFFF00");
+		}
+		
+		//if itis to be placed along X-axis
+		else {
+			if(shipType.equals("Carrier"))
+				colorShipXCoords(coords, "#000080");
+			if(shipType.equals("Battleship"))
+				colorShipXCoords(coords, "#D2691E");
+			if(shipType.equals("Cruiser"))
+				colorShipXCoords(coords, "#008000");
+			if(shipType.equals("Submarine"))
+				colorShipXCoords(coords, "#FFA500");
+			if(shipType.equals("Destroyer"))
+				colorShipXCoords(coords, "#FFFF00");
+		}
+	}
+	
+	/**
+	 * The function will color the Y coordinates based on the type of ship
+	 * @param coords
+	 * @param color
+	 */
+	public void colorShipYCoords(int[] coords, String color) {
+		
+		for(int i = coords[1]; i <= coords[3]; i++) {
+			userButton[i][coords[0]].setStyle("-fx-background-color: "+color+"; ");
+		}
+	}
+	
+	/**
+	 * The function will color the X coordinates based on the type of ship
+	 * @param coords
+	 * @param color
+	 */
+	public void colorShipXCoords(int[] coords, String color) {
+		
+		for(int i = coords[1]; i <= coords[3]; i++) {
+			userButton[coords[1]][i].setStyle("-fx-background-color: "+color+"; ");
+		}
+	}
+	
 	// trying to commit and push
 	public static void main(String[] args) {
 		launch(args);

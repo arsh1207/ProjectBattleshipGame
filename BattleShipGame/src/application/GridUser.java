@@ -10,6 +10,7 @@ import java.util.Map;
  *
  */
 public class GridUser {
+	Battleship_Grid_Pane shipObject;
 
 	public static int rows = 9;
 	public static int cols = 11;
@@ -30,10 +31,12 @@ public class GridUser {
 	public static HashMap<String, Integer> convert = new HashMap<>();
 
 	GridUser() {
-
+		
+		//creating the object to deploy colored ships
+		shipObject = new Battleship_Grid_Pane();
 		// assign the values to the grids
 		Initialize();
-
+		
 		// deploy all the computer ships
 		DeployComputerShips();
 
@@ -52,7 +55,7 @@ public class GridUser {
 
 	}
 
-	public String DeployUserGrid(String coordinates) {
+	public String DeployUserGrid(String coordinates, String shipType) {
 
 		String str[] = coordinates.split("\\s");
 
@@ -84,6 +87,7 @@ public class GridUser {
 				} else if ((x1 >= 0 && x1 < rows) && (y1 >= 0 && y1 < cols) && (y2 >= 0 && y2 < cols)
 						&& userGrid[x1][i] == 1) {
 					return "ships cannot be placed on the same location";
+					//sagar change
 				} else if ((y1 < 0 || y1 >= rows) || (y2 < 0 || y2 >= rows) || (x1 < 0 || x1 >= cols)) {
 					return "You can't place ships outside the " + rows + " by " + cols + " grid";
 				}
@@ -91,8 +95,13 @@ public class GridUser {
 			}
 
 			if (((y2 + 1) - (y1 + 1))+1 == count) {
+				int[] coords = {x1, y1, x2, y2};
+				//calling the function on front end to color the
+				//coordinates of the ship as required
+				shipObject.deployShipsWithColors(coords, shipType, "Y");
+				
 				//result done signifies everything went right
-
+				
 				return "Done";
 			}
 
@@ -113,12 +122,17 @@ public class GridUser {
 				} else if ((y1 >= 0 && y1 < cols) && (x1 >= 0 && x1 < rows) && (x2 >= 0 && x2 < rows)
 						&& userGrid[i][y1] == 1) {
 					return "ships cannot be placed on the same location";
-				} else if ((x1 < 0 || x1 >= rows) || (x2 < 0 || x2 >= rows) || (y1 < 0 || y1 >= cols))
+					//sagar change
+				} else if ((x1 < 0 || x1 >= cols) || (x2 < 0 || x2 >= cols) || (y1 < 0 || y1 >= rows))
 					return "You can't place ships outside the " + rows + " by " + cols + " grid";
 
 			}
 
 			if ((x2 + 1) - (x1 + 1) == count) {
+				int[] coords = {x1, y1, x2, y2};
+				//calling the function on front end to color the
+				//coordinates of the ship as required
+				shipObject.deployShipsWithColors(coords, shipType, "X");
 
 				return "Done";
 			}
