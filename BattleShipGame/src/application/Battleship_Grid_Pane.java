@@ -136,15 +136,15 @@ public class Battleship_Grid_Pane extends Application {
 			}
 		}
 
-		buttonRowIndex = 8;
+		buttonRowIndex = 0;
 
 		// placing the buttons or holes on the grid
-		for (rowButtonCount = 1; rowButtonCount < 10; rowButtonCount += 1) {
+		for (rowButtonCount = 9; rowButtonCount >= 1; rowButtonCount -= 1) {
 			columnButtonCount = 1;
 			// columnButtonCount = 0; columnButtonCount < 11; columnButtonCount += 1
 			for (Button b : radarButton[buttonRowIndex]) {
 				b.setStyle("-fx-background-color: #000000; ");
-				b.setId(rowButtonCount+":"+columnButtonCount);
+				b.setId((buttonRowIndex)+":"+(columnButtonCount-1));
 				b.setShape(new Circle(r));
 				b.setMinSize(2 * r, 2 * r);
 				b.setMaxSize(2 * r, 2 * r);
@@ -154,16 +154,20 @@ public class Battleship_Grid_Pane extends Application {
 					String res = ob.Userturn(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
 					//System.out.println("After hit :" + res);
 					resulttext2.setText(res);
+					if(res.contains("miss"))
+						b.setStyle("-fx-background-color: #FFFFFF; ");
+					else if(res.contains("Hit"))
+						b.setStyle("-fx-background-color: #ff1100; ");
 					
 				});
 				g_pane.add(b, columnButtonCount, rowButtonCount);
 				columnButtonCount++;
 			}
-			if (buttonRowIndex > 0) {
-				buttonRowIndex--;
+			if (buttonRowIndex < 9) {
+				buttonRowIndex++;
 			}
 		}
-
+		rowButtonCount = 10;
 		// placing the letters on the grid
 		for (columnButtonCount = 1; columnButtonCount < 12; columnButtonCount += 1) {
 			char ch = (char) ('A' + columnButtonCount - 1);
@@ -208,7 +212,7 @@ public class Battleship_Grid_Pane extends Application {
 		 * g_pane.add(carrier5, 6, 15);
 		 * 
 		 * g_pane.add(battleship1, 5, 13); g_pane.add(battleship2, 5, 12);
-		 */
+		 */ 
 
 		// initializing the radar grid buttons of 9*11 size
 		// so that they can be accessed via ID
@@ -443,7 +447,6 @@ public class Battleship_Grid_Pane extends Application {
 		
 		/*
 		 * Rectangle shp = new Rectangle(20, 30, Color.BLUE);
-		 * 
 		 * shp.setArcHeight(20.0d); shp.setArcWidth(20.0d);
 		 */
 		

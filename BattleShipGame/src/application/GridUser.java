@@ -164,6 +164,7 @@ public class GridUser {
 		BattleShip.put(0, 1);
 		BattleShip.put(0, 2);
 		BattleShip.put(0, 3);
+		
 		HashMap<Integer, Integer> Cruiser = new HashMap<>();
 		Cruiser.put(1, 2);
 		Cruiser.put(2, 2);
@@ -173,6 +174,7 @@ public class GridUser {
 		Submarine.put(5, 4);
 		Submarine.put(5, 5);
 		Submarine.put(5, 6);
+		
 		HashMap<Integer, Integer> Destroyer = new HashMap<>();
 		Destroyer.put(8, 5);
 		Destroyer.put(8, 6);
@@ -186,6 +188,7 @@ public class GridUser {
 		for (Map.Entry<Integer, Integer> entry : BattleShip.entrySet()) {
 
 			computerGrid[entry.getKey()][entry.getValue()] = 1;
+			//computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 		}
 
@@ -219,7 +222,7 @@ public class GridUser {
 	 * @return
 	 */
 
-	public String Userturn(int y, int x) {
+	public String Userturn(int x, int y) {
 		// get the X and y coordinate from the input
 		//int x = 0;
 
