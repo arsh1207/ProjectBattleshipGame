@@ -208,8 +208,8 @@ public class GridUser {
 		}
 
 		// set the computerGrid to be changed grid
-		ChangedUserGrid = computerGrid;
-
+		ChangedComputerGrid = computerGrid;
+		
 	}
 
 	/**
@@ -219,12 +219,12 @@ public class GridUser {
 	 * @return
 	 */
 
-	public String Userturn(int x, int y) {
+	public String Userturn(int y, int x) {
 		// get the X and y coordinate from the input
 		//int x = 0;
 
 		//int y = 0;
-
+		System.out.println("reached here"+x +"; "+y);
 		if (ChangedComputerGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
 
