@@ -205,11 +205,11 @@ public class GridUser {
 	 * @return
 	 */
 
-	public String Userturn(String request) {
+	public String Userturn(int x, int y) {
 		// get the X and y coordinate from the input
-		int x = 0;
+		//int x = 0;
 
-		int y = 0;
+		//int y = 0;
 
 		if (ChangedComputerGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit

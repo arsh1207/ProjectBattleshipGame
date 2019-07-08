@@ -116,6 +116,8 @@ public class Battleship_Grid_Pane extends Application {
 		g_pane.add(t, columnButtonCount, rowButtonCount);
 		rowButtonCount = 0;
 		columnButtonCount = 0;
+		
+		GridUser ob = new GridUser();
 
 		for (rowButtonCount = 10; rowButtonCount >= 1; rowButtonCount--) {
 			int ch = 10;
@@ -128,6 +130,10 @@ public class Battleship_Grid_Pane extends Application {
 		for (rowButtonCount = 0; rowButtonCount < 9; rowButtonCount++) {
 			for (columnButtonCount = 0; columnButtonCount < 11; columnButtonCount++) {
 				radarButton[rowButtonCount][columnButtonCount] = new Button();
+				radarButton[rowButtonCount][columnButtonCount].setOnAction(e -> {
+					String res = ob.Userturn(rowButtonCount, columnButtonCount);
+					
+				});
 			}
 		}
 
