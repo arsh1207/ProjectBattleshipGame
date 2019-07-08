@@ -165,6 +165,10 @@ public class Battleship_Grid_Pane extends Application {
 		//System.out.println("here");
 		
 		Rectangle carrier1 = new Rectangle(20, 30, Color.BLUE);
+		
+		carrier1.setArcHeight(20.0d); 
+		carrier1.setArcWidth(20.0d); 
+		
 		Rectangle carrier2 = new Rectangle(20, 30, Color.BLUE);
 		Rectangle carrier3 = new Rectangle(20, 30, Color.BLUE);
 		Rectangle carrier4 = new Rectangle(20, 30, Color.BLUE);
