@@ -2,6 +2,7 @@ package application;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * 
@@ -240,7 +241,6 @@ public class GridUser {
 		}
 
 		// set the computerGrid to be changed grid
-		//arsalaan changed
 		ChangedComputerGrid = computerGrid;
 
 	}
@@ -251,18 +251,16 @@ public class GridUser {
 	 * 
 	 * @return
 	 */
-//changes arsalaan
 	public String Userturn(int x, int y) {
 
-		// get the X and y coordinate from the input
-//		int x = 0;
-
-	//	int y = 0;
 		System.out.println("reached here"+x +"; "+y);
+		
+		
 		if (ChangedComputerGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
 
 			ChangedComputerGrid[x][y] = 2;
+			
 
 			return "It's a Hit!!!!!";
 
@@ -278,6 +276,9 @@ public class GridUser {
 
 		// check if User won or computer won
 		CheckIfUserWon();
+		
+		//call the computer for its turn
+		Computerturn();
 
 		// some other case or error
 		return "Some other error";
@@ -289,12 +290,14 @@ public class GridUser {
 	 * 
 	 * @return
 	 */
-
 	public String Computerturn() {
-		// get the X and y coordinate from the input
-		int x = 0;
+		
+		
+		Random  ran= new Random();
+     	// randomly generate the values to hit on the User grid 
+		int x = ran.nextInt(9);
 
-		int y = 0;
+		int y = ran.nextInt(11);
 
 		if (ChangedUserGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
@@ -322,8 +325,8 @@ public class GridUser {
 	}
 
 	/**
-	 * checks both the grid of the User and the computer to verify if they won or
-	 * not sets the static flag true if someone wins
+	 * checks both the grid of the User and the computer to verify if they won or not
+	 *  sets the static flag true if User wins
 	 * 
 	 * @return
 	 */
@@ -355,7 +358,15 @@ public class GridUser {
 		}
 
 	}
-
+	
+	
+/**
+ * 
+ * checks if the Computer has won If yes then calls the View for display
+ * 
+ * 
+ * 
+ */
 	public void CheckIfCompWon() {
 
 		boolean flagcomp = false;
@@ -383,6 +394,15 @@ public class GridUser {
 		}
 
 	}
+	
+	
+	/**
+	 * Based on the Ship type check if the shape are of the specified size 
+	 * 
+	 * @param diff
+	 * @param shipType
+	 * @return
+	 */
 	
 	public String areHolesValid(int diff, String shipType) {
 		if(shipType.equals("Carrier")) {
@@ -418,6 +438,10 @@ public class GridUser {
 		return null;
 	}
 	
+	/**
+	 * Initializes the grid of user and computer to zero 
+	 * 
+	 */
 	public void Initialize() {
 		for (int i = 0; i < rows; i++) {
 
