@@ -69,83 +69,107 @@ public class GridUser {
 		int y2 = Integer.parseInt(str[3]) - 1;
 
 		System.out.println("values x1 y1 x2 y2  " + x1 + y1 + x2 + y2);
-
+		
+		
 		if (x1 == x2) {
+			System.out.println("X coordinates are same");
 			// if two X are the same then the line is vertical
 			// increment the Y values to set the ship location
-
 			// count to check if all coordinated were placed successfully
 			int count = 0;
-
-			for (int i = y1; i <= y2; i++) {
-
-				if ((x1 >= 0 && x1 < rows) && (y1 >= 0 && y1 < cols) && (y2 >= 0 && y2 < cols)
-						&& (userGrid[x1][i] == 0)) {
-					userGrid[x1][i] = 1;
-					count++;
-
-				} else if ((x1 >= 0 && x1 < rows) && (y1 >= 0 && y1 < cols) && (y2 >= 0 && y2 < cols)
-						&& userGrid[x1][i] == 1) {
-					return "ships cannot be placed on the same location";
-					//sagar change
-				} else if ((y1 < 0 || y1 >= rows) || (y2 < 0 || y2 >= rows) || (x1 < 0 || x1 >= cols)) {
-					return "You can't place ships outside the " + rows + " by " + cols + " grid";
-				}
-
+			if(y1 > y2) {
+				int temp = y2;
+				y2 = y1;
+				y1 = temp;
 			}
+			String res = areHolesValid(y2-y1+1, shipType);
+			if(res.equals("YES")) {
 
-			if (((y2 + 1) - (y1 + 1))+1 == count) {
-				int[] coords = {x1, y1, x2, y2};
-				//calling the function on front end to color the
-				//coordinates of the ship as required
-				shipObject.deployShipsWithColors(coords, shipType, "Y");
-				
-				//result done signifies everything went right
-				
-				return "Done";
+				for (int i = y1; i <= y2; i++) {
+					
+					//sagar change
+					if ((x1 >= 0 && x1 < cols) && (y1 >= 0 && y1 < rows) && (y2 >= 0 && y2 < rows)
+							&& (userGrid[i][x1] == 0)) {
+						userGrid[i][x1] = 1;
+						count++;
+	
+					} else if ((x1 >= 0 && x1 < cols) && (y1 >= 0 && y1 < rows) && (y2 >= 0 && y2 < rows)
+							&& userGrid[i][x1] == 1) {
+						return "ships cannot be placed on the same location";
+						//sagar change
+					} else if ((y1 < 0 || y1 >= rows) || (y2 < 0 || y2 >= rows) || (x1 < 0 || x1 >= cols)) {
+						return "You can't place ships outside the " + rows + " by " + cols + " grid";
+					}
+	
+				}
+	
+				if (((y2 + 1) - (y1 + 1))+1 == count) {
+					int[] coords = {x1, y1, x2, y2};
+					//calling the function on front end to color the
+					//coordinates of the ship as required
+					shipObject.deployShipsWithColors(coords, shipType, "Y");
+					
+					//result done signifies everything went right
+					
+					return "Done";
+				}
+			}
+			else {
+				return res;
 			}
 
 		}
 
 		else if (y1 == y2) {
+			System.out.println("Y coordinates are same");
 			// if two Y are the same then the line is Horizontal
 
 			// count to check if all coordinated were placed successfully
 			int count = 0;
-
-			// increment the X values to set the ship location
-			for (int i = x1; i <= x2; i++) {
-				if ((y1 >= 0 && y1 < cols) && (x1 >= 0 && x1 < rows) && (x2 >= 0 && x2 < rows)
-						&& (userGrid[i][y1] == 0)) {
-					userGrid[i][y1] = 1;
-
-				} else if ((y1 >= 0 && y1 < cols) && (x1 >= 0 && x1 < rows) && (x2 >= 0 && x2 < rows)
-						&& userGrid[i][y1] == 1) {
-					return "ships cannot be placed on the same location";
+			if(x1 > x2) {
+				int temp = x2;
+				x2 = x1;
+				x1 = temp;
+			}
+			String res = areHolesValid(x2-x1+1, shipType);
+			if(res.equals("YES")) {
+				// increment the X values to set the ship location
+				for (int i = x1; i <= x2; i++) {
 					//sagar change
-				} else if ((x1 < 0 || x1 >= cols) || (x2 < 0 || x2 >= cols) || (y1 < 0 || y1 >= rows))
-					return "You can't place ships outside the " + rows + " by " + cols + " grid";
-
+					if ((y1 >= 0 && y1 < rows) && (x1 >= 0 && x1 < cols) && (x2 >= 0 && x2 < cols)
+							&& (userGrid[y1][i] == 0)) {
+						System.out.println("For coordinates "+y1+" and "+i);
+						userGrid[y1][i] = 1;
+						count++;
+	
+					} else if ((y1 >= 0 && y1 < rows) && (x1 >= 0 && x1 < cols) && (x2 >= 0 && x2 < cols)
+							&& userGrid[y1][i] == 1) {
+						return "ships cannot be placed on the same location";
+						//sagar change
+					} else if ((x1 < 0 || x1 >= cols) || (x2 < 0 || x2 >= cols) || (y1 < 0 || y1 >= rows))
+						return "You can't place ships outside the " + rows + " by " + cols + " grid";
+	
+				}
+	
+				if (((x2 + 1) - (x1 + 1))+1 == count) {
+					int[] coords = {x1, y1, x2, y2};
+					//calling the function on front end to color the
+					//coordinates of the ship as required
+					shipObject.deployShipsWithColors(coords, shipType, "X");
+	
+					return "Done";
+				}
+	
 			}
-
-			if ((x2 + 1) - (x1 + 1) == count) {
-				int[] coords = {x1, y1, x2, y2};
-				//calling the function on front end to color the
-				//coordinates of the ship as required
-				shipObject.deployShipsWithColors(coords, shipType, "X");
-
-				return "Done";
+		}
+	
+			else {// case when anything Diagonal
+				return "Can not place ship Diagonal";
+	
 			}
-
-		}
-
-		else {// case when anything Diagonal
-			return "Can not place ship Diagonal";
-
-		}
-
-		//  signifies some other error
-		return "Some other error";
+	
+			//  signifies some other error
+			return "Some other error";
 
 	}
 
@@ -208,8 +232,8 @@ public class GridUser {
 		}
 
 		// set the computerGrid to be changed grid
-		ChangedComputerGrid = computerGrid;
-		
+		ChangedUserGrid = computerGrid;
+
 	}
 
 	/**
@@ -219,12 +243,12 @@ public class GridUser {
 	 * @return
 	 */
 
-	public String Userturn(int y, int x) {
+	public String Userturn(String request) {
 		// get the X and y coordinate from the input
-		//int x = 0;
+		int x = 0;
 
-		//int y = 0;
-		System.out.println("reached here"+x +"; "+y);
+		int y = 0;
+
 		if (ChangedComputerGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
 
@@ -349,7 +373,41 @@ public class GridUser {
 		}
 
 	}
-
+	
+	public String areHolesValid(int diff, String shipType) {
+		if(shipType.equals("Carrier")) {
+			if(diff == 5)
+				return "YES";
+			else
+				return "Carriers can only have 5 holes";
+		}
+		if(shipType.equals("Battleship")) {
+			if(diff == 4)
+				return "YES";
+			else
+				return "Battleships can only have 4 holes";
+		}
+		if(shipType.equals("Cruiser")) {
+			if(diff == 3)
+				return "YES";
+			else
+				return "Cruisers can only have 3 holes";
+		}
+		if(shipType.equals("Submarine")) {
+			if(diff == 3)
+				return "YES";
+			else
+				return "Submarines can only have 3 holes";
+		}
+		if(shipType.equals("Destroyer")) {
+			if(diff == 2)
+				return "YES";
+			else
+				return "Destroyers can only have 2 holes";
+		}
+		return null;
+	}
+	
 	public void Initialize() {
 		for (int i = 0; i < rows; i++) {
 

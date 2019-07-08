@@ -41,7 +41,6 @@ public class Battleship_Grid_Pane extends Application {
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;
-	Label resulttext1,resulttext2;
 
 	// Stage stage;
 	@Override
@@ -91,9 +90,8 @@ public class Battleship_Grid_Pane extends Application {
 
 			split_pane.getItems().add(v_box1);
 			split_pane.getItems().add(v_box2);
-			
-			seeResultUser("User ");
-			seeResultComp("Computer ");
+			seeResult("Computer ");
+			seeResult("User ");
 
 			v_box4.getChildren().addAll(menuBar, split_pane);
 
@@ -115,11 +113,9 @@ public class Battleship_Grid_Pane extends Application {
 		double r = 7.5;
 		Text t = new Text("Radar Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
-		g_pane.add(t, columnButtonCount, rowButtonCount);
 		rowButtonCount = 0;
 		columnButtonCount = 0;
-		
-		GridUser ob = new GridUser();
+		g_pane.add(t, columnButtonCount, rowButtonCount);
 
 		for (rowButtonCount = 10; rowButtonCount >= 1; rowButtonCount--) {
 			int ch = 10;
@@ -129,10 +125,9 @@ public class Battleship_Grid_Pane extends Application {
 
 		// initializing the radar grid buttons of 9*11 size
 		// so that they can be accessed via ID
-		for (rowButtonCount = 0; rowButtonCount < 9; rowButtonCount++) {
-			for (columnButtonCount = 0; columnButtonCount < 11; columnButtonCount++) {
+			for (rowButtonCount = 0; rowButtonCount < 9; rowButtonCount++) {
+				for (columnButtonCount = 0; columnButtonCount < 11; columnButtonCount++) {
 				radarButton[rowButtonCount][columnButtonCount] = new Button();
-				
 			}
 		}
 
@@ -144,17 +139,11 @@ public class Battleship_Grid_Pane extends Application {
 			// columnButtonCount = 0; columnButtonCount < 11; columnButtonCount += 1
 			for (Button b : radarButton[buttonRowIndex]) {
 				b.setStyle("-fx-background-color: #000000; ");
-				b.setId(rowButtonCount+":"+columnButtonCount);
 				b.setShape(new Circle(r));
 				b.setMinSize(2 * r, 2 * r);
 				b.setMaxSize(2 * r, 2 * r);
 				b.setOnAction((ActionEvent event) -> {
-					//b.setStyle("-fx-background-color: #FFFFFF; ");
-					String xy[] = b.getId().split(":");
-					String res = ob.Userturn(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
-					//System.out.println("After hit :" + res);
-					resulttext2.setText(res);
-					
+					b.setStyle("-fx-background-color: #FFFFFF; ");
 				});
 				g_pane.add(b, columnButtonCount, rowButtonCount);
 				columnButtonCount++;
@@ -249,26 +238,14 @@ public class Battleship_Grid_Pane extends Application {
 	}
 
 	// places the Result for the hit or miss in the bottom of the window
-	public void seeResultUser(String title) {
+	public void seeResult(String title) {
 		Label resultLabel = new Label(title + "Result: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		//TextField resultTextField = new TextField();
-		 resulttext1 = new Label();
-		 resulttext1.setStyle("-fx-background-color: white;");
-		v_box3.getChildren().addAll(resultLabel, resulttext1);
-
-		// g_pane2.add(resultLabel, 0, 9);
-		// g_pane2.add(resultTextField, 1, 25);
-	}
-	public void seeResultComp(String title) {
-		Label resultLabel = new Label(title + "Result: ");
-		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
-		resultLabel.setTextFill(Color.web("#c40831"));
-		//TextField resultTextField = new TextField();
-		 resulttext2 = new Label();
-		 resulttext2.setStyle("-fx-background-color: white;");
-		v_box3.getChildren().addAll(resultLabel, resulttext2);
+		TextField resultTextField = new TextField();
+		// Label resulttext = new Label();
+		// resulttext.setStyle("-fx-background-color: white;");
+		v_box3.getChildren().addAll(resultLabel, resultTextField);
 
 		// g_pane2.add(resultLabel, 0, 9);
 		// g_pane2.add(resultTextField, 1, 25);
@@ -332,7 +309,6 @@ public class Battleship_Grid_Pane extends Application {
 			String value = ob.DeployUserGrid(res, "Carrier");
 			System.out.println(value);
 			//seeResult(ob.DeployUserGrid(res));
-			
 
 		});
 		Battleship.setOnAction(e -> {
@@ -441,15 +417,8 @@ public class Battleship_Grid_Pane extends Application {
 	 */
 	public void colorShipYCoords(int[] coords, String color) {
 		
-		/*
-		 * Rectangle shp = new Rectangle(20, 30, Color.BLUE);
-		 * 
-		 * shp.setArcHeight(20.0d); shp.setArcWidth(20.0d);
-		 */
-		
 		for(int i = coords[1]; i <= coords[3]; i++) {
 			userButton[i][coords[0]].setStyle("-fx-background-color: "+color+"; ");
-			//g_pane.add(shp, i, coords[0]);
 		}
 	}
 	
@@ -460,7 +429,7 @@ public class Battleship_Grid_Pane extends Application {
 	 */
 	public void colorShipXCoords(int[] coords, String color) {
 		
-		for(int i = coords[1]; i <= coords[3]; i++) {
+		for(int i = coords[0]; i <= coords[2]; i++) {
 			userButton[coords[1]][i].setStyle("-fx-background-color: "+color+"; ");
 		}
 	}
