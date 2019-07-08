@@ -188,6 +188,20 @@ public class Battleship_Grid_Pane extends Application {
 						b.setStyle("-fx-background-color: #FFFFFF; ");
 					else if(res.contains("Hit"))
 						b.setStyle("-fx-background-color: #ff1100; ");
+					
+				
+					
+					//changed prateek
+					String compres = ob.Computerturn();
+					//System.out.println("After hit :" + res);
+					resulttext1.setText(compres);
+					if(compres.contains("miss"))
+						b.setStyle("-fx-background-color: #FFFFFF; ");
+					else if(compres.contains("Hit"))
+						b.setStyle("-fx-background-color: #ff1100; ");
+					
+					//add the 
+
 
 				});
 				g_pane.add(b, columnButtonCount, rowButtonCount);
