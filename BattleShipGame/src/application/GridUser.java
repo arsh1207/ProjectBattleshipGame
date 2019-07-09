@@ -482,19 +482,23 @@ public class GridUser {
 		// get the X and y coordinate from the input
 		Random ran = new Random();
 		
-		int x = ran.nextInt(9);
+//		int x = ran.nextInt(9);
 
-		int y = ran.nextInt(11);
+//		int y = ran.nextInt(11);
+		int x = 7;
+		int y = 10;
 
 		if (ChangedUserGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
 
 			ChangedUserGrid[x][y] = 2;
+			Battleship_Grid_Pane.setUserShipCoordinates(x, y, "Hit");
 
 			return "It's a Hit!!!!!";
 
 		} else if (ChangedUserGrid[x][y] == 0) {
-
+			
+			Battleship_Grid_Pane.setUserShipCoordinates(x, y, "Miss");
 			return "It's a miss!!!!!";
 
 		} else if (ChangedUserGrid[x][y] == 2) {
@@ -685,7 +689,16 @@ public class GridUser {
 		
 		
 	}
-
+	
+	public static void displayUserShips(){
+		
+		for(int x = 0; x<9; x++) {
+			for(int y = 0; y<11; y++)
+				System.out.print(userGrid[x][y]+" ");
+			System.out.println("");
+		}
+		
+	}
 	public void printGrid() {
 		
 		
