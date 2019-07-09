@@ -114,9 +114,11 @@ public class GridUser {
 
 					} else if ((x1 >= 0 && x1 < cols) && (y1 >= 0 && y1 < rows) && (y2 >= 0 && y2 < rows)
 							&& userGrid[i][x1] == 1) {
+						deployedShips.remove(shipType);
 						return "ships cannot be placed on the same location";
 						// sagar change
 					} else if ((y1 < 0 || y1 >= rows) || (y2 < 0 || y2 >= rows) || (x1 < 0 || x1 >= cols)) {
+						deployedShips.remove(shipType);
 						return "You can't place ships outside the " + rows + " by " + cols + " grid";
 					}
 
@@ -133,6 +135,7 @@ public class GridUser {
 					return "Done";
 				}
 			} else {
+				deployedShips.remove(shipType);
 				return res;
 			}
 
@@ -162,10 +165,13 @@ public class GridUser {
 
 					} else if ((y1 >= 0 && y1 < rows) && (x1 >= 0 && x1 < cols) && (x2 >= 0 && x2 < cols)
 							&& userGrid[y1][i] == 1) {
+						deployedShips.remove(shipType);
 						return "ships cannot be placed on the same location";
 						// sagar change
-					} else if ((x1 < 0 || x1 >= cols) || (x2 < 0 || x2 >= cols) || (y1 < 0 || y1 >= rows))
+					} else if ((x1 < 0 || x1 >= cols) || (x2 < 0 || x2 >= cols) || (y1 < 0 || y1 >= rows)) {
+						deployedShips.remove(shipType);
 						return "You can't place ships outside the " + rows + " by " + cols + " grid";
+					}
 
 				}
 
@@ -180,16 +186,18 @@ public class GridUser {
 				}
 
 			} else {
+				deployedShips.remove(shipType);
 				return res;
 			}
 		}
 
 		else {// case when anything Diagonal
+			deployedShips.remove(shipType);
 			return "Can not place ship Diagonal";
 
 		}
 
-
+		deployedShips.remove(shipType);
 		// signifies some other error
 		return "Some other error";
 
@@ -205,7 +213,7 @@ public class GridUser {
 			Random rand = new Random();
 			int carrierX = rand.nextInt(9);
 			int carrierY = rand.nextInt(11);
-		//	System.out.println("carrier -> v" + carrierX + ";" + carrierY );
+			System.out.println("carrier -> v" + carrierX + ";" + carrierY );
 			HashMap<Integer, Integer> Carrier = new HashMap<>();
 			Boolean placed = false;
 
@@ -238,7 +246,7 @@ public class GridUser {
 			int battleShipY = rand.nextInt(11);
 
 			HashMap<Integer, Integer> BattleShip = new HashMap<>();
-			//System.out.println("batt -> h" + battleShipX + ";" + battleShipY );
+			System.out.println("batt -> h" + battleShipX + ";" + battleShipY );
 			placed = false;
 			while (!placed) {
 				if (check(battleShipX, battleShipY, "vertical", 4)) {
@@ -269,7 +277,7 @@ public class GridUser {
 			int cruiserX = rand.nextInt(9);
 			int cruiserY = rand.nextInt(11);
 
-		//	System.out.println("cru -> h" + cruiserX + ";" + cruiserY );
+			System.out.println("cru -> h" + cruiserX + ";" + cruiserY );
 			
 			HashMap<Integer, Integer> Cruiser = new HashMap<>();
 			placed = false;
@@ -303,7 +311,7 @@ public class GridUser {
 			int subY = rand.nextInt(11);
 			HashMap<Integer, Integer> Submarine = new HashMap<>();
 
-		//	System.out.println("sub -> h" + subX + ";" + subY );
+			System.out.println("sub -> h" + subX + ";" + subY );
 			placed = false;
 			while (!placed) {
 				if (check(subX, subY, "vertical", 3)) {
@@ -332,7 +340,7 @@ public class GridUser {
 
 			int destroyerX = rand.nextInt(9);
 			int destroyerY = rand.nextInt(11);
-		//	System.out.println("des -> v" + destroyerX + ";" + destroyerY );
+			System.out.println("des -> v" + destroyerX + ";" + destroyerY );
 			
 			HashMap<Integer, Integer> Destroyer = new HashMap<>();
 			
