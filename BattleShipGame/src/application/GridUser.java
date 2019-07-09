@@ -1,6 +1,8 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,7 +15,7 @@ public class GridUser {
 	Battleship_Grid_Pane shipObject;
 	
 	public static int numOfShipsDep = 0;
-
+	
 	public static int rows = 9;
 	public static int cols = 11;
 
@@ -29,6 +31,8 @@ public class GridUser {
 	public static Integer[][] ChangedUserGrid = new Integer[rows][cols];
 
 	public static Integer[][] ChangedComputerGrid = new Integer[rows][cols];
+	
+	static List<String> deployedShips = new ArrayList<>();
 
 	public static HashMap<String, Integer> convert = new HashMap<>();
 
@@ -58,6 +62,7 @@ public class GridUser {
 	}
 
 	public String DeployUserGrid(String coordinates, String shipType) {
+		
 
 		String str[] = coordinates.split("\\s");
 
@@ -167,14 +172,15 @@ public class GridUser {
 				return res;
 			}
 		}
-	
-			else {// case when anything Diagonal
-				return "Can not place ship Diagonal";
-	
-			}
+
+		else {// case when anything Diagonal
+			return "Can not place ship Diagonal";
+
+		}
+		
 	
 			//  signifies some other error
-			return "Some other error";
+		return "Some other error";
 
 	}
 
@@ -419,6 +425,31 @@ public class GridUser {
 				return "Destroyers can only have 2 holes";
 		}
 		return null;
+	}
+	
+	/**
+	 * function to see whether a particular ship is deployed or not
+	 * @param shipType
+	 * @return
+	 */
+	public boolean isShipDeployed(String shipType) {
+		
+		if(deployedShips.contains(shipType))
+			return true;
+		else if(deployedShips.isEmpty()) {
+			deployedShips.add(shipType);
+			return false;
+		}
+		else
+			deployedShips.add(shipType);
+			return false;		
+	}
+	
+	public boolean areAllShipsDeployed() {
+		if(deployedShips.size() == 5)
+			return true;
+		else
+			return false;
 	}
 	
 	public void Initialize() {
