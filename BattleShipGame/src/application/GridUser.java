@@ -20,8 +20,6 @@ public class GridUser {
 	public static int rows = 9;
 	public static int cols = 11;
 
-	public static boolean Userwon = false;
-	public static boolean Compwon = false;
 
 	// original Grid that remains unchanged throughout the game
 	public static Integer[][] userGrid = new Integer[rows][cols];
@@ -217,7 +215,7 @@ public class GridUser {
 			Random rand = new Random();
 			int carrierX = rand.nextInt(9);
 			int carrierY = rand.nextInt(11);
-			System.out.println("carrier -> v" + carrierX + ";" + carrierY);
+
 			HashMap<Integer, Integer> Carrier = new HashMap<>();
 			Boolean placed = false;
 
@@ -250,7 +248,7 @@ public class GridUser {
 			int battleShipY = rand.nextInt(11);
 
 			HashMap<Integer, Integer> BattleShip = new HashMap<>();
-			System.out.println("batt -> h" + battleShipX + ";" + battleShipY);
+
 			placed = false;
 			while (!placed) {
 				if (check(battleShipX, battleShipY, "vertical", 4)) {
@@ -281,7 +279,6 @@ public class GridUser {
 			int cruiserX = rand.nextInt(9);
 			int cruiserY = rand.nextInt(11);
 
-			System.out.println("cru -> h" + cruiserX + ";" + cruiserY);
 
 			HashMap<Integer, Integer> Cruiser = new HashMap<>();
 			placed = false;
@@ -315,7 +312,6 @@ public class GridUser {
 			int subY = rand.nextInt(11);
 			HashMap<Integer, Integer> Submarine = new HashMap<>();
 
-			System.out.println("sub -> h" + subX + ";" + subY);
 			placed = false;
 			while (!placed) {
 				if (check(subX, subY, "vertical", 3)) {
@@ -344,7 +340,11 @@ public class GridUser {
 
 			int destroyerX = rand.nextInt(9);
 			int destroyerY = rand.nextInt(11);
-			System.out.println("des -> v" + destroyerX + ";" + destroyerY);
+
+		
+
+
+
 
 			HashMap<Integer, Integer> Destroyer = new HashMap<>();
 
@@ -375,15 +375,17 @@ public class GridUser {
 
 			}
 
-			for (int i = 0; i < 9; i++) {
+			/*for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 11; j++) {
 					System.out.print(computerGrid[i][j]);
 				}
 				System.out.println();
-			}
+			}*/
 
 			// set the computerGrid to be changed grid
 			ChangedComputerGrid = computerGrid;
+			
+			printGrid();
 		} catch (Exception e) {
 			e.printStackTrace();
 			// System.out.println(print);
@@ -446,9 +448,6 @@ public class GridUser {
 	public String Userturn(int x, int y) {
 
 		// get the X and y coordinate from the input
-//		int x = 0;
-
-		// int y = 0;
 		System.out.println("reached here" + x + "; " + y);
 		if (ChangedComputerGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
@@ -456,7 +455,6 @@ public class GridUser {
 			ChangedComputerGrid[x][y] = 2;
 
 			return "It's a Hit!!!!!";
-
 		} else if (ChangedComputerGrid[x][y] == 0) {
 
 			return "It's a miss!!!!!";
@@ -467,9 +465,9 @@ public class GridUser {
 
 		}
 
-		// check if User won or computer won
-		CheckIfUserWon();
-		Computerturn();
+		
+		
+		
 
 		// some other case or error
 		return "Some other error";
@@ -484,9 +482,11 @@ public class GridUser {
 
 	public String Computerturn() {
 		// get the X and y coordinate from the input
-		int x = 0;
+		Random ran = new Random();
+		
+		int x = ran.nextInt(9);
 
-		int y = 0;
+		int y = ran.nextInt(11);
 
 		if (ChangedUserGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
@@ -520,7 +520,7 @@ public class GridUser {
 	 * @return
 	 */
 
-	public void CheckIfUserWon() {
+	public void checkIfUserWon() {
 
 		boolean flaguser = false;
 
@@ -540,7 +540,7 @@ public class GridUser {
 
 		if (!flaguser) {// set that user has won
 
-			Userwon = true;
+			AlertBox.displayResult("Hurray!!","User has Won ");
 		} else {
 			// do nothing
 
@@ -568,7 +568,7 @@ public class GridUser {
 
 		if (!flagcomp) {// set that user has won
 
-			Compwon = true;
+			AlertBox.displayResult("Hurray!!","AI has Won ");
 		} else {
 			// do nothing
 
@@ -636,6 +636,7 @@ public class GridUser {
 	}
 
 	public void Initialize() {
+		
 		for (int i = 0; i < rows; i++) {
 
 			for (int j = 0; j < cols; j++) {
@@ -646,6 +647,60 @@ public class GridUser {
 				ChangedComputerGrid[i][j] = 0;
 
 			}
+		}
+		
+
+	}
+	
+	
+	public void reInitialize()
+	{
+		Initialize();
+		
+		DeployComputerShips();
+		
+		
+		// set the hashMap for conversion
+		convert.put("A", 0);
+		convert.put("B", 1);
+		convert.put("C", 2);
+		convert.put("D", 3);
+		convert.put("E", 4);
+		convert.put("F", 5);
+		convert.put("G", 6);
+		convert.put("H", 7);
+		convert.put("I", 8);
+		convert.put("J", 9);
+		convert.put("K", 10);
+
+		convert.put("a", 0);
+		convert.put("b", 1);
+		convert.put("c", 2);
+		convert.put("d", 3);
+		convert.put("e", 4);
+		convert.put("f", 5);
+		convert.put("g", 6);
+		convert.put("h", 7);
+		convert.put("i", 8);
+		convert.put("j", 9);
+		convert.put("k", 10);
+		
+		
+	}
+
+	public void printGrid() {
+		
+		
+		System.out.println("inside the printGrid");
+		
+		for (int i = 0; i < rows; i++) {
+
+			for (int j = 0; j < cols; j++) {
+
+				System.out.print(ChangedComputerGrid[i][j]+" ");
+
+			}
+			System.out.println();
 		}
 
 	}
