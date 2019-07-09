@@ -16,7 +16,7 @@ public class GridUser {
 	Battleship_Grid_Pane shipObject;
 
 	public static int numOfShipsDep = 0;
-	
+
 	public static int rows = 9;
 	public static int cols = 11;
 
@@ -32,7 +32,7 @@ public class GridUser {
 	public static Integer[][] ChangedUserGrid = new Integer[rows][cols];
 
 	public static Integer[][] ChangedComputerGrid = new Integer[rows][cols];
-	
+
 	static List<String> deployedShips = new ArrayList<>();
 
 	public static HashMap<String, Integer> convert = new HashMap<>();
@@ -75,149 +75,149 @@ public class GridUser {
 	}
 
 	public String DeployUserGrid(String coordinates, String shipType) {
-		
-try {
-		String str[] = coordinates.split("\\s");
 
-		int x1 = convert.get(str[0]);
-		// System.out.println(x1);
-		// decrease the value of Y since the coordinated start from 0 in grid
-		int y1 = Integer.parseInt(str[1]) - 1;
-		int x2 = convert.get(str[2]);
+		try {
+			String str[] = coordinates.split("\\s");
 
-		// decrease the value of Y since the coordinated start from 0 in grid
-		int y2 = Integer.parseInt(str[3]) - 1;
+			int x1 = convert.get(str[0]);
+			// System.out.println(x1);
+			// decrease the value of Y since the coordinated start from 0 in grid
+			int y1 = Integer.parseInt(str[1]) - 1;
+			int x2 = convert.get(str[2]);
 
-		System.out.println("values x1 y1 x2 y2  " + x1 + y1 + x2 + y2);
+			// decrease the value of Y since the coordinated start from 0 in grid
+			int y2 = Integer.parseInt(str[3]) - 1;
 
-		if (x1 == x2) {
-			System.out.println("X coordinates are same");
-			// if two X are the same then the line is vertical
-			// increment the Y values to set the ship location
-			// count to check if all coordinated were placed successfully
-			int count = 0;
-			if (y1 > y2) {
-				int temp = y2;
-				y2 = y1;
-				y1 = temp;
-			}
-			String res = areHolesValid(y2 - y1 + 1, shipType);
-			if (res.equals("YES")) {
+			System.out.println("values x1 y1 x2 y2  " + x1 + y1 + x2 + y2);
 
-				for (int i = y1; i <= y2; i++) {
+			if (x1 == x2) {
+				System.out.println("X coordinates are same");
+				// if two X are the same then the line is vertical
+				// increment the Y values to set the ship location
+				// count to check if all coordinated were placed successfully
+				int count = 0;
+				if (y1 > y2) {
+					int temp = y2;
+					y2 = y1;
+					y1 = temp;
+				}
+				String res = areHolesValid(y2 - y1 + 1, shipType);
+				if (res.equals("YES")) {
 
-					// sagar change
-					if ((x1 >= 0 && x1 < cols) && (y1 >= 0 && y1 < rows) && (y2 >= 0 && y2 < rows)
-							&& (userGrid[i][x1] == 0)) {
-						userGrid[i][x1] = 1;
-						count++;
+					for (int i = y1; i <= y2; i++) {
 
-					} else if ((x1 >= 0 && x1 < cols) && (y1 >= 0 && y1 < rows) && (y2 >= 0 && y2 < rows)
-							&& userGrid[i][x1] == 1) {
-						deployedShips.remove(shipType);
-						return "ships cannot be placed on the same location";
 						// sagar change
-					} else if ((y1 < 0 || y1 >= rows) || (y2 < 0 || y2 >= rows) || (x1 < 0 || x1 >= cols)) {
-						deployedShips.remove(shipType);
-						return "You can't place ships outside the " + rows + " by " + cols + " grid";
+						if ((x1 >= 0 && x1 < cols) && (y1 >= 0 && y1 < rows) && (y2 >= 0 && y2 < rows)
+								&& (userGrid[i][x1] == 0)) {
+							userGrid[i][x1] = 1;
+							count++;
+
+						} else if ((x1 >= 0 && x1 < cols) && (y1 >= 0 && y1 < rows) && (y2 >= 0 && y2 < rows)
+								&& userGrid[i][x1] == 1) {
+							deployedShips.remove(shipType);
+							return "ships cannot be placed on the same location";
+							// sagar change
+						} else if ((y1 < 0 || y1 >= rows) || (y2 < 0 || y2 >= rows) || (x1 < 0 || x1 >= cols)) {
+							deployedShips.remove(shipType);
+							return "You can't place ships outside the " + rows + " by " + cols + " grid";
+						}
+
 					}
 
+					if (((y2 + 1) - (y1 + 1)) + 1 == count) {
+						int[] coords = { x1, y1, x2, y2 };
+						// calling the function on front end to color the
+						// coordinates of the ship as required
+						shipObject.deployShipsWithColors(coords, shipType, "Y");
+
+						// result done signifies everything went right
+						numOfShipsDep++;
+						return "Done";
+					}
+				} else {
+					deployedShips.remove(shipType);
+					return res;
 				}
 
-				if (((y2 + 1) - (y1 + 1)) + 1 == count) {
-					int[] coords = { x1, y1, x2, y2 };
-					// calling the function on front end to color the
-					// coordinates of the ship as required
-					shipObject.deployShipsWithColors(coords, shipType, "Y");
+			}
 
-					// result done signifies everything went right
-					numOfShipsDep++;
-					return "Done";
+			else if (y1 == y2) {
+				System.out.println("Y coordinates are same");
+				// if two Y are the same then the line is Horizontal
+
+				// count to check if all coordinated were placed successfully
+				int count = 0;
+				if (x1 > x2) {
+					int temp = x2;
+					x2 = x1;
+					x1 = temp;
 				}
-			} else {
-				deployedShips.remove(shipType);
-				return res;
-			}
-
-		}
-
-		else if (y1 == y2) {
-			System.out.println("Y coordinates are same");
-			// if two Y are the same then the line is Horizontal
-
-			// count to check if all coordinated were placed successfully
-			int count = 0;
-			if (x1 > x2) {
-				int temp = x2;
-				x2 = x1;
-				x1 = temp;
-			}
-			String res = areHolesValid(x2 - x1 + 1, shipType);
-			if (res.equals("YES")) {
-				// increment the X values to set the ship location
-				for (int i = x1; i <= x2; i++) {
-					// sagar change
-					if ((y1 >= 0 && y1 < rows) && (x1 >= 0 && x1 < cols) && (x2 >= 0 && x2 < cols)
-							&& (userGrid[y1][i] == 0)) {
-						System.out.println("For coordinates " + y1 + " and " + i);
-						userGrid[y1][i] = 1;
-						count++;
-
-					} else if ((y1 >= 0 && y1 < rows) && (x1 >= 0 && x1 < cols) && (x2 >= 0 && x2 < cols)
-							&& userGrid[y1][i] == 1) {
-						deployedShips.remove(shipType);
-						return "ships cannot be placed on the same location";
+				String res = areHolesValid(x2 - x1 + 1, shipType);
+				if (res.equals("YES")) {
+					// increment the X values to set the ship location
+					for (int i = x1; i <= x2; i++) {
 						// sagar change
-					} else if ((x1 < 0 || x1 >= cols) || (x2 < 0 || x2 >= cols) || (y1 < 0 || y1 >= rows)) {
-						deployedShips.remove(shipType);
-						return "You can't place ships outside the " + rows + " by " + cols + " grid";
+						if ((y1 >= 0 && y1 < rows) && (x1 >= 0 && x1 < cols) && (x2 >= 0 && x2 < cols)
+								&& (userGrid[y1][i] == 0)) {
+							System.out.println("For coordinates " + y1 + " and " + i);
+							userGrid[y1][i] = 1;
+							count++;
+
+						} else if ((y1 >= 0 && y1 < rows) && (x1 >= 0 && x1 < cols) && (x2 >= 0 && x2 < cols)
+								&& userGrid[y1][i] == 1) {
+							deployedShips.remove(shipType);
+							return "ships cannot be placed on the same location";
+							// sagar change
+						} else if ((x1 < 0 || x1 >= cols) || (x2 < 0 || x2 >= cols) || (y1 < 0 || y1 >= rows)) {
+							deployedShips.remove(shipType);
+							return "You can't place ships outside the " + rows + " by " + cols + " grid";
+						}
+
 					}
 
+					if (((x2 + 1) - (x1 + 1)) + 1 == count) {
+						int[] coords = { x1, y1, x2, y2 };
+						// calling the function on front end to color the
+						// coordinates of the ship as required
+						shipObject.deployShipsWithColors(coords, shipType, "X");
+
+						numOfShipsDep++;
+						return "Done";
+					}
+
+				} else {
+					deployedShips.remove(shipType);
+					return res;
 				}
-
-				if (((x2 + 1) - (x1 + 1)) + 1 == count) {
-					int[] coords = { x1, y1, x2, y2 };
-					// calling the function on front end to color the
-					// coordinates of the ship as required
-					shipObject.deployShipsWithColors(coords, shipType, "X");
-
-					numOfShipsDep++;
-					return "Done";
-				}
-
-			} else {
-				deployedShips.remove(shipType);
-				return res;
 			}
-		}
 
-		else {// case when anything Diagonal
+			else {// case when anything Diagonal
+				deployedShips.remove(shipType);
+				return "Can not place ship Diagonal";
+
+			}
+
 			deployedShips.remove(shipType);
-			return "Can not place ship Diagonal";
-
+			// signifies some other error
+			return "Invalid input, please try again.";
+		} catch (Exception e) {
+			// e.printStackTrace();
+			return "Invalid input, please try again.";
 		}
-
-		deployedShips.remove(shipType);
-		// signifies some other error
-		return "Invalid input, please try again.";
-}
-catch(Exception e) {
-	//e.printStackTrace();
-	return "Invalid input, please try again.";
-}
 	}
-/**
- * This method places computer ships randomly
- * 
- * @author arsalaan
- */
+
+	/**
+	 * This method places computer ships randomly
+	 * 
+	 * @author arsalaan
+	 */
 	public void DeployComputerShips() {
 
 		try {
 			Random rand = new Random();
 			int carrierX = rand.nextInt(9);
 			int carrierY = rand.nextInt(11);
-			System.out.println("carrier -> v" + carrierX + ";" + carrierY );
+			System.out.println("carrier -> v" + carrierX + ";" + carrierY);
 			HashMap<Integer, Integer> Carrier = new HashMap<>();
 			Boolean placed = false;
 
@@ -239,10 +239,10 @@ catch(Exception e) {
 					carrierY = rand.nextInt(11);
 				}
 			}
-			
+
 			for (Map.Entry<Integer, Integer> entry : Carrier.entrySet()) {
 				computerGrid[entry.getValue()][entry.getKey()] = 1;
-				//computerGrid[entry.getKey()][entry.getValue()] = 1;
+				// computerGrid[entry.getKey()][entry.getValue()] = 1;
 
 			}
 
@@ -250,7 +250,7 @@ catch(Exception e) {
 			int battleShipY = rand.nextInt(11);
 
 			HashMap<Integer, Integer> BattleShip = new HashMap<>();
-			System.out.println("batt -> h" + battleShipX + ";" + battleShipY );
+			System.out.println("batt -> h" + battleShipX + ";" + battleShipY);
 			placed = false;
 			while (!placed) {
 				if (check(battleShipX, battleShipY, "vertical", 4)) {
@@ -273,16 +273,16 @@ catch(Exception e) {
 
 			for (Map.Entry<Integer, Integer> entry : BattleShip.entrySet()) {
 
-				 computerGrid[entry.getKey()][entry.getValue()] = 1;
-				//computerGrid[entry.getValue()][entry.getKey()] = 1;
+				computerGrid[entry.getKey()][entry.getValue()] = 1;
+				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}
 
 			int cruiserX = rand.nextInt(9);
 			int cruiserY = rand.nextInt(11);
 
-			System.out.println("cru -> h" + cruiserX + ";" + cruiserY );
-			
+			System.out.println("cru -> h" + cruiserX + ";" + cruiserY);
+
 			HashMap<Integer, Integer> Cruiser = new HashMap<>();
 			placed = false;
 			while (!placed) {
@@ -306,8 +306,8 @@ catch(Exception e) {
 
 			for (Map.Entry<Integer, Integer> entry : Cruiser.entrySet()) {
 
-				 computerGrid[entry.getKey()][entry.getValue()] = 1;
-				//computerGrid[entry.getValue()][entry.getKey()] = 1;
+				computerGrid[entry.getKey()][entry.getValue()] = 1;
+				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}
 
@@ -315,7 +315,7 @@ catch(Exception e) {
 			int subY = rand.nextInt(11);
 			HashMap<Integer, Integer> Submarine = new HashMap<>();
 
-			System.out.println("sub -> h" + subX + ";" + subY );
+			System.out.println("sub -> h" + subX + ";" + subY);
 			placed = false;
 			while (!placed) {
 				if (check(subX, subY, "vertical", 3)) {
@@ -337,17 +337,17 @@ catch(Exception e) {
 			}
 			for (Map.Entry<Integer, Integer> entry : Submarine.entrySet()) {
 
-				 computerGrid[entry.getKey()][entry.getValue()] = 1;
-				//computerGrid[entry.getValue()][entry.getKey()] = 1;
+				computerGrid[entry.getKey()][entry.getValue()] = 1;
+				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}
 
 			int destroyerX = rand.nextInt(9);
 			int destroyerY = rand.nextInt(11);
-			System.out.println("des -> v" + destroyerX + ";" + destroyerY );
-			
+			System.out.println("des -> v" + destroyerX + ";" + destroyerY);
+
 			HashMap<Integer, Integer> Destroyer = new HashMap<>();
-			
+
 			placed = false;
 			while (!placed) {
 				if (check(destroyerX, destroyerY, "horizontal", 2)) {
@@ -367,13 +367,11 @@ catch(Exception e) {
 					destroyerY = rand.nextInt(11);
 				}
 			}
-			
-			
 
 			for (Map.Entry<Integer, Integer> entry : Destroyer.entrySet()) {
 
 				computerGrid[entry.getValue()][entry.getKey()] = 1;
-				//computerGrid[entry.getKey()][entry.getValue()] = 1;
+				// computerGrid[entry.getKey()][entry.getValue()] = 1;
 
 			}
 
@@ -390,7 +388,6 @@ catch(Exception e) {
 			e.printStackTrace();
 			// System.out.println(print);
 		}
-
 
 	}
 
@@ -421,19 +418,19 @@ catch(Exception e) {
 			}
 
 		} else {
-			
-				if ((x + points) < 9) {
-					for (int j = 0; j < points; j++) {
-						if (computerGrid[x + j][y] != 0)
-							canPlace = false;
-					}
-				} else {
-					for (int j = 0; j < points; j++) {
-						if (computerGrid[x - j][y] != 0)
-							canPlace = false;
-					}
+
+			if ((x + points) < 9) {
+				for (int j = 0; j < points; j++) {
+					if (computerGrid[x + j][y] != 0)
+						canPlace = false;
 				}
-			
+			} else {
+				for (int j = 0; j < points; j++) {
+					if (computerGrid[x - j][y] != 0)
+						canPlace = false;
+				}
+			}
+
 		}
 
 		return canPlace;
@@ -613,32 +610,30 @@ catch(Exception e) {
 		return null;
 	}
 
-	
 	/**
 	 * function to see whether a particular ship is deployed or not
+	 * 
 	 * @param shipType
 	 * @return
 	 */
 	public boolean isShipDeployed(String shipType) {
-		
-		if(deployedShips.contains(shipType))
+
+		if (deployedShips.contains(shipType))
 			return true;
-		else if(deployedShips.isEmpty()) {
+		else if (deployedShips.isEmpty()) {
 			deployedShips.add(shipType);
 			return false;
-		}
-		else
+		} else
 			deployedShips.add(shipType);
-			return false;		
+		return false;
 	}
-	
+
 	public boolean areAllShipsDeployed() {
-		if(deployedShips.size() == 5)
+		if (deployedShips.size() == 5)
 			return true;
 		else
 			return false;
 	}
-	
 
 	public void Initialize() {
 		for (int i = 0; i < rows; i++) {
