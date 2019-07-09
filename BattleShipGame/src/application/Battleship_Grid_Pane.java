@@ -99,11 +99,10 @@ public class Battleship_Grid_Pane extends Application {
 			seeResultUser("User ");
 			seeResultComp("Computer ");
 			
-	
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
-				if(GridUser.numOfShipsDep == 1)
+				if(GridUser.numOfShipsDep == 5)
 				{
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
@@ -143,6 +142,8 @@ public class Battleship_Grid_Pane extends Application {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+
 
 	public void setUserRadarGrid() {
 		// System.out.println("here");
@@ -317,12 +318,11 @@ public class Battleship_Grid_Pane extends Application {
 		MenuItem menu1Item1 = new MenuItem("Start new game");
 		MenuItem menu1Item2 = new MenuItem("Exit");
 		
-		//prtk
 		menu1Item1.setOnAction(e -> {
-			
-
+			stage.close();
+			start(new Stage());
+			ob.reInitialize();	
 		});
-
 
 		menu1Item2.setOnAction(e -> {
 			Boolean res = ConfirmBox.display("Confirmation box", "Are you sure?");
@@ -351,8 +351,6 @@ public class Battleship_Grid_Pane extends Application {
 		place_ship.getItems().add(Destroyer);
 
 		menu2.getItems().add(place_ship);
-
-		//GridUser ob = new GridUser();
 
 		Carrier.setOnAction(e -> {
 
