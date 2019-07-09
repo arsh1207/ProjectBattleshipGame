@@ -101,7 +101,7 @@ public class Battleship_Grid_Pane extends Application {
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
-				if(GridUser.numOfShipsDep == 1)
+				if(GridUser.numOfShipsDep == 5)
 				{
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
@@ -223,19 +223,6 @@ public class Battleship_Grid_Pane extends Application {
 	public void setUserShipGrid() {
 		// System.out.println("here");
 
-		Rectangle carrier1 = new Rectangle(20, 30, Color.BLUE);
-		
-		carrier1.setArcHeight(20.0d); 
-		carrier1.setArcWidth(20.0d); 
-		
-		Rectangle carrier2 = new Rectangle(20, 30, Color.BLUE);
-		Rectangle carrier3 = new Rectangle(20, 30, Color.BLUE);
-		Rectangle carrier4 = new Rectangle(20, 30, Color.BLUE);
-		Rectangle carrier5 = new Rectangle(20, 30, Color.BLUE);
-
-		Rectangle battleship1 = new Rectangle(20, 30, Color.BROWN);
-		Rectangle battleship2 = new Rectangle(20, 30, Color.BROWN);
-
 		double r = 7.5;
 		Text t = new Text("Ship Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
@@ -249,14 +236,7 @@ public class Battleship_Grid_Pane extends Application {
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
 
-		// prtk
-		/*
-		 * g_pane.add(carrier1, 2, 15); g_pane.add(carrier2, 3, 15);
-		 * g_pane.add(carrier3, 4, 15); g_pane.add(carrier4, 5, 15);
-		 * g_pane.add(carrier5, 6, 15);
-		 * 
-		 * g_pane.add(battleship1, 5, 13); g_pane.add(battleship2, 5, 12);
-		 */ 
+		
 
 		// initializing the radar grid buttons of 9*11 size
 		// so that they can be accessed via ID
@@ -350,15 +330,15 @@ public class Battleship_Grid_Pane extends Application {
 		menu1.getItems().add(menu1Item2);
 
 		Menu place_ship = new Menu("Place");
-		MenuItem Carrier = new MenuItem("Carrier");
+		MenuItem Carrier = new MenuItem("Carrier (5)");
 		Carrier.setGraphic(new ImageView("file:images/blue1.png"));
-		MenuItem Battleship = new MenuItem("Battleship");
+		MenuItem Battleship = new MenuItem("Battleship (4)");
 		Battleship.setGraphic(new ImageView("file:images/brown.png"));
-		MenuItem Cruiser = new MenuItem("Cruiser");
+		MenuItem Cruiser = new MenuItem("Cruiser (3)");
 		Cruiser.setGraphic(new ImageView("file:images/green.png"));
-		MenuItem Submarine = new MenuItem("Submarine");
+		MenuItem Submarine = new MenuItem("Submarine (3)");
 		Submarine.setGraphic(new ImageView("file:images/orange.png"));
-		MenuItem Destroyer = new MenuItem("Destroyer");
+		MenuItem Destroyer = new MenuItem("Destroyer (2)");
 		Destroyer.setGraphic(new ImageView("file:images/yellow.png"));
 		place_ship.getItems().add(Carrier);
 		place_ship.getItems().add(Battleship);
@@ -376,36 +356,102 @@ public class Battleship_Grid_Pane extends Application {
 			// user related to
 			// input format
 
-			String res = InputBox.display("Carrier ship");
-			System.out.println(res);
-			String value = ob.DeployUserGrid(res, "Carrier");
-			System.out.println(value);
+			if(!ob.areAllShipsDeployed()) {
+				if(!ob.isShipDeployed("Carrier")) {
+					String res = InputBox.display("Carrier ship");
+					System.out.println(res);
+					String value = ob.DeployUserGrid(res, "Carrier");
+					if(!(value.equals("Done"))) {
+						AlertBox.displayError("Carrier", value);
+					}
+					System.out.println(value);
+				}
+				else {
+					AlertBox.displayError("Carrier", "Already Deployed!");
+				}
+			}
+			else {
+				AlertBox.displayError("Carrier", "All Ships Deployed!");
+			}
 			//seeResult(ob.DeployUserGrid(res));
 
 		});
 		Battleship.setOnAction(e -> {
 
-			String res = InputBox.display("Battleship");
-			String value = ob.DeployUserGrid(res, "Battleship");
-			System.out.println(value);
+			if(!ob.areAllShipsDeployed()) {
+				if(!ob.isShipDeployed("Battleship")) {
+					String res = InputBox.display("Battleship");
+					String value = ob.DeployUserGrid(res, "Battleship");
+					if(!(value.equals("Done"))) {
+						AlertBox.displayError("Battleship", value);
+					}
+					System.out.println(value);
+				}
+				else {
+					AlertBox.displayError("Battleship", "Already Deployed!");
+				}
+			}
+			else {
+				AlertBox.displayError("Battleship", "All Ships Deployed!");
+			}
 			//seeResult(ob.DeployUserGrid(res));
 		});
 		Cruiser.setOnAction(e -> {
-			String res = InputBox.display(" Cruiser ");
-			String value = ob.DeployUserGrid(res, "Cruiser");
-			System.out.println(value);
+			
+			if(!ob.areAllShipsDeployed()) {
+				if(!ob.isShipDeployed("Cruiser")) {
+					String res = InputBox.display("Cruiser");
+					String value = ob.DeployUserGrid(res, "Cruiser");
+					if(!(value.equals("Done"))) {
+						AlertBox.displayError("Cruiser", value);
+					}
+					System.out.println(value);
+				}
+				else {
+					AlertBox.displayError("Cruiser", "Already Deployed!");
+				}
+			}
+			else {
+				AlertBox.displayError("Cruiser", "All Ships Deployed!");
+			}
 			//seeResult(ob.DeployUserGrid(res));
 		});
 		Submarine.setOnAction(e -> {
-			String res = InputBox.display("Submarine");
-			String value = ob.DeployUserGrid(res, "Submarine");
-			System.out.println(value);
+			if(!ob.areAllShipsDeployed()) {
+				if(!ob.isShipDeployed("Submarine")) {
+					String res = InputBox.display("Submarine");
+					String value = ob.DeployUserGrid(res, "Submarine");
+					if(!(value.equals("Done"))) {
+						AlertBox.displayError("Submarine", value);
+					}
+					System.out.println(value);
+				}
+				else {
+					AlertBox.displayError("Submarine", "Already Deployed!");
+				}
+			}
+			else {
+				AlertBox.displayError("Submarine", "All Ships Deployed!");
+			}
 			//seeResult(ob.DeployUserGrid(res));
 		});
 		Destroyer.setOnAction(e -> {
-			String res = InputBox.display("Destroyer");
-			String value = ob.DeployUserGrid(res, "Destroyer");
-			System.out.println(value);
+			if(!ob.areAllShipsDeployed()) {
+				if(!ob.isShipDeployed("Destroyer")) {
+					String res = InputBox.display("Destroyer");
+					String value = ob.DeployUserGrid(res, "Destroyer");
+					if(!(value.equals("Destroyer"))) {
+						AlertBox.displayError("Destroyer", value);
+					}
+					System.out.println(value);
+				}
+				else {
+					AlertBox.displayError("Destroyer", "Already Deployed!");
+				}
+			}
+			else {
+				AlertBox.displayError("Destroyer", "All Ships Deployed!");
+			}
 			//seeResult(ob.DeployUserGrid(res));
 		});
 
@@ -489,13 +535,10 @@ public class Battleship_Grid_Pane extends Application {
 	 */
 	public void colorShipYCoords(int[] coords, String color) {
 
-		/*
-		 * Rectangle shp = new Rectangle(20, 30, Color.BLUE);
-		 * shp.setArcHeight(20.0d); shp.setArcWidth(20.0d);
-		 */
 
 		for(int i = coords[1]; i <= coords[3]; i++) {
 			userButton[i][coords[0]].setStyle("-fx-background-color: "+color+"; ");
+			 
 		}
 	}
 	

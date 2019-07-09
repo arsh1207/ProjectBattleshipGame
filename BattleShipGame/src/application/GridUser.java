@@ -1,6 +1,8 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -14,10 +16,12 @@ public class GridUser {
 	Battleship_Grid_Pane shipObject;
 
 	public static int numOfShipsDep = 0;
-
+	
 	public static int rows = 9;
 	public static int cols = 11;
 
+	public static boolean Userwon = false;
+	public static boolean Compwon = false;
 
 	// original Grid that remains unchanged throughout the game
 	public static Integer[][] userGrid = new Integer[rows][cols];
@@ -28,6 +32,8 @@ public class GridUser {
 	public static Integer[][] ChangedUserGrid = new Integer[rows][cols];
 
 	public static Integer[][] ChangedComputerGrid = new Integer[rows][cols];
+	
+	static List<String> deployedShips = new ArrayList<>();
 
 	public static HashMap<String, Integer> convert = new HashMap<>();
 
@@ -53,8 +59,7 @@ public class GridUser {
 		convert.put("I", 8);
 		convert.put("J", 9);
 		convert.put("K", 10);
-		
-		
+
 		convert.put("a", 0);
 		convert.put("b", 1);
 		convert.put("c", 2);
@@ -70,7 +75,8 @@ public class GridUser {
 	}
 
 	public String DeployUserGrid(String coordinates, String shipType) {
-
+		
+try {
 		String str[] = coordinates.split("\\s");
 
 		int x1 = convert.get(str[0]);
@@ -108,9 +114,11 @@ public class GridUser {
 
 					} else if ((x1 >= 0 && x1 < cols) && (y1 >= 0 && y1 < rows) && (y2 >= 0 && y2 < rows)
 							&& userGrid[i][x1] == 1) {
+						deployedShips.remove(shipType);
 						return "ships cannot be placed on the same location";
 						// sagar change
 					} else if ((y1 < 0 || y1 >= rows) || (y2 < 0 || y2 >= rows) || (x1 < 0 || x1 >= cols)) {
+						deployedShips.remove(shipType);
 						return "You can't place ships outside the " + rows + " by " + cols + " grid";
 					}
 
@@ -127,6 +135,7 @@ public class GridUser {
 					return "Done";
 				}
 			} else {
+				deployedShips.remove(shipType);
 				return res;
 			}
 
@@ -156,10 +165,13 @@ public class GridUser {
 
 					} else if ((y1 >= 0 && y1 < rows) && (x1 >= 0 && x1 < cols) && (x2 >= 0 && x2 < cols)
 							&& userGrid[y1][i] == 1) {
+						deployedShips.remove(shipType);
 						return "ships cannot be placed on the same location";
 						// sagar change
-					} else if ((x1 < 0 || x1 >= cols) || (x2 < 0 || x2 >= cols) || (y1 < 0 || y1 >= rows))
+					} else if ((x1 < 0 || x1 >= cols) || (x2 < 0 || x2 >= cols) || (y1 < 0 || y1 >= rows)) {
+						deployedShips.remove(shipType);
 						return "You can't place ships outside the " + rows + " by " + cols + " grid";
+					}
 
 				}
 
@@ -169,91 +181,262 @@ public class GridUser {
 					// coordinates of the ship as required
 					shipObject.deployShipsWithColors(coords, shipType, "X");
 
+					numOfShipsDep++;
 					return "Done";
 				}
 
 			} else {
+				deployedShips.remove(shipType);
 				return res;
 			}
 		}
 
 		else {// case when anything Diagonal
+			deployedShips.remove(shipType);
 			return "Can not place ship Diagonal";
 
 		}
 
+		deployedShips.remove(shipType);
 		// signifies some other error
-		return "Some other error";
+		return "Invalid input, please try again.";
+}
+catch(Exception e) {
+	//e.printStackTrace();
+	return "Invalid input, please try again.";
+}
+	}
+/**
+ * This method places computer ships randomly
+ * 
+ * @author arsalaan
+ */
+	public void DeployComputerShips() {
+
+		try {
+			Random rand = new Random();
+			int carrierX = rand.nextInt(9);
+			int carrierY = rand.nextInt(11);
+			System.out.println("carrier -> v" + carrierX + ";" + carrierY );
+			HashMap<Integer, Integer> Carrier = new HashMap<>();
+			Boolean placed = false;
+
+			while (!placed) {
+				if (check(carrierX, carrierY, "horizontal", 5)) {
+					if ((carrierY + 5) <= 11) {
+
+						for (int i = 0; i < 5; i++) {
+							Carrier.put((carrierY + i), carrierX);
+						}
+					} else {
+						for (int i = 0; i < 5; i++) {
+							Carrier.put((carrierY - i), carrierX);
+						}
+					}
+					placed = true;
+				} else {
+					carrierX = rand.nextInt(9);
+					carrierY = rand.nextInt(11);
+				}
+			}
+			
+			for (Map.Entry<Integer, Integer> entry : Carrier.entrySet()) {
+				computerGrid[entry.getValue()][entry.getKey()] = 1;
+				//computerGrid[entry.getKey()][entry.getValue()] = 1;
+
+			}
+
+			int battleShipX = rand.nextInt(9);
+			int battleShipY = rand.nextInt(11);
+
+			HashMap<Integer, Integer> BattleShip = new HashMap<>();
+			System.out.println("batt -> h" + battleShipX + ";" + battleShipY );
+			placed = false;
+			while (!placed) {
+				if (check(battleShipX, battleShipY, "vertical", 4)) {
+					if ((battleShipX + 4) < 9) {
+
+						for (int i = 0; i < 4; i++) {
+							BattleShip.put((battleShipX + i), battleShipY);
+						}
+					} else {
+						for (int i = 0; i < 4; i++) {
+							BattleShip.put((battleShipX - i), battleShipY);
+						}
+					}
+					placed = true;
+				} else {
+					battleShipX = rand.nextInt(9);
+					battleShipY = rand.nextInt(11);
+				}
+			}
+
+			for (Map.Entry<Integer, Integer> entry : BattleShip.entrySet()) {
+
+				 computerGrid[entry.getKey()][entry.getValue()] = 1;
+				//computerGrid[entry.getValue()][entry.getKey()] = 1;
+
+			}
+
+			int cruiserX = rand.nextInt(9);
+			int cruiserY = rand.nextInt(11);
+
+			System.out.println("cru -> h" + cruiserX + ";" + cruiserY );
+			
+			HashMap<Integer, Integer> Cruiser = new HashMap<>();
+			placed = false;
+			while (!placed) {
+				if (check(cruiserX, cruiserY, "vertical", 3)) {
+					if ((cruiserX + 3) < 9) {
+
+						for (int i = 0; i < 3; i++) {
+							Cruiser.put((cruiserX + i), cruiserY);
+						}
+					} else {
+						for (int i = 0; i < 3; i++) {
+							Cruiser.put((cruiserX - i), cruiserY);
+						}
+					}
+					placed = true;
+				} else {
+					cruiserX = rand.nextInt(9);
+					cruiserY = rand.nextInt(11);
+				}
+			}
+
+			for (Map.Entry<Integer, Integer> entry : Cruiser.entrySet()) {
+
+				 computerGrid[entry.getKey()][entry.getValue()] = 1;
+				//computerGrid[entry.getValue()][entry.getKey()] = 1;
+
+			}
+
+			int subX = rand.nextInt(9);
+			int subY = rand.nextInt(11);
+			HashMap<Integer, Integer> Submarine = new HashMap<>();
+
+			System.out.println("sub -> h" + subX + ";" + subY );
+			placed = false;
+			while (!placed) {
+				if (check(subX, subY, "vertical", 3)) {
+					if ((subX + 3) < 9) {
+
+						for (int i = 0; i < 3; i++) {
+							Submarine.put((subX + i), subY);
+						}
+					} else {
+						for (int i = 0; i < 3; i++) {
+							Submarine.put((subX - i), subY);
+						}
+					}
+					placed = true;
+				} else {
+					subX = rand.nextInt(9);
+					subY = rand.nextInt(11);
+				}
+			}
+			for (Map.Entry<Integer, Integer> entry : Submarine.entrySet()) {
+
+				 computerGrid[entry.getKey()][entry.getValue()] = 1;
+				//computerGrid[entry.getValue()][entry.getKey()] = 1;
+
+			}
+
+			int destroyerX = rand.nextInt(9);
+			int destroyerY = rand.nextInt(11);
+			System.out.println("des -> v" + destroyerX + ";" + destroyerY );
+			
+			HashMap<Integer, Integer> Destroyer = new HashMap<>();
+			
+			placed = false;
+			while (!placed) {
+				if (check(destroyerX, destroyerY, "horizontal", 2)) {
+					if ((destroyerY + 2) < 11) {
+
+						for (int i = 0; i < 2; i++) {
+							Destroyer.put((destroyerY + i), destroyerX);
+						}
+					} else {
+						for (int i = 0; i < 2; i++) {
+							Destroyer.put((destroyerY - i), destroyerX);
+						}
+					}
+					placed = true;
+				} else {
+					destroyerX = rand.nextInt(9);
+					destroyerY = rand.nextInt(11);
+				}
+			}
+			
+			
+
+			for (Map.Entry<Integer, Integer> entry : Destroyer.entrySet()) {
+
+				computerGrid[entry.getValue()][entry.getKey()] = 1;
+				//computerGrid[entry.getKey()][entry.getValue()] = 1;
+
+			}
+
+			for (int i = 0; i < 9; i++) {
+				for (int j = 0; j < 11; j++) {
+					System.out.print(computerGrid[i][j]);
+				}
+				System.out.println();
+			}
+
+			// set the computerGrid to be changed grid
+			ChangedComputerGrid = computerGrid;
+		} catch (Exception e) {
+			e.printStackTrace();
+			// System.out.println(print);
+		}
+
 
 	}
 
-	public void DeployComputerShips() {
+	/**
+	 * This method checks if a ship can be placed over the computer grid.
+	 * 
+	 * @author arsalaan
+	 * 
+	 * @param x
+	 * @param y
+	 * @param direction
+	 * @param points
+	 * @return canPlace
+	 */
+	public Boolean check(int x, int y, String direction, int points) {
+		Boolean canPlace = true;
+		if (direction.equals("horizontal")) {
+			if ((y + points) < 11) {
+				for (int j = 0; j < points; j++) {
+					if (computerGrid[x][y + j] != 0)
+						canPlace = false;
+				}
+			} else {
+				for (int j = 0; j < points; j++) {
+					if (computerGrid[x][y - j] != 0)
+						canPlace = false;
+				}
+			}
 
-		HashMap<Integer, Integer> Carrier = new HashMap<>();
-
-		Carrier.put(0, 7);
-		Carrier.put(1, 7);
-		Carrier.put(2, 7);
-		Carrier.put(3, 7);
-		Carrier.put(4, 7);
-
-		// arsalaan change (swapped key and values)
-		HashMap<Integer, Integer> BattleShip = new HashMap<>();
-		BattleShip.put(0, 0);
-		BattleShip.put(1, 0);
-		BattleShip.put(2, 0);
-		BattleShip.put(3, 0);
-
-		HashMap<Integer, Integer> Cruiser = new HashMap<>();
-		Cruiser.put(1, 2);
-		Cruiser.put(2, 2);
-		Cruiser.put(3, 2);
-
-		// arsalaan change
-		HashMap<Integer, Integer> Submarine = new HashMap<>();
-		Submarine.put(4, 5);
-		Submarine.put(5, 5);
-		Submarine.put(6, 5);
-
-		// arsalaan change
-		HashMap<Integer, Integer> Destroyer = new HashMap<>();
-		Destroyer.put(5, 8);
-		Destroyer.put(6, 8);
-
-		for (Map.Entry<Integer, Integer> entry : Carrier.entrySet()) {
-
-			computerGrid[entry.getKey()][entry.getValue()] = 1;
-
+		} else {
+			
+				if ((x + points) < 9) {
+					for (int j = 0; j < points; j++) {
+						if (computerGrid[x + j][y] != 0)
+							canPlace = false;
+					}
+				} else {
+					for (int j = 0; j < points; j++) {
+						if (computerGrid[x - j][y] != 0)
+							canPlace = false;
+					}
+				}
+			
 		}
 
-		for (Map.Entry<Integer, Integer> entry : BattleShip.entrySet()) {
-
-			// computerGrid[entry.getKey()][entry.getValue()] = 1;
-			computerGrid[entry.getValue()][entry.getKey()] = 1;
-
-		}
-
-		for (Map.Entry<Integer, Integer> entry : Cruiser.entrySet()) {
-
-			computerGrid[entry.getKey()][entry.getValue()] = 1;
-
-		}
-
-		for (Map.Entry<Integer, Integer> entry : Submarine.entrySet()) {
-
-			computerGrid[entry.getValue()][entry.getKey()] = 1;
-
-		}
-
-		for (Map.Entry<Integer, Integer> entry : Destroyer.entrySet()) {
-
-			computerGrid[entry.getValue()][entry.getKey()] = 1;
-
-		}
-
-		// set the computerGrid to be changed grid
-		ChangedComputerGrid = computerGrid;
-
+		return canPlace;
 	}
 
 	/**
@@ -262,10 +445,14 @@ public class GridUser {
 	 * 
 	 * @return
 	 */
+
 	public String Userturn(int x, int y) {
 
-		System.out.println("reached here" + x + "; " + y);
+		// get the X and y coordinate from the input
+//		int x = 0;
 
+		// int y = 0;
+		System.out.println("reached here" + x + "; " + y);
 		if (ChangedComputerGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
 
@@ -285,8 +472,6 @@ public class GridUser {
 
 		// check if User won or computer won
 		CheckIfUserWon();
-
-		// call the computer for its turn
 		Computerturn();
 
 		// some other case or error
@@ -299,15 +484,12 @@ public class GridUser {
 	 * 
 	 * @return
 	 */
+
 	public String Computerturn() {
+		// get the X and y coordinate from the input
+		int x = 0;
 
-		
-		System.out.println("inside the Computer turn");
-		Random ran = new Random();
-		// randomly generate the values to hit on the User grid
-		int x = ran.nextInt(9);
-
-		int y = ran.nextInt(11);
+		int y = 0;
 
 		if (ChangedUserGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
@@ -336,14 +518,13 @@ public class GridUser {
 
 	/**
 	 * checks both the grid of the User and the computer to verify if they won or
-	 * not sets the static flag true if User wins
+	 * not sets the static flag true if someone wins
 	 * 
 	 * @return
 	 */
 
 	public void CheckIfUserWon() {
 
-		System.out.println("Check if user won");
 		boolean flaguser = false;
 
 		// check the computer grid if all the 1 are converted to 2
@@ -362,7 +543,7 @@ public class GridUser {
 
 		if (!flaguser) {// set that user has won
 
-			AlertBox.displayResult("Game Over", "User has Won the Game");
+			Userwon = true;
 		} else {
 			// do nothing
 
@@ -370,12 +551,6 @@ public class GridUser {
 
 	}
 
-	/**
-	 * 
-	 * checks if the Computer has won If yes then calls the View for display
-	 * 
-	 * 
-	 */
 	public void CheckIfCompWon() {
 
 		boolean flagcomp = false;
@@ -396,21 +571,13 @@ public class GridUser {
 
 		if (!flagcomp) {// set that user has won
 
-			AlertBox.displayResult("Game Over", "AI has won the game!!!!");
+			Compwon = true;
 		} else {
 			// do nothing
 
 		}
 
 	}
-
-	/**
-	 * Based on the Ship type check if the shape are of the specified size
-	 * 
-	 * @param diff
-	 * @param shipType
-	 * @return
-	 */
 
 	public String areHolesValid(int diff, String shipType) {
 		if (shipType.equals("Carrier")) {
@@ -446,10 +613,33 @@ public class GridUser {
 		return null;
 	}
 
+	
 	/**
-	 * Initializes the grid of user and computer to zero
-	 * 
+	 * function to see whether a particular ship is deployed or not
+	 * @param shipType
+	 * @return
 	 */
+	public boolean isShipDeployed(String shipType) {
+		
+		if(deployedShips.contains(shipType))
+			return true;
+		else if(deployedShips.isEmpty()) {
+			deployedShips.add(shipType);
+			return false;
+		}
+		else
+			deployedShips.add(shipType);
+			return false;		
+	}
+	
+	public boolean areAllShipsDeployed() {
+		if(deployedShips.size() == 5)
+			return true;
+		else
+			return false;
+	}
+	
+
 	public void Initialize() {
 		for (int i = 0; i < rows; i++) {
 
@@ -464,25 +654,5 @@ public class GridUser {
 		}
 
 	}
-	
-	/**
-	 * Reinitializes the grid of user and computer to zero
-	 * 
-	 */
-	public void ReInitialize() {
-		for (int i = 0; i < rows; i++) {
-
-			for (int j = 0; j < cols; j++) {
-
-				userGrid[i][j] = 0;
-				computerGrid[i][j] = 0;
-				ChangedUserGrid[i][j] = 0;
-				ChangedComputerGrid[i][j] = 0;
-
-			}
-		}
-
-	}
-
 
 }
