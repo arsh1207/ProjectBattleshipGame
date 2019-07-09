@@ -521,6 +521,7 @@ public class GridUser {
 	 */
 
 	public void checkIfUserWon() {
+		System.out.println("Checking if user won");
 
 		boolean flaguser = false;
 
@@ -539,6 +540,7 @@ public class GridUser {
 		}
 
 		if (!flaguser) {// set that user has won
+			System.out.println("User has won");
 
 			AlertBox.displayResult("Hurray!!","User has Won ");
 		} else {
@@ -549,6 +551,7 @@ public class GridUser {
 	}
 
 	public void CheckIfCompWon() {
+		System.out.println("Checking if comp won");
 
 		boolean flagcomp = false;
 
@@ -567,6 +570,7 @@ public class GridUser {
 		}
 
 		if (!flagcomp) {// set that user has won
+			System.out.println("Com won");
 
 			AlertBox.displayResult("Hurray!!","AI has Won ");
 		} else {
@@ -666,6 +670,7 @@ public class GridUser {
 		DeployComputerShips();
 		
 		numOfShipsDep = 0;
+		deployedShips = new ArrayList<>();
 		
 		// set the hashMap for conversion
 		convert.put("A", 0);
