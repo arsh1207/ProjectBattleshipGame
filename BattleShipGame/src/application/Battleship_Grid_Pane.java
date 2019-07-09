@@ -72,7 +72,7 @@ public class Battleship_Grid_Pane extends Application {
 			imageView.setPreserveRatio(true);
 			
 			Battleship_Grid_Pane obj = new Battleship_Grid_Pane();
-
+			//String ar[] = null;
 			MenuBar menuBar = obj.battleMenu(v_box1, stage);
 
 			// g_pane.setStyle("-fx-background-color: #35E7DB;");
