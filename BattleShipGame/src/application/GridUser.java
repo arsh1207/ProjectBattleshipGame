@@ -54,6 +54,18 @@ public class GridUser {
 		convert.put("I", 8);
 		convert.put("J", 9);
 		convert.put("K", 10);
+		
+		convert.put("a", 0);
+		convert.put("b", 1);
+		convert.put("c", 2);
+		convert.put("d", 3);
+		convert.put("e", 4);
+		convert.put("f", 5);
+		convert.put("g", 6);
+		convert.put("h", 7);
+		convert.put("i", 8);
+		convert.put("j", 9);
+		convert.put("k", 10);
 
 	}
 
@@ -278,7 +290,8 @@ public class GridUser {
 
 		// check if User won or computer won
 		CheckIfUserWon();
-
+		Computerturn();
+		
 		// some other case or error
 		return "Some other error";
 
@@ -315,6 +328,7 @@ public class GridUser {
 
 		// check if User won or computer won
 		CheckIfCompWon();
+		
 
 		// some other case or error
 		return " ";

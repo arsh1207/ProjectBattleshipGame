@@ -101,7 +101,7 @@ public class Battleship_Grid_Pane extends Application {
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
-				if(GridUser.numOfShipsDep == 1)
+				if(GridUser.numOfShipsDep == 5)
 				{
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
@@ -336,15 +336,15 @@ public class Battleship_Grid_Pane extends Application {
 		menu1.getItems().add(menu1Item2);
 
 		Menu place_ship = new Menu("Place");
-		MenuItem Carrier = new MenuItem("Carrier");
+		MenuItem Carrier = new MenuItem("Carrier (5)");
 		Carrier.setGraphic(new ImageView("file:images/blue1.png"));
-		MenuItem Battleship = new MenuItem("Battleship");
+		MenuItem Battleship = new MenuItem("Battleship (4)");
 		Battleship.setGraphic(new ImageView("file:images/brown.png"));
-		MenuItem Cruiser = new MenuItem("Cruiser");
+		MenuItem Cruiser = new MenuItem("Cruiser (3)");
 		Cruiser.setGraphic(new ImageView("file:images/green.png"));
-		MenuItem Submarine = new MenuItem("Submarine");
+		MenuItem Submarine = new MenuItem("Submarine (3)");
 		Submarine.setGraphic(new ImageView("file:images/orange.png"));
-		MenuItem Destroyer = new MenuItem("Destroyer");
+		MenuItem Destroyer = new MenuItem("Destroyer (2)");
 		Destroyer.setGraphic(new ImageView("file:images/yellow.png"));
 		place_ship.getItems().add(Carrier);
 		place_ship.getItems().add(Battleship);
