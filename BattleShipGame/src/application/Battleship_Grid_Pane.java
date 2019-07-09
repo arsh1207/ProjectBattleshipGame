@@ -250,15 +250,13 @@ public class Battleship_Grid_Pane extends Application {
 		// placing the buttons or holes on the grid
 		for (; rowButtonCount < 21; rowButtonCount += 1) {
 			columnButtonCount = 1;
+			//System.out.println("Buttons "+buttonRowIndex+" initialized in "+rowButtonCount);
 			// columnButtonCount = 0; columnButtonCount < 11; columnButtonCount += 1
 			for (Button b : userButton[buttonRowIndex]) {
 				b.setStyle("-fx-background-color: #000000; ");
 				b.setShape(new Circle(r));
 				b.setMinSize(2 * r, 2 * r);
 				b.setMaxSize(2 * r, 2 * r);
-				b.setOnAction((ActionEvent event) -> {
-					b.setStyle("-fx-background-color: #FFFFFF; ");
-				});
 				g_pane.add(b, columnButtonCount, rowButtonCount);
 				columnButtonCount++;
 			}
@@ -532,6 +530,12 @@ public class Battleship_Grid_Pane extends Application {
 			if(shipType.equals("Destroyer"))
 				colorShipXCoords(coords, "#FFFF00");
 		}
+	}
+	
+	public void setUserShipCoordinates(int x, int y) {
+		
+		System.out.println("Coordinates: "+x+" "+y);
+		
 	}
 	
 	/**
