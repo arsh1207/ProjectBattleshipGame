@@ -526,16 +526,18 @@ public class GridUser {
 		System.out.println("Checking if user won");
 
 		boolean flaguser = false;
+		//int counter = 0;
 
 		// check the computer grid if all the 1 are converted to 2
 		for (int i = 0; i < rows; i++) {
 
 			for (int j = 0; j < cols; j++) {
 
-				if (!(computerGrid[i][j] == 1 && ChangedComputerGrid[i][j] == 2)) {
+				if (ChangedComputerGrid[i][j] == 1) {
 					// set the flag as true
 					flaguser = true;
-
+					//counter++;
+					//System.out.println("user counter "+ counter);
 				}
 
 			}
@@ -556,15 +558,18 @@ public class GridUser {
 		System.out.println("Checking if comp won");
 
 		boolean flagcomp = false;
+		//int counter = 0;
 
 		// check the computer grid if all the 1 are converted to 2
 		for (int i = 0; i < rows; i++) {
 
 			for (int j = 0; j < cols; j++) {
 
-				if (!(userGrid[i][j] == 1 && ChangedUserGrid[i][j] == 2)) {
+				if (ChangedUserGrid[i][j] == 1) {
 					// set the flag as true
 					flagcomp = true;
+					//counter++;
+					//System.out.println("comp counter "+ counter);
 
 				}
 
