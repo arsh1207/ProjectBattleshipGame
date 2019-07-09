@@ -1,4 +1,6 @@
 /**
+ * This class takes 4 inputs from user.
+ * 
  * @author arsalaan
  */
 

@@ -1,6 +1,10 @@
 package application;
 
-
+/**
+ * This class contains function display which serves a purpose of confirming an input from user.
+ * 
+ * @author arsalaan
+ */
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
