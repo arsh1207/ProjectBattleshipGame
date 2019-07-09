@@ -34,7 +34,7 @@ import javafx.stage.Stage;
 public class Battleship_Grid_Pane extends Application {
 
 	
-	GridUser ob ;
+	static GridUser ob ;
 	Scene scene1;
 	Scene scene2;
 	GridPane g_pane;
@@ -530,9 +530,15 @@ public class Battleship_Grid_Pane extends Application {
 		}
 	}
 	
-	public void setUserShipCoordinates(int x, int y) {
+	public static void setUserShipCoordinates(int x, int y, String res) {
+		
+		GridUser.displayUserShips();
 		
 		System.out.println("Coordinates: "+x+" "+y);
+		if(res.equals("Miss"))
+			userButton[x][y].setStyle("-fx-background-color: #FFFFFF; ");
+		else if(res.equals("Hit"))
+			userButton[x][y].setStyle("-fx-background-color: #ff1100; ");
 		
 	}
 	
