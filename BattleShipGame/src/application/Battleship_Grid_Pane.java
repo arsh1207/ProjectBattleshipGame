@@ -1,6 +1,7 @@
 package application;
 
 import java.io.FileInputStream;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
@@ -13,7 +14,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -25,7 +25,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -34,6 +33,8 @@ import javafx.stage.Stage;
 
 public class Battleship_Grid_Pane extends Application {
 
+	
+	GridUser ob ;
 	Scene scene1;
 	Scene scene2;
 	GridPane g_pane;
@@ -52,6 +53,7 @@ public class Battleship_Grid_Pane extends Application {
 			Stage stage = primarystage;
 			stage.setTitle(" Battle Ship Game");
 
+			ob= new GridUser();
 			launchStartupWindow(stage);
 
 			radarButton = new Button[9][11];
@@ -101,7 +103,7 @@ public class Battleship_Grid_Pane extends Application {
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
-				if(GridUser.numOfShipsDep == 5)
+				if(GridUser.numOfShipsDep == 1)
 				{
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
@@ -150,7 +152,7 @@ public class Battleship_Grid_Pane extends Application {
 		rowButtonCount = 0;
 		columnButtonCount = 0;
 		g_pane.add(t, columnButtonCount, rowButtonCount);
-		GridUser ob = new GridUser();
+		//GridUser ob = new GridUser();
 		for (rowButtonCount = 10; rowButtonCount >= 1; rowButtonCount--) {
 			int ch = 10;
 			Text text1 = new Text(Integer.toString(ch - rowButtonCount));
@@ -189,18 +191,15 @@ public class Battleship_Grid_Pane extends Application {
 					else if(res.contains("Hit"))
 						b.setStyle("-fx-background-color: #ff1100; ");
 					
-				
+					//checks if User has Won
+					ob.checkIfUserWon();
 					
 					//changed prateek
 					String compres = ob.Computerturn();
 					//System.out.println("After hit :" + res);
 					resulttext1.setText(compres);
-					if(compres.contains("miss"))
-						b.setStyle("-fx-background-color: #FFFFFF; ");
-					else if(compres.contains("Hit"))
-						b.setStyle("-fx-background-color: #ff1100; ");
-					
-					//add the 
+					//Checks if AI has won
+					ob.CheckIfCompWon();
 
 
 				});
@@ -319,6 +318,13 @@ public class Battleship_Grid_Pane extends Application {
 
 		MenuItem menu1Item1 = new MenuItem("Start new game");
 		MenuItem menu1Item2 = new MenuItem("Exit");
+		
+		//prtk
+		menu1Item1.setOnAction(e -> {
+			
+
+		});
+
 
 		menu1Item2.setOnAction(e -> {
 			Boolean res = ConfirmBox.display("Confirmation box", "Are you sure?");
@@ -348,7 +354,7 @@ public class Battleship_Grid_Pane extends Application {
 
 		menu2.getItems().add(place_ship);
 
-		GridUser ob = new GridUser();
+		//GridUser ob = new GridUser();
 
 		Carrier.setOnAction(e -> {
 

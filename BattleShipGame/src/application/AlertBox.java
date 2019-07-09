@@ -52,7 +52,7 @@ public class AlertBox {
 		Button btn2 = new Button("Quit Game");
 		
 		btn1.setOnAction(e -> {
-			stage.close();
+			//put the reinitialize
 		});
 		
 		btn2.setOnAction(e -> {
