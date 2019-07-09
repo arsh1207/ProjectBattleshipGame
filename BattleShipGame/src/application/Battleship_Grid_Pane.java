@@ -532,6 +532,12 @@ public class Battleship_Grid_Pane extends Application {
 		}
 	}
 	
+	/**
+	 * This function will color the user coordinates based on the hit or miss
+	 * @param x
+	 * @param y
+	 * @param res
+	 */
 	public static void setUserShipCoordinates(int x, int y, String res) {
 		
 		GridUser.displayUserShips();

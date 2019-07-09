@@ -129,6 +129,7 @@ public class GridUser {
 						shipObject.deployShipsWithColors(coords, shipType, "Y");
 
 						// result done signifies everything went right
+						ChangedUserGrid = userGrid;
 						numOfShipsDep++;
 						return "Done";
 					}
@@ -178,7 +179,7 @@ public class GridUser {
 						// calling the function on front end to color the
 						// coordinates of the ship as required
 						shipObject.deployShipsWithColors(coords, shipType, "X");
-
+						ChangedUserGrid = userGrid;
 						numOfShipsDep++;
 						return "Done";
 					}
@@ -482,11 +483,11 @@ public class GridUser {
 		// get the X and y coordinate from the input
 		Random ran = new Random();
 		
-//		int x = ran.nextInt(9);
+		int x = ran.nextInt(9);
 
-//		int y = ran.nextInt(11);
-		int x = 7;
-		int y = 10;
+		int y = ran.nextInt(11);
+//		int x = 7;
+//		int y = 10;
 
 		if (ChangedUserGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
@@ -506,9 +507,6 @@ public class GridUser {
 			return "The location has been hit earlier";
 
 		}
-
-		// check if User won or computer won
-		CheckIfCompWon();
 
 		// some other case or error
 		return " ";
@@ -577,7 +575,13 @@ public class GridUser {
 		}
 
 	}
-
+	
+	/**
+	 * 
+	 * @param diff
+	 * @param shipType
+	 * @return
+	 */
 	public String areHolesValid(int diff, String shipType) {
 		if (shipType.equals("Carrier")) {
 			if (diff == 5)
@@ -661,6 +665,7 @@ public class GridUser {
 		
 		DeployComputerShips();
 		
+		numOfShipsDep = 0;
 		
 		// set the hashMap for conversion
 		convert.put("A", 0);
