@@ -5,6 +5,8 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -66,6 +68,7 @@ public class Battleship_Grid_Pane extends Application {
 			imageView.setFitHeight(500);
 			imageView.setFitWidth(800);
 			imageView.setPreserveRatio(true);
+			
 			Battleship_Grid_Pane obj = new Battleship_Grid_Pane();
 
 			MenuBar menuBar = obj.battleMenu(v_box1, stage);
@@ -93,6 +96,37 @@ public class Battleship_Grid_Pane extends Application {
 			split_pane.getItems().add(v_box2);
 			seeResultUser("User ");
 			seeResultComp("Computer ");
+			
+	
+			Button startBtn = new Button("Start Playing");
+			startBtn.setDisable(false);
+			startBtn.setOnAction((ActionEvent event) -> {
+				if(GridUser.numOfShipsDep == 1)
+				{
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Battleship Game");
+					alert.setHeaderText("The battle ships are placed correctly.");
+					alert.setContentText("You can start playing!");
+					alert.showAndWait();
+					for(int i = 0; i< 9; i++) {
+						for (int j = 0; j< 11; j++)
+						{
+							radarButton[i][j].setDisable(false);
+						}
+					}
+				}
+				else {
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Battleship Game");
+					alert.setHeaderText("The battle ships are not placed correctly.");
+					alert.setContentText("Please place them before starting.");
+					alert.showAndWait();
+					
+				}
+			});
+			
+			
+			v_box3.getChildren().addAll(startBtn);
 			v_box4.getChildren().addAll(menuBar, split_pane);
 
 			scene1 = new Scene(v_box4, 800, 700);
@@ -140,6 +174,7 @@ public class Battleship_Grid_Pane extends Application {
 			for (Button b : radarButton[buttonRowIndex]) {
 				b.setStyle("-fx-background-color: #000000; ");
 				b.setId((buttonRowIndex)+":"+(columnButtonCount-1));
+				b.setDisable(true);
 				b.setShape(new Circle(r));
 				b.setMinSize(2 * r, 2 * r);
 				b.setMaxSize(2 * r, 2 * r);

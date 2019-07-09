@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public class GridUser {
 	Battleship_Grid_Pane shipObject;
+	
+	public static int numOfShipsDep = 0;
 
 	public static int rows = 9;
 	public static int cols = 11;
@@ -60,7 +62,7 @@ public class GridUser {
 		String str[] = coordinates.split("\\s");
 
 		int x1 = convert.get(str[0]);
-		System.out.println(x1);
+		//System.out.println(x1);
 		// decrease the value of Y since the coordinated start from 0 in grid
 		int y1 = Integer.parseInt(str[1]) - 1;
 		int x2 = convert.get(str[2]);
@@ -110,7 +112,7 @@ public class GridUser {
 					shipObject.deployShipsWithColors(coords, shipType, "Y");
 					
 					//result done signifies everything went right
-					
+					numOfShipsDep++;
 					return "Done";
 				}
 			}
@@ -183,36 +185,39 @@ public class GridUser {
 		Carrier.put(3, 7);
 		Carrier.put(4, 7);
 
+		// arsalaan change (swapped key and values)
 		HashMap<Integer, Integer> BattleShip = new HashMap<>();
 		BattleShip.put(0, 0);
-		BattleShip.put(0, 1);
-		BattleShip.put(0, 2);
-		BattleShip.put(0, 3);
+		BattleShip.put(1, 0);
+		BattleShip.put(2, 0);
+		BattleShip.put(3, 0);
 		
 		HashMap<Integer, Integer> Cruiser = new HashMap<>();
 		Cruiser.put(1, 2);
 		Cruiser.put(2, 2);
 		Cruiser.put(3, 2);
 
+		// arsalaan change
 		HashMap<Integer, Integer> Submarine = new HashMap<>();
-		Submarine.put(5, 4);
+		Submarine.put(4, 5);
 		Submarine.put(5, 5);
-		Submarine.put(5, 6);
+		Submarine.put(6, 5);
 		
+		//arsalaan change
 		HashMap<Integer, Integer> Destroyer = new HashMap<>();
-		Destroyer.put(8, 5);
-		Destroyer.put(8, 6);
+		Destroyer.put(5, 8);
+		Destroyer.put(6, 8);
 
 		for (Map.Entry<Integer, Integer> entry : Carrier.entrySet()) {
-
+			
 			computerGrid[entry.getKey()][entry.getValue()] = 1;
 
 		}
 
 		for (Map.Entry<Integer, Integer> entry : BattleShip.entrySet()) {
 
-			computerGrid[entry.getKey()][entry.getValue()] = 1;
-			//computerGrid[entry.getValue()][entry.getKey()] = 1;
+			//computerGrid[entry.getKey()][entry.getValue()] = 1;
+			computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 		}
 
@@ -224,18 +229,19 @@ public class GridUser {
 
 		for (Map.Entry<Integer, Integer> entry : Submarine.entrySet()) {
 
-			computerGrid[entry.getKey()][entry.getValue()] = 1;
+			computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 		}
 
 		for (Map.Entry<Integer, Integer> entry : Destroyer.entrySet()) {
 
-			computerGrid[entry.getKey()][entry.getValue()] = 1;
+			computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 		}
 
 		// set the computerGrid to be changed grid
-		ChangedUserGrid = computerGrid;
+		//arsalaan changed
+		ChangedComputerGrid = computerGrid;
 
 	}
 
