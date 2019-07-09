@@ -342,36 +342,102 @@ public class Battleship_Grid_Pane extends Application {
 			// user related to
 			// input format
 
-			String res = InputBox.display("Carrier ship");
-			System.out.println(res);
-			String value = ob.DeployUserGrid(res, "Carrier");
-			System.out.println(value);
+			if(!ob.areAllShipsDeployed()) {
+				if(!ob.isShipDeployed("Carrier")) {
+					String res = InputBox.display("Carrier ship");
+					System.out.println(res);
+					String value = ob.DeployUserGrid(res, "Carrier");
+					if(!(value.equals("Done"))) {
+						AlertBox.displayError("Carrier", value);
+					}
+					System.out.println(value);
+				}
+				else {
+					AlertBox.displayError("Carrier", "Already Deployed!");
+				}
+			}
+			else {
+				AlertBox.displayError("Carrier", "All Ships Deployed!");
+			}
 			//seeResult(ob.DeployUserGrid(res));
 
 		});
 		Battleship.setOnAction(e -> {
 
-			String res = InputBox.display("Battleship");
-			String value = ob.DeployUserGrid(res, "Battleship");
-			System.out.println(value);
+			if(!ob.areAllShipsDeployed()) {
+				if(!ob.isShipDeployed("Battleship")) {
+					String res = InputBox.display("Battleship");
+					String value = ob.DeployUserGrid(res, "Battleship");
+					if(!(value.equals("Done"))) {
+						AlertBox.displayError("Battleship", value);
+					}
+					System.out.println(value);
+				}
+				else {
+					AlertBox.displayError("Battleship", "Already Deployed!");
+				}
+			}
+			else {
+				AlertBox.displayError("Battleship", "All Ships Deployed!");
+			}
 			//seeResult(ob.DeployUserGrid(res));
 		});
 		Cruiser.setOnAction(e -> {
-			String res = InputBox.display(" Cruiser ");
-			String value = ob.DeployUserGrid(res, "Cruiser");
-			System.out.println(value);
+			
+			if(!ob.areAllShipsDeployed()) {
+				if(!ob.isShipDeployed("Cruiser")) {
+					String res = InputBox.display("Cruiser");
+					String value = ob.DeployUserGrid(res, "Cruiser");
+					if(!(value.equals("Done"))) {
+						AlertBox.displayError("Cruiser", value);
+					}
+					System.out.println(value);
+				}
+				else {
+					AlertBox.displayError("Cruiser", "Already Deployed!");
+				}
+			}
+			else {
+				AlertBox.displayError("Cruiser", "All Ships Deployed!");
+			}
 			//seeResult(ob.DeployUserGrid(res));
 		});
 		Submarine.setOnAction(e -> {
-			String res = InputBox.display("Submarine");
-			String value = ob.DeployUserGrid(res, "Submarine");
-			System.out.println(value);
+			if(!ob.areAllShipsDeployed()) {
+				if(!ob.isShipDeployed("Submarine")) {
+					String res = InputBox.display("Submarine");
+					String value = ob.DeployUserGrid(res, "Submarine");
+					if(!(value.equals("Done"))) {
+						AlertBox.displayError("Submarine", value);
+					}
+					System.out.println(value);
+				}
+				else {
+					AlertBox.displayError("Submarine", "Already Deployed!");
+				}
+			}
+			else {
+				AlertBox.displayError("Submarine", "All Ships Deployed!");
+			}
 			//seeResult(ob.DeployUserGrid(res));
 		});
 		Destroyer.setOnAction(e -> {
-			String res = InputBox.display("Destroyer");
-			String value = ob.DeployUserGrid(res, "Destroyer");
-			System.out.println(value);
+			if(!ob.areAllShipsDeployed()) {
+				if(!ob.isShipDeployed("Destroyer")) {
+					String res = InputBox.display("Destroyer");
+					String value = ob.DeployUserGrid(res, "Destroyer");
+					if(!(value.equals("Destroyer"))) {
+						AlertBox.displayError("Destroyer", value);
+					}
+					System.out.println(value);
+				}
+				else {
+					AlertBox.displayError("Destroyer", "Already Deployed!");
+				}
+			}
+			else {
+				AlertBox.displayError("Destroyer", "All Ships Deployed!");
+			}
 			//seeResult(ob.DeployUserGrid(res));
 		});
 
