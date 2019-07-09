@@ -101,7 +101,7 @@ public class Battleship_Grid_Pane extends Application {
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
-				if(GridUser.numOfShipsDep == 5)
+				if(GridUser.numOfShipsDep == 1)
 				{
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
@@ -209,19 +209,6 @@ public class Battleship_Grid_Pane extends Application {
 	public void setUserShipGrid() {
 		// System.out.println("here");
 
-		Rectangle carrier1 = new Rectangle(20, 30, Color.BLUE);
-		
-		carrier1.setArcHeight(20.0d); 
-		carrier1.setArcWidth(20.0d); 
-		
-		Rectangle carrier2 = new Rectangle(20, 30, Color.BLUE);
-		Rectangle carrier3 = new Rectangle(20, 30, Color.BLUE);
-		Rectangle carrier4 = new Rectangle(20, 30, Color.BLUE);
-		Rectangle carrier5 = new Rectangle(20, 30, Color.BLUE);
-
-		Rectangle battleship1 = new Rectangle(20, 30, Color.BROWN);
-		Rectangle battleship2 = new Rectangle(20, 30, Color.BROWN);
-
 		double r = 7.5;
 		Text t = new Text("Ship Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
@@ -235,14 +222,7 @@ public class Battleship_Grid_Pane extends Application {
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
 
-		// prtk
-		/*
-		 * g_pane.add(carrier1, 2, 15); g_pane.add(carrier2, 3, 15);
-		 * g_pane.add(carrier3, 4, 15); g_pane.add(carrier4, 5, 15);
-		 * g_pane.add(carrier5, 6, 15);
-		 * 
-		 * g_pane.add(battleship1, 5, 13); g_pane.add(battleship2, 5, 12);
-		 */ 
+		
 
 		// initializing the radar grid buttons of 9*11 size
 		// so that they can be accessed via ID
@@ -475,13 +455,10 @@ public class Battleship_Grid_Pane extends Application {
 	 */
 	public void colorShipYCoords(int[] coords, String color) {
 
-		/*
-		 * Rectangle shp = new Rectangle(20, 30, Color.BLUE);
-		 * shp.setArcHeight(20.0d); shp.setArcWidth(20.0d);
-		 */
 
 		for(int i = coords[1]; i <= coords[3]; i++) {
 			userButton[i][coords[0]].setStyle("-fx-background-color: "+color+"; ");
+			 
 		}
 	}
 	
