@@ -163,6 +163,9 @@ public class GridUser {
 				}
 	
 			}
+			else {
+				return res;
+			}
 		}
 	
 			else {// case when anything Diagonal
