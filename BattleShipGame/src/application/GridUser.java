@@ -76,7 +76,7 @@ public class GridUser {
 
 	public String DeployUserGrid(String coordinates, String shipType) {
 		
-
+try {
 		String str[] = coordinates.split("\\s");
 
 		int x1 = convert.get(str[0]);
@@ -191,8 +191,12 @@ public class GridUser {
 
 
 		// signifies some other error
-		return "Some other error";
-
+		return "Invalid input, please try again.";
+}
+catch(Exception e) {
+	//e.printStackTrace();
+	return "Invalid input, please try again.";
+}
 	}
 /**
  * This method places computer ships randomly
