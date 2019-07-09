@@ -433,7 +433,7 @@ public class GridUser {
 	 * 
 	 * @return
 	 */
-//changes arsalaan
+
 	public String Userturn(int x, int y) {
 
 		// get the X and y coordinate from the input
