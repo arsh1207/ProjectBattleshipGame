@@ -88,6 +88,7 @@ public class Battleship_Grid_Pane extends Application {
 			VBox v_box4 = new VBox();
 
 			v_box1.getChildren().addAll(g_pane);
+			Label l1 = new Label();
 
 			v_box2.setStyle("-fx-background-color: #000000;");
 			v_box2.getChildren().addAll(imageView, v_box3);
@@ -96,7 +97,9 @@ public class Battleship_Grid_Pane extends Application {
 
 			split_pane.getItems().add(v_box1);
 			split_pane.getItems().add(v_box2);
+			
 			seeResultUser("User ");
+			v_box3.getChildren().add(l1);
 			seeResultComp("Computer ");
 			
 			Button startBtn = new Button("Start Playing");
@@ -278,7 +281,7 @@ public class Battleship_Grid_Pane extends Application {
 	 * @param title
 	 */
 	public void seeResultUser(String title) {
-		Label resultLabel = new Label(title + "Result: ");
+		Label resultLabel = new Label(title + "Turn: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		resultLabel.setTextFill(Color.web("#c40831"));
 		resulttext1 = new Label();
@@ -292,7 +295,7 @@ public class Battleship_Grid_Pane extends Application {
 	 * @param title
 	 */
 	public void seeResultComp(String title) {
-		Label resultLabel = new Label(title + "Result: ");
+		Label resultLabel = new Label(title + "Turn: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		resultLabel.setTextFill(Color.web("#c40831"));
 		resulttext2 = new Label();
