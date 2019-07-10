@@ -100,8 +100,26 @@ public class GridUser {
 			int y2 = Integer.parseInt(str[3]) - 1;
 
 			System.out.println("values x1 y1 x2 y2  " + x1 + y1 + x2 + y2);
+			
+			//ships cannot be placed outside the grid
+			if(x1 >= cols || y1 >= rows || x2 >= cols || y2 >= rows) {
+				
+				deployedShips.remove(shipType);
+				return "You can't place ships outside the " + rows + " by " + cols + " grid";
+				
+			}
+			
+			//coordinates cannot be negative
+			if(x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
+				
+				deployedShips.remove(shipType);
+				return "You can't place ships outside the " + rows + " by " + cols + " grid";
+				
+			}
+			
 
 			if (x1 == x2) {
+				
 				System.out.println("X coordinates are same");
 				// if two X are the same then the line is vertical
 				// increment the Y values to set the ship location
@@ -111,6 +129,15 @@ public class GridUser {
 					int temp = y2;
 					y2 = y1;
 					y1 = temp;
+				}
+				for (int i = y1; i <= y2; i++) {
+					
+					if (userGrid[i][x1] == 1) {
+						displayUserShips();
+						deployedShips.remove(shipType);
+						return "ships cannot be placed on the same location";
+					}
+					
 				}
 				String res = areHolesValid(y2 - y1 + 1, shipType);
 				if (res.equals("YES")) {
@@ -122,16 +149,7 @@ public class GridUser {
 							userGrid[i][x1] = 1;
 							count++;
 
-						} else if ((x1 >= 0 && x1 < cols) && (y1 >= 0 && y1 < rows) && (y2 >= 0 && y2 < rows)
-								&& userGrid[i][x1] == 1) {
-							deployedShips.remove(shipType);
-							return "ships cannot be placed on the same location";
-
-						} else if ((y1 < 0 || y1 >= rows) || (y2 < 0 || y2 >= rows) || (x1 < 0 || x1 >= cols)) {
-							deployedShips.remove(shipType);
-							return "You can't place ships outside the " + rows + " by " + cols + " grid";
 						}
-
 					}
 
 					if (((y2 + 1) - (y1 + 1)) + 1 == count) {
@@ -163,6 +181,14 @@ public class GridUser {
 					x2 = x1;
 					x1 = temp;
 				}
+				for (int i = x1; i <= x2; i++) {
+					
+					if (userGrid[y1][i] == 1) {
+						displayUserShips();
+						deployedShips.remove(shipType);
+						return "ships cannot be placed on the same location";
+					}
+				}
 				String res = areHolesValid(x2 - x1 + 1, shipType);
 				if (res.equals("YES")) {
 					// increment the X values to set the ship location
@@ -174,14 +200,6 @@ public class GridUser {
 							userGrid[y1][i] = 1;
 							count++;
 
-						} else if ((y1 >= 0 && y1 < rows) && (x1 >= 0 && x1 < cols) && (x2 >= 0 && x2 < cols)
-								&& userGrid[y1][i] == 1) {
-							deployedShips.remove(shipType);
-							return "ships cannot be placed on the same location";
-
-						} else if ((x1 < 0 || x1 >= cols) || (x2 < 0 || x2 >= cols) || (y1 < 0 || y1 >= rows)) {
-							deployedShips.remove(shipType);
-							return "You can't place ships outside the " + rows + " by " + cols + " grid";
 						}
 
 					}
