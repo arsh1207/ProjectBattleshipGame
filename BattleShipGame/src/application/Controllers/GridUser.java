@@ -81,11 +81,11 @@ public class GridUser {
 
 	/**
 	 * 
-	 * @param coordinates
-	 * @param shipType
-	 * @return
+	 * @param coordinates defines the coordinated to be deployed
+	 * @param shipType    type of the ship
+	 * @return strings defining the placement of the ship in grid
 	 */
-	public String DeployUserGrid(String coordinates, String shipType) {
+	public String deployUserGrid(String coordinates, String shipType) {
 
 		try {
 			String str[] = coordinates.split("\\s");
@@ -153,7 +153,7 @@ public class GridUser {
 			}
 
 			else if (y1 == y2) {
-				System.out.println("Y coordinates are same");
+				// System.out.println("Y coordinates are same");
 				// if two Y are the same then the line is Horizontal
 
 				// count to check if all coordinated were placed successfully
@@ -398,11 +398,11 @@ public class GridUser {
 	 * 
 	 * @author arsalaan
 	 * 
-	 * @param x
-	 * @param y
-	 * @param direction
-	 * @param points
-	 * @return canPlace
+	 * @param x         coordinate
+	 * @param y         coordinate
+	 * @param direction describes horizontal or vertical
+	 * @param points    limit of movement
+	 * @return canPlace tells if ship can be placed or not
 	 */
 	public Boolean check(int x, int y, String direction, int points) {
 		Boolean canPlace = true;
@@ -436,15 +436,16 @@ public class GridUser {
 		}
 
 		return canPlace;
+		
 	}
 
 	/**
 	 * Takes the input based on the event listener Provides the hit or miss while
 	 * hitting on the computer grid
 	 * 
-	 * @param x
-	 * @param y
-	 * @return
+	 * @param x coordinate
+	 * @param y coordinates
+	 * @return String defining if the user hit or miss the computer grid
 	 */
 
 	public String userTurn(int x, int y) {
@@ -475,7 +476,7 @@ public class GridUser {
 	/**
 	 * Provides if its a hit or miss while hitting on the computer grid
 	 * 
-	 * @return
+	 * @return String defining the computer turn results
 	 */
 	public String computerTurn() {
 		// get the X and y coordinate from the input
@@ -510,10 +511,9 @@ public class GridUser {
 	}
 
 	/**
-	 * checks the grid of the computer to verify if they won or
-	 * not sets the static flag true if someone wins
 	 * 
-	 * @return
+	 * checks the grid of the computer to verify if they won or not sets the static
+	 * flag true if someone wins
 	 */
 
 	public void checkIfUserWon() {
@@ -546,8 +546,8 @@ public class GridUser {
 
 	/**
 	 * 
-	 * checks the grid of the User to verify if user has won or
-	 * not displays the Win case if User won
+	 * checks the grid of the User to verify if user has won or not displays the Win
+	 * case if User won
 	 * 
 	 */
 	public void checkIfCompWon() {
@@ -569,7 +569,6 @@ public class GridUser {
 		}
 
 		if (!flagcomp) {// set that user has won
-			
 
 			AlertBox.displayResult("Hurray!!", "AI has Won ");
 		} else {
@@ -583,9 +582,9 @@ public class GridUser {
 	 * Checking that the ships are of the exact size
 	 * 
 	 * 
-	 * @param diff
-	 * @param shipType
-	 * @return
+	 * @param diff     size of the ship
+	 * @param shipType type of the ship
+	 * @return returns String defining if the ships have the correct size
 	 */
 	public String areHolesValid(int diff, String shipType) {
 		if (shipType.equals("Carrier")) {
@@ -624,8 +623,8 @@ public class GridUser {
 	/**
 	 * function to see whether a particular ship is deployed or not
 	 * 
-	 * @param shipType
-	 * @return
+	 * @param shipType gives the type of the ship
+	 * @return boolean to check the ship deployed
 	 */
 	public boolean isShipDeployed(String shipType) {
 
@@ -641,7 +640,8 @@ public class GridUser {
 
 	/**
 	 * check if all the ships have been deployed or not
-	 * @return
+	 * 
+	 * @return boolean true if all the ships deployed
 	 */
 	public boolean areAllShipsDeployed() {
 		if (deployedShips.size() == 5)
@@ -650,7 +650,6 @@ public class GridUser {
 			return false;
 	}
 
-	
 	/**
 	 * Initialize all the grids to zero
 	 * 
@@ -712,9 +711,9 @@ public class GridUser {
 	}
 
 	/**
-	 * method to display user ship 
+	 * method to display user ship
 	 */
-	
+
 	public static void displayUserShips() {
 
 		for (int x = 0; x < 9; x++) {
@@ -724,10 +723,9 @@ public class GridUser {
 		}
 
 	}
-	
-	
+
 	/**
-	 * Method to display the computer grid  
+	 * Method to display the computer grid
 	 */
 
 	public void printGrid() {

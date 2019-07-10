@@ -363,7 +363,7 @@ public class Battleship_Grid_Pane extends Application {
 				if(!ob.isShipDeployed("Carrier")) {
 					String res = InputBox.display("Carrier ship");
 					System.out.println(res);
-					String value = ob.DeployUserGrid(res, "Carrier");
+					String value = ob.deployUserGrid(res, "Carrier");
 					if(!(value.equals("Done"))) {
 						AlertBox.displayError("Carrier", value);
 					}
@@ -383,7 +383,7 @@ public class Battleship_Grid_Pane extends Application {
 			if(!ob.areAllShipsDeployed()) {
 				if(!ob.isShipDeployed("Battleship")) {
 					String res = InputBox.display("Battleship");
-					String value = ob.DeployUserGrid(res, "Battleship");
+					String value = ob.deployUserGrid(res, "Battleship");
 					if(!(value.equals("Done"))) {
 						AlertBox.displayError("Battleship", value);
 					}
@@ -403,7 +403,7 @@ public class Battleship_Grid_Pane extends Application {
 			if(!ob.areAllShipsDeployed()) {
 				if(!ob.isShipDeployed("Cruiser")) {
 					String res = InputBox.display("Cruiser");
-					String value = ob.DeployUserGrid(res, "Cruiser");
+					String value = ob.deployUserGrid(res, "Cruiser");
 					if(!(value.equals("Done"))) {
 						AlertBox.displayError("Cruiser", value);
 					}
@@ -422,7 +422,7 @@ public class Battleship_Grid_Pane extends Application {
 			if(!ob.areAllShipsDeployed()) {
 				if(!ob.isShipDeployed("Submarine")) {
 					String res = InputBox.display("Submarine");
-					String value = ob.DeployUserGrid(res, "Submarine");
+					String value = ob.deployUserGrid(res, "Submarine");
 					if(!(value.equals("Done"))) {
 						AlertBox.displayError("Submarine", value);
 					}
@@ -441,7 +441,7 @@ public class Battleship_Grid_Pane extends Application {
 			if(!ob.areAllShipsDeployed()) {
 				if(!ob.isShipDeployed("Destroyer")) {
 					String res = InputBox.display("Destroyer");
-					String value = ob.DeployUserGrid(res, "Destroyer");
+					String value = ob.deployUserGrid(res, "Destroyer");
 					if(!(value.equals("Destroyer"))) {
 						AlertBox.displayError("Destroyer", value);
 					}
