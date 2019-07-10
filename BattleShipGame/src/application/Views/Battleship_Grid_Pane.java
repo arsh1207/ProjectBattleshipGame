@@ -191,8 +191,9 @@ public class Battleship_Grid_Pane extends Application {
 					resulttext2.setText(res);
 					if(res.contains("miss"))
 						b.setStyle("-fx-background-color: #FFFFFF; ");
-					else if(res.contains("Hit"))
+					else if(res.contains("Hit")) {
 						b.setStyle("-fx-background-color: #ff1100; ");
+					}
 					
 					//checks if User has Won
 					ob.checkIfUserWon();
