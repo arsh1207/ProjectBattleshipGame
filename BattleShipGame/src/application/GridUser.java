@@ -200,6 +200,7 @@ public class GridUser {
 			// signifies some other error
 			return "Invalid input, please try again.";
 		} catch (Exception e) {
+			deployedShips.remove(shipType);
 			// e.printStackTrace();
 			return "Invalid input, please try again.";
 		}
