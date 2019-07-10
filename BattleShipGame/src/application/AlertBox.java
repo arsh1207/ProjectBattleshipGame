@@ -15,8 +15,8 @@ public class AlertBox {
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle(title);
-		stage.setMinWidth(750);
-		stage.setMinHeight(500);
+		stage.setMinWidth(450);
+		stage.setMinHeight(300);
 		
 		Label label1 = new Label(msg);
 		
@@ -43,24 +43,20 @@ public class AlertBox {
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle(title);
-		stage.setMinWidth(750);
-		stage.setMinHeight(500);
+		stage.setMinWidth(450);
+		stage.setMinHeight(300);
 		
 		Label label1 = new Label(msg);
 		
-		Button btn1 = new Button("Restart Game");
-		Button btn2 = new Button("Quit Game");
+		Button btn1 = new Button("OK");
 		
 		btn1.setOnAction(e -> {
 			//put the reinitialize
 		});
 		
-		btn2.setOnAction(e -> {
-			stage.close();
-		});
 		
 		VBox v_box = new VBox();
-		v_box.getChildren().addAll(label1, btn1, btn2 );
+		v_box.getChildren().addAll(label1, btn1);
 		v_box.setAlignment(Pos.CENTER);
 		
 		Scene scene = new Scene(v_box);

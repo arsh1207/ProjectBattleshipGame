@@ -541,7 +541,7 @@ public class GridUser {
 			}
 		}
 
-		if (!flaguser) {// set that user has won
+		if (flaguser) {// set that user has won
 			System.out.println("User has won");
 
 			AlertBox.displayResult("Hurray!!","User has Won ");
@@ -571,7 +571,7 @@ public class GridUser {
 			}
 		}
 
-		if (!flagcomp) {// set that user has won
+		if (flagcomp) {// set that user has won
 			System.out.println("Com won");
 
 			AlertBox.displayResult("Hurray!!","AI has Won ");

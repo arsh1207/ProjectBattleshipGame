@@ -46,7 +46,6 @@ public class Battleship_Grid_Pane extends Application {
 	int buttonRowIndex;
 	Label resulttext1,resulttext2;
 
-	// Stage stage;
 	@Override
 	public void start(Stage primarystage) {
 		try {
@@ -132,7 +131,6 @@ public class Battleship_Grid_Pane extends Application {
 
 			scene1 = new Scene(v_box4, 800, 700);
 			g_pane.getStylesheets().add("application/application.css");
-			// stage.setScene(scene1);
 			stage.show();
 
 			// deployment has been done start the game turn by turn now
@@ -144,16 +142,16 @@ public class Battleship_Grid_Pane extends Application {
 	}
 	
 
-
+	/**
+	 * Deploys the radar grid on the screen
+	 */
 	public void setUserRadarGrid() {
-		// System.out.println("here");
 		double r = 7.5;
 		Text t = new Text("Radar Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		rowButtonCount = 0;
 		columnButtonCount = 0;
 		g_pane.add(t, columnButtonCount, rowButtonCount);
-		//GridUser ob = new GridUser();
 		for (rowButtonCount = 10; rowButtonCount >= 1; rowButtonCount--) {
 			int ch = 10;
 			Text text1 = new Text(Integer.toString(ch - rowButtonCount));
@@ -220,9 +218,11 @@ public class Battleship_Grid_Pane extends Application {
 		}
 	}
 
+	/**
+	 * Deploys user grid on the screen
+	 */
 	public void setUserShipGrid() {
-		// System.out.println("here");
-
+		
 		double r = 7.5;
 		Text t = new Text("Ship Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
@@ -251,8 +251,6 @@ public class Battleship_Grid_Pane extends Application {
 		// placing the buttons or holes on the grid
 		for (; rowButtonCount < 21; rowButtonCount += 1) {
 			columnButtonCount = 1;
-			//System.out.println("Buttons "+buttonRowIndex+" initialized in "+rowButtonCount);
-			// columnButtonCount = 0; columnButtonCount < 11; columnButtonCount += 1
 			for (Button b : userButton[buttonRowIndex]) {
 				b.setStyle("-fx-background-color: #000000; ");
 				b.setShape(new Circle(r));
@@ -273,36 +271,38 @@ public class Battleship_Grid_Pane extends Application {
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
 	}
-
-	// places the Result for the hit or miss in the bottom of the window
+	
+	/**
+	 * Places the result of the user on the screen
+	 * @param title
+	 */
 	public void seeResultUser(String title) {
 		Label resultLabel = new Label(title + "Result: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		//TextField resultTextField = new TextField();
-		 resulttext1 = new Label();
-		 resulttext1.setStyle("-fx-background-color: white;");
+		resulttext1 = new Label();
+		resulttext1.setStyle("-fx-background-color: white;");
 		v_box3.getChildren().addAll(resultLabel, resulttext1);
 
-		// g_pane2.add(resultLabel, 0, 9);
-		// g_pane2.add(resultTextField, 1, 25);
 	}
+	
+	/**
+	 * Places the result of the computer on the screen
+	 * @param title
+	 */
 	public void seeResultComp(String title) {
 		Label resultLabel = new Label(title + "Result: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		//TextField resultTextField = new TextField();
-		 resulttext2 = new Label();
-		 resulttext2.setStyle("-fx-background-color: white;");
+		resulttext2 = new Label();
+		resulttext2.setStyle("-fx-background-color: white;");
 		v_box3.getChildren().addAll(resultLabel, resulttext2);
 
-		// g_pane2.add(resultLabel, 0, 9);
-		// g_pane2.add(resultTextField, 1, 25);
 	}
 
 
 	/**
-	 * Menubar displaying the menu for the game including placment of battleships
+	 * Menu bar displaying the menu for the game including placement of battleships
 	 * 
 	 * @param v_box1
 	 * @param stage
@@ -375,7 +375,6 @@ public class Battleship_Grid_Pane extends Application {
 			else {
 				AlertBox.displayError("Carrier", "All Ships Deployed!");
 			}
-			//seeResult(ob.DeployUserGrid(res));
 
 		});
 		Battleship.setOnAction(e -> {
@@ -396,7 +395,7 @@ public class Battleship_Grid_Pane extends Application {
 			else {
 				AlertBox.displayError("Battleship", "All Ships Deployed!");
 			}
-			//seeResult(ob.DeployUserGrid(res));
+			
 		});
 		Cruiser.setOnAction(e -> {
 			
@@ -416,7 +415,7 @@ public class Battleship_Grid_Pane extends Application {
 			else {
 				AlertBox.displayError("Cruiser", "All Ships Deployed!");
 			}
-			//seeResult(ob.DeployUserGrid(res));
+			
 		});
 		Submarine.setOnAction(e -> {
 			if(!ob.areAllShipsDeployed()) {
@@ -435,7 +434,7 @@ public class Battleship_Grid_Pane extends Application {
 			else {
 				AlertBox.displayError("Submarine", "All Ships Deployed!");
 			}
-			//seeResult(ob.DeployUserGrid(res));
+			
 		});
 		Destroyer.setOnAction(e -> {
 			if(!ob.areAllShipsDeployed()) {
@@ -454,13 +453,18 @@ public class Battleship_Grid_Pane extends Application {
 			else {
 				AlertBox.displayError("Destroyer", "All Ships Deployed!");
 			}
-			//seeResult(ob.DeployUserGrid(res));
+			
 		});
 
 		return menuBar;
-
 	}
-
+	
+	
+	/**
+	 * The startup window gets launched with this method
+	 * @param stg
+	 * @throws Exception
+	 */
 	public void launchStartupWindow(Stage stg) throws Exception {
 
 		GridPane root1 = new GridPane();
@@ -477,13 +481,10 @@ public class Battleship_Grid_Pane extends Application {
 
 		root1.setBackground(background);
 
-		// Text text = new Text("The Battleship Game!");
-		// text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 		Button btn1 = new Button("Start New Game! (Vs. CPU)");
 		btn1.setStyle("-fx-background-color: #a3a0a0; ");
 		Button btn2 = new Button("Exit Game");
 		btn2.setStyle("-fx-background-color: #a3a0a0; ");
-		// root1.setStyle("-fx-background-color: #0000FF;");
 		btn1.setOnAction((ActionEvent event) -> {
 			stg.setScene(scene1);
 		});
@@ -495,10 +496,15 @@ public class Battleship_Grid_Pane extends Application {
 		root1.setAlignment(Pos.CENTER);
 		root1.add(btn1, 0, 1);
 		root1.add(btn2, 0, 2);
-		// root1.add(text, 0, 0);
 		stg.setScene(scene2);
 	}
 	
+	/**
+	 * This method deploys the ships with different colors
+	 * @param coords
+	 * @param shipType
+	 * @param axis
+	 */
 	public void deployShipsWithColors(int[] coords, String shipType, String axis) {
 		
 		//if the ship is to be placed along Y-axis
@@ -515,7 +521,7 @@ public class Battleship_Grid_Pane extends Application {
 				colorShipYCoords(coords, "#FFFF00");
 		}
 		
-		//if itis to be placed along X-axis
+		//if it is to be placed along X-axis
 		else {
 			if(shipType.equals("Carrier"))
 				colorShipXCoords(coords, "#000080");
@@ -574,7 +580,10 @@ public class Battleship_Grid_Pane extends Application {
 		}
 	}
 	
-	// trying to commit and push
+	/**
+	 * main function
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
