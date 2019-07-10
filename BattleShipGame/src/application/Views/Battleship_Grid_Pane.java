@@ -183,7 +183,7 @@ public class Battleship_Grid_Pane extends Application {
 				b.setOnAction((ActionEvent event) -> {
 					//b.setStyle("-fx-background-color: #FFFFFF; ");
 					String xy[] = b.getId().split(":");
-					String res = ob.Userturn(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
+					String res = ob.userTurn(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
 					//System.out.println("After hit :" + res);
 					resulttext2.setText(res);
 					if(res.contains("miss"))
@@ -195,11 +195,11 @@ public class Battleship_Grid_Pane extends Application {
 					ob.checkIfUserWon();
 					
 					//changed prateek
-					String compres = ob.Computerturn();
+					String compres = ob.computerTurn();
 					//System.out.println("After hit :" + res);
 					resulttext1.setText(compres);
 					//Checks if AI has won
-					ob.CheckIfCompWon();
+					ob.checkIfCompWon();
 
 
 				});
