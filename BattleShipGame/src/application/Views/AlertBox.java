@@ -1,4 +1,4 @@
-package application;
+package application.Views;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -52,6 +52,7 @@ public class AlertBox {
 		
 		btn1.setOnAction(e -> {
 			//put the reinitialize
+			stage.close();
 		});
 		
 		

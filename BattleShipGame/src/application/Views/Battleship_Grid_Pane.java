@@ -1,7 +1,8 @@
-package application;
+package application.Views;
 
 import java.io.FileInputStream;
 
+import application.Controllers.GridUser;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
@@ -64,7 +65,7 @@ public class Battleship_Grid_Pane extends Application {
 			v_box1 = new VBox();
 			v_box2 = new VBox();
 
-			Image image = new Image(new FileInputStream("bombs.png"));
+			Image image = new Image(new FileInputStream("images/bombs.png"));
 			ImageView imageView = new ImageView(image);
 			imageView.setFitHeight(500);
 			imageView.setFitWidth(800);
@@ -130,7 +131,7 @@ public class Battleship_Grid_Pane extends Application {
 			v_box4.getChildren().addAll(menuBar, split_pane);
 
 			scene1 = new Scene(v_box4, 800, 700);
-			g_pane.getStylesheets().add("application/application.css");
+			g_pane.getStylesheets().add("application/Views/application.css");
 			stage.show();
 
 			// deployment has been done start the game turn by turn now
@@ -472,7 +473,7 @@ public class Battleship_Grid_Pane extends Application {
 		root1.setVgap(10);
 		root1.setHgap(10);
 
-		Image image = new Image(new FileInputStream("battleship.png"));
+		Image image = new Image(new FileInputStream("images/battleship.png"));
 
 		BackgroundImage backgroundimage = new BackgroundImage(image, BackgroundRepeat.ROUND, BackgroundRepeat.ROUND,
 				BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);

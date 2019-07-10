@@ -1,4 +1,4 @@
-package application;
+package application.Views;
 
 /**
  * This class contains function display which serves a purpose of confirming an input from user.

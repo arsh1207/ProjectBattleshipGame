@@ -4,7 +4,7 @@
  * @author arsalaan
  */
 
-package application;
+package application.Views;
 
 
 import javafx.geometry.Insets;

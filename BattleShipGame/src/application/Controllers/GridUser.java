@@ -1,10 +1,13 @@
-package application;
+package application.Controllers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import application.Views.AlertBox;
+import application.Views.Battleship_Grid_Pane;
 
 /**
  * 
@@ -35,7 +38,7 @@ public class GridUser {
 
 	public static HashMap<String, Integer> convert = new HashMap<>();
 
-	GridUser() {
+	public GridUser() {
 
 		// creating the object to deploy colored ships
 		shipObject = new Battleship_Grid_Pane();
@@ -544,7 +547,7 @@ public class GridUser {
 			}
 		}
 
-		if (flaguser) {// set that user has won
+		if (!flaguser) {// set that user has won
 			System.out.println("User has won");
 
 			AlertBox.displayResult("Hurray!!","User has Won ");
@@ -577,7 +580,7 @@ public class GridUser {
 			}
 		}
 
-		if (flagcomp) {// set that user has won
+		if (!flagcomp) {// set that user has won
 			System.out.println("Com won");
 
 			AlertBox.displayResult("Hurray!!","AI has Won ");
