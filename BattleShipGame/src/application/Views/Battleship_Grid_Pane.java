@@ -34,8 +34,7 @@ import javafx.stage.Stage;
 
 public class Battleship_Grid_Pane extends Application {
 
-	
-	static GridUser ob ;
+	static GridUser ob;
 	Scene scene1;
 	Scene scene2;
 	GridPane g_pane;
@@ -45,7 +44,7 @@ public class Battleship_Grid_Pane extends Application {
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;
-	Label resulttext1,resulttext2;
+	Label resulttext1, resulttext2;
 
 	@Override
 	public void start(Stage primarystage) {
@@ -53,7 +52,7 @@ public class Battleship_Grid_Pane extends Application {
 			Stage stage = primarystage;
 			stage.setTitle(" Battle Ship Game");
 
-			ob= new GridUser();
+			ob = new GridUser();
 			launchStartupWindow(stage);
 
 			radarButton = new Button[9][11];
@@ -70,20 +69,17 @@ public class Battleship_Grid_Pane extends Application {
 			imageView.setFitHeight(500);
 			imageView.setFitWidth(800);
 			imageView.setPreserveRatio(true);
-			
+
 			Battleship_Grid_Pane obj = new Battleship_Grid_Pane();
-			//String ar[] = null;
+
 			MenuBar menuBar = obj.battleMenu(v_box1, stage);
 
-			// g_pane.setStyle("-fx-background-color: #35E7DB;");
 			g_pane.setVgap(10);
 			g_pane.setHgap(10);
 
 			setUserRadarGrid();
 
 			setUserShipGrid();
-
-			// changes
 
 			VBox v_box4 = new VBox();
 
@@ -97,39 +93,35 @@ public class Battleship_Grid_Pane extends Application {
 
 			split_pane.getItems().add(v_box1);
 			split_pane.getItems().add(v_box2);
-			
+
 			seeResultUser("User ");
 			v_box3.getChildren().add(l1);
 			seeResultComp("Computer ");
-			
+
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
-				if(GridUser.numOfShipsDep == 5)
-				{
+				if (GridUser.numOfShipsDep == 5) {
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
 					alert.setHeaderText("The battle ships are placed correctly.");
 					alert.setContentText("You can start playing!");
 					alert.showAndWait();
-					for(int i = 0; i< 9; i++) {
-						for (int j = 0; j< 11; j++)
-						{
+					for (int i = 0; i < 9; i++) {
+						for (int j = 0; j < 11; j++) {
 							radarButton[i][j].setDisable(false);
 						}
 					}
-				}
-				else {
+				} else {
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
 					alert.setHeaderText("The battle ships are not placed correctly.");
 					alert.setContentText("Please place them before starting.");
 					alert.showAndWait();
-					
+
 				}
 			});
-			
-			
+
 			v_box3.getChildren().addAll(startBtn);
 			v_box4.getChildren().addAll(menuBar, split_pane);
 
@@ -144,7 +136,6 @@ public class Battleship_Grid_Pane extends Application {
 			System.out.println(e.getMessage());
 		}
 	}
-	
 
 	/**
 	 * Deploys the radar grid on the screen
@@ -164,8 +155,8 @@ public class Battleship_Grid_Pane extends Application {
 
 		// initializing the radar grid buttons of 9*11 size
 		// so that they can be accessed via ID
-			for (rowButtonCount = 0; rowButtonCount < 9; rowButtonCount++) {
-				for (columnButtonCount = 0; columnButtonCount < 11; columnButtonCount++) {
+		for (rowButtonCount = 0; rowButtonCount < 9; rowButtonCount++) {
+			for (columnButtonCount = 0; columnButtonCount < 11; columnButtonCount++) {
 				radarButton[rowButtonCount][columnButtonCount] = new Button();
 			}
 		}
@@ -175,36 +166,32 @@ public class Battleship_Grid_Pane extends Application {
 		// placing the buttons or holes on the grid
 		for (rowButtonCount = 9; rowButtonCount >= 1; rowButtonCount -= 1) {
 			columnButtonCount = 1;
-			// columnButtonCount = 0; columnButtonCount < 11; columnButtonCount += 1
 			for (Button b : radarButton[buttonRowIndex]) {
 				b.setStyle("-fx-background-color: #000000; ");
-				b.setId((buttonRowIndex)+":"+(columnButtonCount-1));
+				b.setId((buttonRowIndex) + ":" + (columnButtonCount - 1));
 				b.setDisable(true);
 				b.setShape(new Circle(r));
 				b.setMinSize(2 * r, 2 * r);
 				b.setMaxSize(2 * r, 2 * r);
 				b.setOnAction((ActionEvent event) -> {
-					//b.setStyle("-fx-background-color: #FFFFFF; ");
+
 					String xy[] = b.getId().split(":");
 					String res = ob.userTurn(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
-					//System.out.println("After hit :" + res);
+
 					resulttext2.setText(res);
-					if(res.contains("miss"))
+					if (res.contains("miss"))
 						b.setStyle("-fx-background-color: #FFFFFF; ");
-					else if(res.contains("Hit")) {
+					else if (res.contains("Hit")) {
 						b.setStyle("-fx-background-color: #ff1100; ");
 					}
-					
-					//checks if User has Won
-					ob.checkIfUserWon();
-					
-					//changed prateek
-					String compres = ob.computerTurn();
-					//System.out.println("After hit :" + res);
-					resulttext1.setText(compres);
-					//Checks if AI has won
-					ob.checkIfCompWon();
 
+					// checks if User has Won
+					ob.checkIfUserWon();
+
+					String compres = ob.computerTurn();
+					resulttext1.setText(compres);
+					// Checks if AI has won
+					ob.checkIfCompWon();
 
 				});
 				g_pane.add(b, columnButtonCount, rowButtonCount);
@@ -227,7 +214,7 @@ public class Battleship_Grid_Pane extends Application {
 	 * Deploys user grid on the screen
 	 */
 	public void setUserShipGrid() {
-		
+
 		double r = 7.5;
 		Text t = new Text("Ship Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
@@ -240,8 +227,6 @@ public class Battleship_Grid_Pane extends Application {
 			Text text1 = new Text(Integer.toString(ch - rowButtonCount));
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
-
-		
 
 		// initializing the radar grid buttons of 9*11 size
 		// so that they can be accessed via ID
@@ -276,9 +261,10 @@ public class Battleship_Grid_Pane extends Application {
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
 	}
-	
+
 	/**
 	 * Places the result of the user on the screen
+	 * 
 	 * @param title To display name of caller (User or CPU).
 	 */
 	public void seeResultUser(String title) {
@@ -290,9 +276,10 @@ public class Battleship_Grid_Pane extends Application {
 		v_box3.getChildren().addAll(resultLabel, resulttext1);
 
 	}
-	
+
 	/**
 	 * Places the result of the computer on the screen
+	 * 
 	 * @param title To display name of caller (User or CPU).
 	 */
 	public void seeResultComp(String title) {
@@ -305,12 +292,11 @@ public class Battleship_Grid_Pane extends Application {
 
 	}
 
-
 	/**
 	 * Menu bar displaying the menu for the game including placement of battleships
 	 * 
 	 * @param v_box1 layout used to add the menu bar
-	 * @param stage The stage variable holding all the layouts.
+	 * @param stage  The stage variable holding all the layouts.
 	 * @return Menu bar obeject after adding all the required options on it
 	 */
 	public MenuBar battleMenu(VBox v_box1, Stage stage) {
@@ -322,11 +308,11 @@ public class Battleship_Grid_Pane extends Application {
 
 		MenuItem menu1Item1 = new MenuItem("Start new game");
 		MenuItem menu1Item2 = new MenuItem("Exit");
-		
+
 		menu1Item1.setOnAction(e -> {
 			stage.close();
 			start(new Stage());
-			ob.reInitialize();	
+			ob.reInitialize();
 		});
 
 		menu1Item2.setOnAction(e -> {
@@ -359,114 +345,100 @@ public class Battleship_Grid_Pane extends Application {
 
 		Carrier.setOnAction(e -> {
 
-			// the format of result I have kept same so no need to change anything in grid
-			// user related to
-			// input format
-
-			if(!ob.areAllShipsDeployed()) {
-				if(!ob.isShipDeployed("Carrier")) {
+			if (!ob.areAllShipsDeployed()) {
+				if (!ob.isShipDeployed("Carrier")) {
 					String res = InputBox.display("Carrier ship");
 					System.out.println(res);
 					String value = ob.deployUserGrid(res, "Carrier");
-					if(!(value.equals("Done"))) {
+					if (!(value.equals("Done"))) {
 						AlertBox.displayError("Carrier", value);
 					}
 					System.out.println(value);
-				}
-				else {
+				} else {
 					AlertBox.displayError("Carrier", "Already Deployed!");
 				}
-			}
-			else {
+			} else {
 				AlertBox.displayError("Carrier", "All Ships Deployed!");
 			}
 
 		});
 		Battleship.setOnAction(e -> {
 
-			if(!ob.areAllShipsDeployed()) {
-				if(!ob.isShipDeployed("Battleship")) {
+			if (!ob.areAllShipsDeployed()) {
+				if (!ob.isShipDeployed("Battleship")) {
 					String res = InputBox.display("Battleship");
 					String value = ob.deployUserGrid(res, "Battleship");
-					if(!(value.equals("Done"))) {
+					if (!(value.equals("Done"))) {
 						AlertBox.displayError("Battleship", value);
 					}
 					System.out.println(value);
-				}
-				else {
+				} else {
 					AlertBox.displayError("Battleship", "Already Deployed!");
 				}
-			}
-			else {
+			} else {
 				AlertBox.displayError("Battleship", "All Ships Deployed!");
 			}
-			
+
 		});
 		Cruiser.setOnAction(e -> {
-			
-			if(!ob.areAllShipsDeployed()) {
-				if(!ob.isShipDeployed("Cruiser")) {
+
+			if (!ob.areAllShipsDeployed()) {
+				if (!ob.isShipDeployed("Cruiser")) {
 					String res = InputBox.display("Cruiser");
 					String value = ob.deployUserGrid(res, "Cruiser");
-					if(!(value.equals("Done"))) {
+					if (!(value.equals("Done"))) {
 						AlertBox.displayError("Cruiser", value);
 					}
 					System.out.println(value);
-				}
-				else {
+				} else {
 					AlertBox.displayError("Cruiser", "Already Deployed!");
 				}
-			}
-			else {
+			} else {
 				AlertBox.displayError("Cruiser", "All Ships Deployed!");
 			}
-			
+
 		});
 		Submarine.setOnAction(e -> {
-			if(!ob.areAllShipsDeployed()) {
-				if(!ob.isShipDeployed("Submarine")) {
+			if (!ob.areAllShipsDeployed()) {
+				if (!ob.isShipDeployed("Submarine")) {
 					String res = InputBox.display("Submarine");
 					String value = ob.deployUserGrid(res, "Submarine");
-					if(!(value.equals("Done"))) {
+					if (!(value.equals("Done"))) {
 						AlertBox.displayError("Submarine", value);
 					}
 					System.out.println(value);
-				}
-				else {
+				} else {
 					AlertBox.displayError("Submarine", "Already Deployed!");
 				}
-			}
-			else {
+			} else {
 				AlertBox.displayError("Submarine", "All Ships Deployed!");
 			}
-			
+
 		});
 		Destroyer.setOnAction(e -> {
-			if(!ob.areAllShipsDeployed()) {
-				if(!ob.isShipDeployed("Destroyer")) {
+			if (!ob.areAllShipsDeployed()) {
+				if (!ob.isShipDeployed("Destroyer")) {
 					String res = InputBox.display("Destroyer");
 					String value = ob.deployUserGrid(res, "Destroyer");
-					if(!(value.equals("Destroyer"))) {
+					if (!(value.equals("Done"))) {
 						AlertBox.displayError("Destroyer", value);
 					}
 					System.out.println(value);
-				}
-				else {
+				} else {
 					AlertBox.displayError("Destroyer", "Already Deployed!");
 				}
-			}
-			else {
+			} else {
 				AlertBox.displayError("Destroyer", "All Ships Deployed!");
 			}
-			
+
 		});
 
 		return menuBar;
 	}
-	
-	
+
 	/**
 	 * The startup window gets launched with this method
+	 * 
 	 * @param stg It is a temorary stage used a start up screen
 	 * @throws Exception may throw file not found error
 	 */
@@ -503,90 +475,93 @@ public class Battleship_Grid_Pane extends Application {
 		root1.add(btn2, 0, 2);
 		stg.setScene(scene2);
 	}
-	
+
 	/**
 	 * This method deploys the ships with different colors
-	 * @param coords holds the co-ordinates that will changed as per the ship type
+	 * 
+	 * @param coords   holds the co-ordinates that will changed as per the ship type
 	 * @param shipType The type of ship being placed
-	 * @param axis tell either horizontal of vertical
+	 * @param axis     tell either horizontal of vertical
 	 */
 	public void deployShipsWithColors(int[] coords, String shipType, String axis) {
-		
-		//if the ship is to be placed along Y-axis
-		if(axis.equals("Y")) {
-			if(shipType.equals("Carrier"))
+
+		// if the ship is to be placed along Y-axis
+		if (axis.equals("Y")) {
+			if (shipType.equals("Carrier"))
 				colorShipYCoords(coords, "#000080");
-			if(shipType.equals("Battleship"))
+			if (shipType.equals("Battleship"))
 				colorShipYCoords(coords, "#654321");
-			if(shipType.equals("Cruiser"))
+			if (shipType.equals("Cruiser"))
 				colorShipYCoords(coords, "#008000");
-			if(shipType.equals("Submarine"))
+			if (shipType.equals("Submarine"))
 				colorShipYCoords(coords, "#FFC0CB");
-			if(shipType.equals("Destroyer"))
+			if (shipType.equals("Destroyer"))
 				colorShipYCoords(coords, "#FFFF00");
 		}
-		
-		//if it is to be placed along X-axis
+
+		// if it is to be placed along X-axis
 		else {
-			if(shipType.equals("Carrier"))
+			if (shipType.equals("Carrier"))
 				colorShipXCoords(coords, "#000080");
-			if(shipType.equals("Battleship"))
+			if (shipType.equals("Battleship"))
 				colorShipXCoords(coords, "#D2691E");
-			if(shipType.equals("Cruiser"))
+			if (shipType.equals("Cruiser"))
 				colorShipXCoords(coords, "#008000");
-			if(shipType.equals("Submarine"))
+			if (shipType.equals("Submarine"))
 				colorShipXCoords(coords, "#FFA500");
-			if(shipType.equals("Destroyer"))
+			if (shipType.equals("Destroyer"))
 				colorShipXCoords(coords, "#FFFF00");
 		}
 	}
-	
+
 	/**
 	 * This function will color the user coordinates based on the hit or miss
-	 * @param x x-coordinate of gird being hit
-	 * @param y y-coordinate of gird being hit
-	 * @param res contains hit or miss 
+	 * 
+	 * @param x   x-coordinate of gird being hit
+	 * @param y   y-coordinate of gird being hit
+	 * @param res contains hit or miss
 	 */
 	public static void setUserShipCoordinates(int x, int y, String res) {
-		
+
 		GridUser.displayUserShips();
-		
-		System.out.println("Coordinates: "+x+" "+y);
-		if(res.equals("Miss"))
+
+		if (res.equals("Miss"))
 			userButton[x][y].setStyle("-fx-background-color: #FFFFFF; ");
-		else if(res.equals("Hit"))
+		else if (res.equals("Hit"))
 			userButton[x][y].setStyle("-fx-background-color: #ff1100; ");
-		
+
 	}
-	
+
 	/**
 	 * The function will color the Y coordinates based on the type of ship
+	 * 
 	 * @param coords coordinates that need to be updated for ship placement
-	 * @param color Which color needs to be placed 
+	 * @param color  Which color needs to be placed
 	 */
 	public void colorShipYCoords(int[] coords, String color) {
 
+		for (int i = coords[1]; i <= coords[3]; i++) {
+			userButton[i][coords[0]].setStyle("-fx-background-color: " + color + "; ");
 
-		for(int i = coords[1]; i <= coords[3]; i++) {
-			userButton[i][coords[0]].setStyle("-fx-background-color: "+color+"; ");
-			 
 		}
 	}
-	
+
 	/**
 	 * The function will color the X coordinates based on the type of ship
+	 * 
 	 * @param coords coordinates that need to be updated for ship placement
-	 * @param color Which color needs to be placed 
+	 * @param color  Which color needs to be placed
 	 */
 	public void colorShipXCoords(int[] coords, String color) {
-		
-		for(int i = coords[0]; i <= coords[2]; i++) {
-			userButton[coords[1]][i].setStyle("-fx-background-color: "+color+"; ");
+
+		for (int i = coords[0]; i <= coords[2]; i++) {
+			userButton[coords[1]][i].setStyle("-fx-background-color: " + color + "; ");
 		}
 	}
-	
+
 	/**
 	 * main function
+	 * 
 	 * @param args default arguments array
 	 */
 	public static void main(String[] args) {
