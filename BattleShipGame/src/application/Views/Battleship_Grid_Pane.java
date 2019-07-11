@@ -279,7 +279,7 @@ public class Battleship_Grid_Pane extends Application {
 	
 	/**
 	 * Places the result of the user on the screen
-	 * @param title
+	 * @param title To display name of caller (User or CPU).
 	 */
 	public void seeResultUser(String title) {
 		Label resultLabel = new Label(title + "Turn: ");
@@ -293,7 +293,7 @@ public class Battleship_Grid_Pane extends Application {
 	
 	/**
 	 * Places the result of the computer on the screen
-	 * @param title
+	 * @param title To display name of caller (User or CPU).
 	 */
 	public void seeResultComp(String title) {
 		Label resultLabel = new Label(title + "Turn: ");
@@ -309,9 +309,9 @@ public class Battleship_Grid_Pane extends Application {
 	/**
 	 * Menu bar displaying the menu for the game including placement of battleships
 	 * 
-	 * @param v_box1
-	 * @param stage
-	 * @return
+	 * @param v_box1 layout used to add the menu bar
+	 * @param stage The stage variable holding all the layouts.
+	 * @return Menu bar obeject after adding all the required options on it
 	 */
 	public MenuBar battleMenu(VBox v_box1, Stage stage) {
 		Menu menu1 = new Menu("Game");
@@ -467,8 +467,8 @@ public class Battleship_Grid_Pane extends Application {
 	
 	/**
 	 * The startup window gets launched with this method
-	 * @param stg
-	 * @throws Exception
+	 * @param stg It is a temorary stage used a start up screen
+	 * @throws Exception may throw file not found error
 	 */
 	public void launchStartupWindow(Stage stg) throws Exception {
 
@@ -506,9 +506,9 @@ public class Battleship_Grid_Pane extends Application {
 	
 	/**
 	 * This method deploys the ships with different colors
-	 * @param coords
-	 * @param shipType
-	 * @param axis
+	 * @param coords holds the co-ordinates that will changed as per the ship type
+	 * @param shipType The type of ship being placed
+	 * @param axis tell either horizontal of vertical
 	 */
 	public void deployShipsWithColors(int[] coords, String shipType, String axis) {
 		
@@ -543,9 +543,9 @@ public class Battleship_Grid_Pane extends Application {
 	
 	/**
 	 * This function will color the user coordinates based on the hit or miss
-	 * @param x
-	 * @param y
-	 * @param res
+	 * @param x x-coordinate of gird being hit
+	 * @param y y-coordinate of gird being hit
+	 * @param res contains hit or miss 
 	 */
 	public static void setUserShipCoordinates(int x, int y, String res) {
 		
@@ -561,8 +561,8 @@ public class Battleship_Grid_Pane extends Application {
 	
 	/**
 	 * The function will color the Y coordinates based on the type of ship
-	 * @param coords
-	 * @param color
+	 * @param coords coordinates that need to be updated for ship placement
+	 * @param color Which color needs to be placed 
 	 */
 	public void colorShipYCoords(int[] coords, String color) {
 
@@ -575,8 +575,8 @@ public class Battleship_Grid_Pane extends Application {
 	
 	/**
 	 * The function will color the X coordinates based on the type of ship
-	 * @param coords
-	 * @param color
+	 * @param coords coordinates that need to be updated for ship placement
+	 * @param color Which color needs to be placed 
 	 */
 	public void colorShipXCoords(int[] coords, String color) {
 		
@@ -587,7 +587,7 @@ public class Battleship_Grid_Pane extends Application {
 	
 	/**
 	 * main function
-	 * @param args
+	 * @param args default arguments array
 	 */
 	public static void main(String[] args) {
 		launch(args);

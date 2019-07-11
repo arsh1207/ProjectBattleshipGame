@@ -91,7 +91,7 @@ public class GridUser {
 			String str[] = coordinates.split("\\s");
 
 			int x1 = convert.get(str[0]);
-			// System.out.println(x1);
+
 			// decrease the value of Y since the coordinated start from 0 in grid
 			int y1 = Integer.parseInt(str[1]) - 1;
 			int x2 = convert.get(str[2]);
@@ -100,26 +100,25 @@ public class GridUser {
 			int y2 = Integer.parseInt(str[3]) - 1;
 
 			System.out.println("values x1 y1 x2 y2  " + x1 + y1 + x2 + y2);
-			
-			//ships cannot be placed outside the grid
-			if(x1 >= cols || y1 >= rows || x2 >= cols || y2 >= rows) {
-				
+
+			// ships cannot be placed outside the grid
+			if (x1 >= cols || y1 >= rows || x2 >= cols || y2 >= rows) {
+
 				deployedShips.remove(shipType);
 				return "You can't place ships outside the " + rows + " by " + cols + " grid";
-				
+
 			}
-			
-			//coordinates cannot be negative
-			if(x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
-				
+
+			// coordinates cannot be negative
+			if (x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
+
 				deployedShips.remove(shipType);
 				return "You can't place ships outside the " + rows + " by " + cols + " grid";
-				
+
 			}
-			
 
 			if (x1 == x2) {
-				
+
 				System.out.println("X coordinates are same");
 				// if two X are the same then the line is vertical
 				// increment the Y values to set the ship location
@@ -131,13 +130,13 @@ public class GridUser {
 					y1 = temp;
 				}
 				for (int i = y1; i <= y2; i++) {
-					
+
 					if (userGrid[i][x1] == 1) {
 						displayUserShips();
 						deployedShips.remove(shipType);
 						return "ships cannot be placed on the same location";
 					}
-					
+
 				}
 				String res = areHolesValid(y2 - y1 + 1, shipType);
 				if (res.equals("YES")) {
@@ -171,7 +170,7 @@ public class GridUser {
 			}
 
 			else if (y1 == y2) {
-				// System.out.println("Y coordinates are same");
+
 				// if two Y are the same then the line is Horizontal
 
 				// count to check if all coordinated were placed successfully
@@ -182,7 +181,7 @@ public class GridUser {
 					x1 = temp;
 				}
 				for (int i = x1; i <= x2; i++) {
-					
+
 					if (userGrid[y1][i] == 1) {
 						displayUserShips();
 						deployedShips.remove(shipType);
@@ -454,7 +453,7 @@ public class GridUser {
 		}
 
 		return canPlace;
-		
+
 	}
 
 	/**
@@ -747,8 +746,6 @@ public class GridUser {
 	 */
 
 	public void printGrid() {
-
-		System.out.println("inside the printGrid");
 
 		for (int i = 0; i < rows; i++) {
 
