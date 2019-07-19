@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 import application.Controllers.GridUser;
+import application.Models.Computer;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -64,15 +65,18 @@ public class Battleship_Grid_Pane extends Application {
 		try {
 			Stage stage = primarystage;
 			stage.setTitle(" Battle Ship Game");
+			Computer computer = new Computer();
 			launchStartupWindow(stage);
 			ob = new GridUser();
-			 ScrollPane sp = new ScrollPane();
+			RadarGrid radarGridObserver = new RadarGrid(computer);
+			ScrollPane sp = new ScrollPane();
 			radarButton = new Button[9][11];
 			userButton = new Button[9][11];
 			SplitPane split_pane = new SplitPane();
 			g_pane1 = new GridPane();
 			g_pane2 = new GridPane();
-
+			resulttext1 = new Label();
+			resulttext2 = new Label();
 			v_box3 = new VBox();
 			v_box1 = new VBox();
 			v_box2 = new VBox();
@@ -99,7 +103,7 @@ public class Battleship_Grid_Pane extends Application {
 
 			// g_pane.alignmentProperty().addListener(listener );
 
-			setUserRadarGrid();
+			radarGridObserver.setUserRadarGrid(g_pane1, resulttext2, ob);
 
 			setUserShipGrid();
 			Button userRandomShips = new Button("Feelin' Lazy?");
@@ -130,6 +134,7 @@ public class Battleship_Grid_Pane extends Application {
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
 				if (GridUser.numOfShipsDep == 5) {
+					ob.callDeployComputerShips(computer);
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
 					alert.setHeaderText("The battle ships are placed correctly.");
@@ -137,7 +142,7 @@ public class Battleship_Grid_Pane extends Application {
 					alert.showAndWait();
 					for (int i = 0; i < 9; i++) {
 						for (int j = 0; j < 11; j++) {
-							radarButton[i][j].setDisable(false);
+							radarGridObserver.disableButtons(i, j);
 						}
 					}
 				} else {
@@ -399,7 +404,6 @@ public class Battleship_Grid_Pane extends Application {
 		Label resultLabel = new Label(title + "Turn: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		resulttext1 = new Label();
 		resulttext1.setStyle("-fx-background-color: white;");
 		v_box3.getChildren().addAll(resultLabel, resulttext1);
 
@@ -414,7 +418,6 @@ public class Battleship_Grid_Pane extends Application {
 		Label resultLabel = new Label(title + "Turn: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		resulttext2 = new Label();
 		resulttext2.setStyle("-fx-background-color: white;");
 		v_box3.getChildren().addAll(resultLabel, resulttext2);
 	}

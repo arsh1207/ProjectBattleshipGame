@@ -13,25 +13,40 @@ import java.util.Observable;
 import java.util.Observer;
 
 import application.Controllers.GridUser;
+import application.Models.Computer;
 import javafx.event.ActionEvent;
 import javafx.scene.*;
 
+@SuppressWarnings("deprecation")
 public class RadarGrid implements Observer {
 
-	static int rowButtonCount;
-	static int columnButtonCount;
-	static Button[][] radarButton;
-	static RadarGrid radarGridObserver;
+	int rowButtonCount;
+	int columnButtonCount;
+	Button[][] radarButton;
+	Computer computer;
+	int coordX = 0; 
+	int coordY = 0;
+	Label resulttext2;
+		
+	RadarGrid(Computer computer){
+		
+		this.rowButtonCount =  rowButtonCount;
+		this.columnButtonCount = columnButtonCount;
+		this.radarButton = radarButton;
+		this.resulttext2 = resulttext2;
+		this.computer = computer;
+		this.computer.addObserver(this);
+		
+	}
 	
 	
 	/**
 	 * Deploys the radar grid on the screen
 	 */
-	public static void setUserRadarGrid(GridPane g_pane, Label resulttext2, Label resulttext1, GridUser ob) {
+	public void setUserRadarGrid(GridPane g_pane, Label resulttext2, GridUser ob) {
 		radarButton = new Button[9][11];
-		radarGridObserver = new RadarGrid();
-		ob.addObserver(radarGridObserver);
-		//System.out.println("Setting radarGrid");
+		this.resulttext2 = resulttext2;
+		System.out.println("Setting radarGrid");
 		double r = 7.5;
 		int buttonRowIndex;
 		Text t = new Text("Radar Grid");
@@ -40,7 +55,7 @@ public class RadarGrid implements Observer {
 		columnButtonCount = 0;
 		g_pane.add(t, columnButtonCount, rowButtonCount);
 		for (rowButtonCount = 10; rowButtonCount >= 1; rowButtonCount--) {
-			//System.out.println(rowButtonCount+" "+columnButtonCount);
+			System.out.println(rowButtonCount+" "+columnButtonCount);
 			int ch = 10;
 			Text text1 = new Text(Integer.toString(ch - rowButtonCount));
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
@@ -63,6 +78,7 @@ public class RadarGrid implements Observer {
 			// columnButtonCount = 0; columnButtonCount < 11; columnButtonCount += 1
 			for (Button b : radarButton[buttonRowIndex]) {
 				System.out.println(rowButtonCount+" "+columnButtonCount);
+				System.out.println(rowButtonCount+" "+columnButtonCount);
 				b.setStyle("-fx-background-color: #000000; ");
 				b.setId((buttonRowIndex)+":"+(columnButtonCount-1));
 				b.setDisable(true);
@@ -72,25 +88,9 @@ public class RadarGrid implements Observer {
 				b.setOnAction((ActionEvent event) -> {
 					//b.setStyle("-fx-background-color: #FFFFFF; ");
 					String xy[] = b.getId().split(":");
-					String res = ob.userTurn(Integer.parseInt(xy[0]), Integer.parseInt(xy[1]));
-					//System.out.println("After hit :" + res);
-					resulttext2.setText(res);
-					if(res.contains("miss"))
-						b.setStyle("-fx-background-color: #FFFFFF; ");
-					else if(res.contains("Hit")) {
-						b.setStyle("-fx-background-color: #ff1100; ");
-					}
-					
-					//checks if User has Won
-					ob.checkIfUserWon();
-					
-					//changed prateek
-					String compres = ob.computerTurn();
-					//System.out.println("After hit :" + res);
-					resulttext1.setText(compres);
-					//Checks if AI has won
-					ob.checkIfCompWon();
-
+					coordX = Integer.parseInt(xy[0]);
+					coordY = Integer.parseInt(xy[1]);
+					ob.callUserTurn(computer, coordX, coordY);
 
 				});
 				g_pane.add(b, columnButtonCount, rowButtonCount);
@@ -100,6 +100,7 @@ public class RadarGrid implements Observer {
 				buttonRowIndex++;
 			}
 		}
+		
 		rowButtonCount = 10;
 		// placing the letters on the grid
 		for (columnButtonCount = 1; columnButtonCount < 12; columnButtonCount += 1) {
@@ -108,14 +109,28 @@ public class RadarGrid implements Observer {
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
 	}
-
+	
+	public void disableButtons(int i, int j) {
+		
+		radarButton[i][j].setDisable(false);
+		
+	}
+	
 
 	@Override
 	public void update(Observable o, Object arg) {
 		System.out.println("update called");
 		// TODO Auto-generated method stub
-		if(arg.equals("HITORMISS ")) {
-			System.out.println("Action completed");
+		if(arg.equals("HITORMISS")) {
+			String res = computer.getReply();
+			if(res.equals("It's a Hit!!!!!")) {
+				radarButton[coordX][coordY].setStyle("-fx-background-color: #FF0000; ");
+			}
+			else if(res.equals("It's a miss!!!!!")) {
+			
+				radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
+			}
+			resulttext2.setText(res);
 		}
 		
 	}

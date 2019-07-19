@@ -50,7 +50,7 @@ public class GridUser {
 		initialize();
 
 		// deploy all the computer ships
-		deployComputerShips();
+		//deployComputerShips();
 
 		// set the hashMap for conversion
 		convert.put("A", 0);
@@ -1029,6 +1029,25 @@ public class GridUser {
 			System.out.println();
 		}
 
+	}
+	
+	/**
+	 * This method will user turn in the model to check whether the coordinates are hit or not
+	 * @param computer
+	 * @param coordX
+	 * @param coordY
+	 */
+	public void callUserTurn(Computer computer, int coordX, int coordY) {
+		computer.userTurn(coordX, coordY);
+		
+	}
+	
+	/**
+	 * This method will tell the computer model to deploy its ships in the backend
+	 * @param computer
+	 */
+	public void callDeployComputerShips(Computer computer) {
+		computer.deployComputerShips();
 	}
 
 }

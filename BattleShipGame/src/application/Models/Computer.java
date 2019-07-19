@@ -2,11 +2,12 @@ package application.Models;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Random;
 
 import application.Views.Battleship_Grid_Pane;
 
-public class Computer {
+public class Computer extends Observable {
 
 	final int rows = 9;
 	final int cols = 11;
@@ -23,11 +24,57 @@ public class Computer {
 
 	public void setReply(String reply) {
 		this.reply = reply;
+		setChanged();
+		notifyObservers("HITORMISS");
 	}
 
 	public Computer() {
 
 		initialize();
+
+	}
+	
+	/**
+	 * Takes the input based on the event listener Provides the hit or miss while
+	 * hitting on the computer grid
+	 * 
+	 * @param x coordinate
+	 * @param y coordinates
+	 * @return String defining if the user hit or miss the computer grid
+	 */
+
+	public void userTurn(int x, int y) {
+
+		// get the X and y coordinate from the input
+		System.out.println("reached here" + x + "; " + y);
+		if (computerGrid[x][y] == 1) {
+			// change the grid value from 1 to 2 to signify hit
+
+			computerGrid[x][y] = 2;
+			System.out.println("Hit");
+
+			setReply("It's a Hit!!!!!");
+			
+			//return "It's a Hit!!!!!";
+		} else if (computerGrid[x][y] == 0) {
+
+			setReply("It's a miss!!!!!");
+			//return "It's a miss!!!!!";
+
+		} else if (computerGrid[x][y] == 2) {
+
+			
+			setReply("The location has been hit earlier");
+			//return "The location has been hit earlier";
+
+		}
+		
+		else {
+		
+			setReply("Some other error");
+		}
+		// some other case or error
+		//return "Some other error";
 
 	}
 
@@ -76,6 +123,7 @@ public class Computer {
 		}
 
 		setReply(" ");
+		
 		// some other case or error
 		//return " ";
 
@@ -248,7 +296,7 @@ public class Computer {
 			// set the computerGrid to be changed grid
 			// changedComputerGrid = computerGrid;
 
-			// printGrid();
+			printGrid();
 		} catch (Exception e) {
 			e.printStackTrace();
 			// System.out.println(print);
@@ -315,6 +363,26 @@ public class Computer {
 				computerGrid[i][j] = 0;
 
 			}
+		}
+
+	}
+	
+	/**
+	 * Method to display the computer grid
+	 */
+
+	public void printGrid() {
+
+		System.out.println("inside the printGrid");
+
+		for (int i = 0; i < rows; i++) {
+
+			for (int j = 0; j < cols; j++) {
+
+				System.out.print(computerGrid[i][j] + " ");
+
+			}
+			System.out.println();
 		}
 
 	}
