@@ -29,11 +29,11 @@ public class Player extends Observable {
 	public boolean Hit = false;
 	public boolean Miss = false;
 
-	final int rows = 9;
-	final int cols = 11;
+	final static int rows = 9;
+	final static int cols = 11;
 
 	// original Grid that remains unchanged throughout the game
-	public Integer[][] userGrid = new Integer[rows][cols];
+	public static Integer[][] userGrid = new Integer[rows][cols];
 	
 	
 
@@ -760,6 +760,40 @@ public class Player extends Observable {
 		}
 
 		return canPlace;
+
+	}
+	
+	/**
+	 * 
+	 * checks the grid of the User to verify if user has won or not displays the Win
+	 * case if User won
+	 * 
+	 */
+	public void checkIfCompWon() {
+
+		boolean flagcomp = false;
+
+		// check the computer grid if all the 1 are converted to 2
+		for (int i = 0; i < rows; i++) {
+
+			for (int j = 0; j < cols; j++) {
+
+				if (userGrid[i][j] == 1) {
+					// set the flag as true
+					flagcomp = true;
+
+				}
+
+			}
+		}
+
+		if (!flagcomp) {// set that user has won
+
+			AlertBox.displayResult("Hurray!!", "AI has Won ");
+		} else {
+			// do nothing
+
+		}
 
 	}
 	

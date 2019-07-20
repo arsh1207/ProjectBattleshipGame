@@ -5,7 +5,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
-import application.Views.Battleship_Grid_Pane;
+import application.Views.AlertBox;
+
 
 public class Computer extends Observable {
 
@@ -14,7 +15,7 @@ public class Computer extends Observable {
 
 	public Integer[][] computerGrid = new Integer[rows][cols];
 
-	public String reply = "";
+	private String reply = "";
 
 	// public Integer[][] changedComputerGrid = new Integer[rows][cols];
 
@@ -83,51 +84,7 @@ public class Computer extends Observable {
 	 * 
 	 * @return String defining the computer turn results
 	 */
-	public void computerTurn(Integer[][] UserGrid) {
-		// get the X and y coordinate from the input
-		Random ran = new Random();
-
-		int x = ran.nextInt(9);
-
-		int y = ran.nextInt(11);
-
-		if (UserGrid[x][y] == 1) {
-			// change the grid value from 1 to 2 to signify hit
-
-			UserGrid[x][y] = 2;
-			///
-
-			
-			//this cannot be called directly
-			// change the below call
-			Battleship_Grid_Pane.setUserShipCoordinates(x, y, "Hit");
-
-			setReply("It's a Hit!!!!!");
-
-			// return "It's a Hit!!!!!";
-
-		} else if (UserGrid[x][y] == 0) {
-			//this cannot be called directly
-			// change the below call
-
-			Battleship_Grid_Pane.setUserShipCoordinates(x, y, "Miss");
-			// return "It's a miss!!!!!";
-
-			setReply("It's a miss!!!!!");
-
-		} else if (UserGrid[x][y] == 2) {
-
-			setReply("The location has been hit earlier");
-			// return "The location has been hit earlier";
-
-		}
-
-		setReply(" ");
-		
-		// some other case or error
-		//return " ";
-
-	}
+	
 
 	/**
 	 * This method places computer ships randomly
@@ -363,6 +320,34 @@ public class Computer extends Observable {
 				computerGrid[i][j] = 0;
 
 			}
+		}
+
+	}
+	
+	public void checkIfUserWon() {
+
+		boolean flaguser = false;
+
+		// check the computer grid if all the 1 are converted to 2
+		for (int i = 0; i < rows; i++) {
+
+			for (int j = 0; j < cols; j++) {
+
+				if (computerGrid[i][j] == 1) {
+					// set the flag as true if there is still one present somewhere
+					flaguser = true;
+
+				}
+
+			}
+		}
+
+		if (!flaguser) {// set that user has won
+
+			AlertBox.displayResult("Hurray!!", "User has Won ");
+		} else {
+			// do nothing
+
 		}
 
 	}

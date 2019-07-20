@@ -2,8 +2,9 @@ package main;
 
 import java.io.FileInputStream;
 import application.Controllers.GridUser;
+import application.Models.Computer;
+import application.Models.HitStrategy;
 import application.Models.Player;
-import application.Views.ConfirmBox;
 import application.Views.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -38,24 +39,23 @@ import javafx.stage.Stage;
 
 public class Main extends Application{
 
-	//ShipGrid sg = new ShipGrid();
+	
 	static GridUser ob;
 	Scene scene1;
 	Scene scene2;
 	GridPane g_pane1, g_pane2;
 	VBox v_box1, v_box2, v_box3;
-	static Button[][] radarButton;
-	static Button[][] userButton;
+	//static Button[][] radarButton;
+	//static Button[][] userButton;
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;
 	Label resulttext1, resulttext2;
 	public static String shipType = "";
-	static String gameMode = "Medium"; 
-	
-	Boolean lastCompResult = false;
+	public static String gameMode = "Medium"; 
 	
 	
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);
@@ -69,13 +69,14 @@ public class Main extends Application{
 			launchStartupWindow(stage);
 			
 			Player player = new Player();
-			ShipGrid sg = new ShipGrid(player);
+			Computer computer = new Computer();
+			HitStrategy strategy = new HitStrategy();
+			ob = new GridUser(player, computer, strategy);
+			ShipGrid sg = new ShipGrid(player, ob, strategy);
 			
 			
-			ob = new GridUser();
 			 ScrollPane sp = new ScrollPane();
-			radarButton = new Button[9][11];
-			userButton = new Button[9][11];
+	
 			SplitPane split_pane = new SplitPane();
 			g_pane1 = new GridPane();
 			g_pane2 = new GridPane();
@@ -105,8 +106,13 @@ public class Main extends Application{
 			//g_pane2.setGridLinesVisible(true);
 
 			// g_pane.alignmentProperty().addListener(listener );
+			 Label l1 = new Label();
+			 seeResultUser("User ");
+				v_box3.getChildren().add(l1);
+				seeResultComp("Computer ");
 
-			//RadarGrid.setUserRadarGrid(g_pane1, resulttext2, resulttext1, ob);
+				RadarGrid radarGridObserver = new RadarGrid(computer, resulttext2, resulttext1, ob, strategy);
+			 radarGridObserver.setUserRadarGrid(g_pane1, resulttext2);
 			
 			sg.setUserShipGrid(g_pane2);
 			Button userRandomShips = new Button("Feelin' Lazy?");
@@ -119,7 +125,7 @@ public class Main extends Application{
 				if(player.numOfShipsDep==0)
 					player.deployUserRandomShips();
 			});
-			Label l1 = new Label();
+			
 
 			v_box2.setStyle("-fx-background-color: #000000;");
 			v_box2.getChildren().addAll(imageView, v_box3);
@@ -130,10 +136,7 @@ public class Main extends Application{
 			split_pane.getItems().add(sp);
 			split_pane.getItems().add(v_box2);
 
-			seeResultUser("User ");
-			v_box3.getChildren().add(l1);
-			seeResultComp("Computer ");
-
+			
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
@@ -145,9 +148,10 @@ public class Main extends Application{
 					alert.showAndWait();
 					for (int i = 0; i < 9; i++) {
 						for (int j = 0; j < 11; j++) {
-							radarButton[i][j].setDisable(false);
+							radarGridObserver.radarButton[i][j].setDisable(false);
 						}
 					}
+					computer.deployComputerShips();
 				} else {
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
@@ -208,7 +212,7 @@ public class Main extends Application{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			ob.reInitialize();
+		//	ob.reInitialize();
 		});
 
 		menu1Item2.setOnAction(e -> {

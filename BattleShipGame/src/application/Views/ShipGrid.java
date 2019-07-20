@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import application.Controllers.GridUser;
+import application.Models.HitStrategy;
 import application.Models.Player;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -26,12 +27,17 @@ public class ShipGrid implements Observer {
 	static String gameMode = "Medium";
 
 	static Boolean lastCompResult = false;
+	private GridUser ob;
 
 	private Player player;
+	private HitStrategy strategy;
 
-	public ShipGrid(Player player) {
+	public ShipGrid(Player player, GridUser ob, HitStrategy strategy) {
 		this.player = player;
 		player.addObserver(this);
+		this.ob = ob;
+		this.strategy = strategy;
+		strategy.addObserver(this);
 	}
 
 	/**
@@ -94,8 +100,8 @@ public class ShipGrid implements Observer {
 
 							if (!player.areAllShipsDeployed()) {
 								if (!player.isShipDeployed(Main.shipType)) {
-									String res = initialCoordinates + " " + finalCoordinates;																							
-								
+									String res = initialCoordinates + " " + finalCoordinates;
+
 									player.deployUserGrid(res, Main.shipType);
 
 								} else {
@@ -136,22 +142,32 @@ public class ShipGrid implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		System.out.println("called");
-		System.out.println(arg);
-		String value = ((Player) o).getReply();
-		System.out.println(value);
+		if (o instanceof Player) {
+			// TODO Auto-generated method stub
+			System.out.println("called");
+			System.out.println(arg);
+			String value = ((Player) o).getReply();
+			System.out.println(value);
 
-		int coord[] = ((Player) o).getCoords();
-		String shipType = ((Player) o).getShipType();
-		String axis = ((Player) o).getAxis();
-		deployShipsWithColors(coord, shipType, axis);
+			int coord[] = ((Player) o).getCoords();
+			String shipType = ((Player) o).getShipType();
+			String axis = ((Player) o).getAxis();
+			deployShipsWithColors(coord, shipType, axis);
 
-		if (!(value.equals("Done")) && !value.isEmpty()) {
-			userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
-			AlertBox.displayError(Main.shipType, value);
+			if (!(value.equals("Done")) && !value.isEmpty()) {
+				userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+				AlertBox.displayError(Main.shipType, value);
+			}
+		} else {
+			String reply =  ((HitStrategy) o).getReply();
+			int coord[] =  ((HitStrategy) o).getCoords();
+			if(reply.contains("Hit")) {
+				setUserShipCoordinates(coord[0], coord[1], "Hit");
+			}
+			else {
+				setUserShipCoordinates(coord[0], coord[1], "Miss");
+			}
 		}
-
 	}
 
 	/**
@@ -223,6 +239,15 @@ public class ShipGrid implements Observer {
 			userButton[coords[1]][i].setOnMouseExited(null);
 			userButton[coords[1]][i].setOnMouseClicked(null);
 		}
+	}
+
+	public static void setUserShipCoordinates(int x, int y, String res) {
+
+		if (res.equals("Miss"))
+			userButton[x][y].setStyle("-fx-background-color: #FFFFFF; ");
+		else if (res.equals("Hit"))
+			userButton[x][y].setStyle("-fx-background-color: #ff1100; ");
+
 	}
 
 }

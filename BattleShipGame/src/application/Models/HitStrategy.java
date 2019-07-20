@@ -3,11 +3,23 @@ package application.Models;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Random;
 
 import application.Controllers.*;
 
-public class HitStrategy {
+
+public class HitStrategy extends Observable {
+	Integer[][] randomGrid = new Integer[9][11];
+	Integer[][] probabilityGrid = new Integer[9][11];
+	ArrayList<String> hitFound = new ArrayList<>();
+	String direction = "";
+	int hitX, hitY;
+	int counter = 0;
+	int minMax = 0;
+	private String reply = "";
+	private int[] coords = {};
+
 	public HitStrategy() {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 11; j++) {
@@ -23,32 +35,54 @@ public class HitStrategy {
 		}
 	}
 
-	Integer[][] randomGrid = new Integer[9][11];
-	Integer[][] probabilityGrid = new Integer[9][11];
-	ArrayList<String> hitFound = new ArrayList<>();
-	String direction = "";
-	int hitX, hitY;
-	int counter = 0;
-	int minMax = 0;
+	public int[] getCoords() {
+		return coords;
+	}
 
-	public int[] randomHit() {
+	public void setCoords(int[] coords) {
+		this.coords = coords;
+	}
+
+	public String getReply() {
+		return reply;
+	}
+
+	public void setReply(String reply) {
+		this.reply = reply;
+		setChanged();
+		notifyObservers("userHitorMiss");
+	}
+
+	public void randomHit() {
 		Random ran = new Random();
 		int x = ran.nextInt(9);
 		int y = ran.nextInt(11);
 
 		boolean newHit = false;
 		while (!newHit) {
-			if (GridUser.changedUserGrid[x][y] == 2) {
+			if (Player.userGrid[x][y] == 2) {
 				x = ran.nextInt(9);
 				y = ran.nextInt(11);
 			} else
 				newHit = true;
 		}
 		int hitCoord[] = { x, y };
-		return hitCoord;
+		setCoords(hitCoord);
+
+		if (Player.userGrid[x][y] == 1) {
+			// change the grid value from 1 to 2 to signify hit
+			Player.userGrid[x][y] = 2;
+			setReply("It's a Hit!!!!!");
+		} else if (Player.userGrid[x][y] == 0) {
+			Player.userGrid[x][y] = 2;
+			setReply("It's a miss!!!!!");
+		} else if (Player.userGrid[x][y] == 2) {
+			setReply("The location has been hit earlier");
+
+		}
 	}
 
-	public int[] mediumMode(Boolean hitResult) {
+	public void mediumMode(Boolean hitResult) {
 
 		Random ran = new Random();
 		int x = ran.nextInt(9);
@@ -57,7 +91,7 @@ public class HitStrategy {
 		if (!hitResult && direction.isEmpty()) {
 			boolean newHit = false;
 			while (!newHit) {
-				if (GridUser.changedUserGrid[x][y] == 2) {
+				if (Player.userGrid[x][y] == 2) {
 					x = ran.nextInt(9);
 					y = ran.nextInt(11);
 				} else
@@ -149,19 +183,24 @@ public class HitStrategy {
 		hitY = y;
 		// System.out.println(x +" ; "+ y);
 		int hitCoord[] = { x, y };
-		return hitCoord;
+		setCoords(hitCoord);
+		if (Player.userGrid[x][y] == 1) {
+			// change the grid value from 1 to 2 to signify hit
+			Player.userGrid[x][y] = 2;
+			setReply("It's a Hit!!!!!");
+		} else if (Player.userGrid[x][y] == 0) {
+			Player.userGrid[x][y] = 2;
+			setReply("It's a miss!!!!!");
+		} else if (Player.userGrid[x][y] == 2) {
+			setReply("The location has been hit earlier");
+
+		}
 
 	}
 
-	public int[] hardMode(Boolean hitResult) {
+	public void hardMode(Boolean hitResult) {
 		int x = 0, y = 0;
 		int mostProbable = probabilityGrid[x][y];
-
-		/*
-		 * for (int i = 0; i < 9; i++) { for (int j = 0; j < 11; j++) { if
-		 * (probabilityGrid[i][j] > mostProbable) { mostProbable =
-		 * probabilityGrid[i][j]; x = i; y = j; minMax = 1; } } }
-		 */
 
 		if (minMax == 0) {
 			for (int i = 0; i < 9; i++) {
@@ -188,11 +227,11 @@ public class HitStrategy {
 			}
 			minMax = 0;
 		}
-		
+
 		if (!hitResult && direction.isEmpty()) {
 			boolean newHit = false;
 			while (!newHit) {
-				if (GridUser.changedUserGrid[x][y] == 2) {
+				if (Player.userGrid[x][y] == 2) {
 					if (minMax == 0) {
 						for (int i = 0; i < 9; i++) {
 							for (int j = 0; j < 11; j++) {
@@ -372,15 +411,26 @@ public class HitStrategy {
 				}
 			}
 		}
-		
-		
-		System.out.println(x + " ; " + y + " -> " +probabilityGrid[x][y]);
+
+		System.out.println(x + " ; " + y + " -> " + probabilityGrid[x][y]);
 		probabilityGrid[x][y] = -1;
 		hitX = x;
 		hitY = y;
-		
+
 		int hitCoord[] = { x, y };
-		return hitCoord;
+		setCoords(hitCoord);
+		
+		if (Player.userGrid[x][y] == 1) {
+			// change the grid value from 1 to 2 to signify hit
+			Player.userGrid[x][y] = 2;
+			setReply("It's a Hit!!!!!");
+		} else if (Player.userGrid[x][y] == 0) {
+			Player.userGrid[x][y] = 2;
+			setReply("It's a miss!!!!!");
+		} else if (Player.userGrid[x][y] == 2) {
+			setReply("The location has been hit earlier");
+
+		}
 
 	}
 
