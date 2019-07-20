@@ -17,6 +17,8 @@ public class HitStrategy extends Observable {
 	int hitX, hitY;
 	int counter = 0;
 	int minMax = 0;
+	private int scoring=0;
+	private int scoringComp=0;
 	private String reply = "";
 	private int[] coords = {};
 
@@ -53,6 +55,13 @@ public class HitStrategy extends Observable {
 		notifyObservers("userHitorMiss");
 	}
 
+	public void setScore(int s) {
+		scoring=scoring+s;
+	}
+	public int getScore() {
+		return scoring;
+	}
+	
 	public void randomHit() {
 		Random ran = new Random();
 		int x = ran.nextInt(9);
@@ -73,8 +82,10 @@ public class HitStrategy extends Observable {
 			// change the grid value from 1 to 2 to signify hit
 			Player.userGrid[x][y] = 2;
 			setReply("It's a Hit!!!!!");
+			setScore(5);
 		} else if (Player.userGrid[x][y] == 0) {
 			Player.userGrid[x][y] = 2;
+			setScore(-2);
 			setReply("It's a miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2) {
 			setReply("The location has been hit earlier");

@@ -37,17 +37,19 @@ public class RadarGrid implements Observer {
 	Computer computer;
 	int coordX = 0;
 	int coordY = 0;
-	Label resulttext2, resulttext1;
+	Label resulttext2, resulttext1, resulttext3, resulttext4;
 	GridPane g_pane1;
 	GridUser ob;
 
 	Boolean lastCompResult = false;
 	private HitStrategy strategy;
 
-	public RadarGrid(Computer computer, Label resulttext2, Label resulttext1, GridUser ob, HitStrategy strategy) {
+	public RadarGrid(Computer computer, Label resulttext2, Label resulttext1,Label resulttext3,Label resulttext4, GridUser ob, HitStrategy strategy) {
 
 		this.resulttext2 = resulttext2;
 		this.resulttext1 = resulttext1;
+		this.resulttext3 = resulttext3;
+		this.resulttext4 = resulttext4;
 		this.computer = computer;
 		this.computer.addObserver(this);
 		this.ob = ob;
@@ -138,14 +140,19 @@ public class RadarGrid implements Observer {
 		if (o instanceof Computer) {
 			System.out.println("update called");
 			// TODO Auto-generated method stub
+
 			if (arg.equals("HITORMISS")) {
 				String res = computer.getReply();
+				int score1=computer.getScoreComp();
+				resulttext3.setText(""+score1);
 				afterCompReply(res);
 
 			}
 		}
 		else {
 			String reply =  ((HitStrategy) o).getReply();
+			int  score =  ((HitStrategy) o).getScore();
+			
 			int coord[] =  ((HitStrategy) o).getCoords();
 			if(reply.contains("Hit")) {
 				lastCompResult = true;
@@ -155,6 +162,7 @@ public class RadarGrid implements Observer {
 			}	
 
 			resulttext1.setText(reply);
+			resulttext4.setText(""+score);
 			ob.callCheckIfCompWon();
 			
 		}

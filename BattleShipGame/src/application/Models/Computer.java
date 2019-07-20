@@ -14,7 +14,7 @@ public class Computer extends Observable {
 	final int cols = 11;
 
 	public Integer[][] computerGrid = new Integer[rows][cols];
-
+private int scoringComp=0;
 	private String reply = "";
 
 	// public Integer[][] changedComputerGrid = new Integer[rows][cols];
@@ -28,6 +28,16 @@ public class Computer extends Observable {
 		setChanged();
 		notifyObservers("HITORMISS");
 	}
+	
+	public void setScoreComp(int s) {
+		scoringComp=scoringComp+s;
+	}
+	public int getScoreComp() {
+		return scoringComp;
+	}
+
+	
+	
 
 	public Computer() {
 
@@ -37,7 +47,7 @@ public class Computer extends Observable {
 	
 	/**
 	 * Takes the input based on the event listener Provides the hit or miss while
-	 * hitting on the computer grid
+	 * hitting on the user grid
 	 * 
 	 * @param x coordinate
 	 * @param y coordinates
@@ -57,10 +67,15 @@ public class Computer extends Observable {
 			setReply("It's a Hit!!!!!");
 			
 			//return "It's a Hit!!!!!";
+			setScoreComp(5);
+			// incrementing computer score for a successful hit
+			
 		} else if (computerGrid[x][y] == 0) {
 
 			setReply("It's a miss!!!!!");
 			//return "It's a miss!!!!!";
+			setScoreComp(-2);
+			//loosing points for a miss
 
 		} else if (computerGrid[x][y] == 2) {
 
@@ -78,6 +93,9 @@ public class Computer extends Observable {
 		//return "Some other error";
 
 	}
+	/*
+	 * Returning computer score
+	 */
 
 	/**
 	 * Provides if its a hit or miss while hitting on the computer grid

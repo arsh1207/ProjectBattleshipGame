@@ -12,6 +12,7 @@ import application.Views.AlertBox;
 public class Player extends Observable {
 
 	//
+	public static int userScore;
 	public List<String> deployedShips = new ArrayList<>();
 
 	public HashMap<String, Integer> convert = new HashMap<>();
@@ -121,12 +122,17 @@ public class Player extends Observable {
 			computerGrid[x][y] = 2;
 
 			setReply("It's a Hit!!!!!");
+			userScore+=10;
+			// incrementing user score for a successful hit
 			
 			//return "It's a Hit!!!!!";
 		} else if (computerGrid[x][y] == 0) {
 
 			setReply("It's a miss!!!!!");
 			//return "It's a miss!!!!!";
+			
+			userScore-=2;
+			//loosing points for a miss
 
 		} else if (computerGrid[x][y] == 2) {
 
@@ -142,6 +148,12 @@ public class Player extends Observable {
 		//return "Some other error";
 
 	}
+	/*
+	 * Returning user score
+	 */
+	public int GetScore() {
+		return userScore;	
+		}
 
 	/**
 	 * Takes the input based on the event listener Provides the hit or miss while

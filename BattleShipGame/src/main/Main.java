@@ -50,7 +50,7 @@ public class Main extends Application{
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;
-	Label resulttext1, resulttext2;
+	Label resulttext1, resulttext2, resulttext3, resulttext4;
 	public static String shipType = "";
 	public static String gameMode = "Medium"; 
 	
@@ -110,8 +110,10 @@ public class Main extends Application{
 			 seeResultUser("User ");
 				v_box3.getChildren().add(l1);
 				seeResultComp("Computer ");
+				Score("Player SCORE");
+				ScoreComp("Computer SCORE");
 
-				RadarGrid radarGridObserver = new RadarGrid(computer, resulttext2, resulttext1, ob, strategy);
+				RadarGrid radarGridObserver = new RadarGrid(computer, resulttext2, resulttext1,resulttext3,resulttext4, ob, strategy);
 			 radarGridObserver.setUserRadarGrid(g_pane1, resulttext2);
 			
 			sg.setUserShipGrid(g_pane2);
@@ -353,6 +355,33 @@ public class Main extends Application{
 		resulttext2 = new Label();
 		resulttext2.setStyle("-fx-background-color: white;");
 		v_box3.getChildren().addAll(resultLabel, resulttext2);
+	}
+	
+	/**
+	 * Places the Score of the user on the screen
+	 * 
+	 */
+	public void Score(String title) {
+		Label resultLabel = new Label(title + ": ");
+		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
+		resultLabel.setTextFill(Color.web("#c40831"));
+		resulttext3 = new Label();
+		resulttext3.setStyle("-fx-background-color: white;");
+		v_box3.getChildren().addAll(resultLabel, resulttext3);
+
+	}
+	/**
+	 * Places the Score of the Computer on the screen
+	 * 
+	 */
+	public void ScoreComp(String title) {
+		Label resultLabel = new Label(title + ": ");
+		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
+		resultLabel.setTextFill(Color.web("#c40831"));
+		resulttext4 = new Label();
+		resulttext4.setStyle("-fx-background-color: white;");
+		v_box3.getChildren().addAll(resultLabel, resulttext4);
+
 	}
 
 
