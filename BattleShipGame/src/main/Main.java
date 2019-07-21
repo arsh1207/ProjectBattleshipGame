@@ -37,24 +37,21 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-public class Main extends Application{
+public class Main extends Application {
 
-	
 	static GridUser ob;
 	Scene scene1;
 	Scene scene2;
 	GridPane g_pane1, g_pane2;
 	VBox v_box1, v_box2, v_box3;
-	//static Button[][] radarButton;
-	//static Button[][] userButton;
+	// static Button[][] radarButton;
+	// static Button[][] userButton;
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;
 	Label resulttext1, resulttext2, resulttext3, resulttext4;
 	public static String shipType = "";
-	public static String gameMode = "Medium"; 
-	
-	
+	public static String gameMode = "Medium";
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -67,16 +64,15 @@ public class Main extends Application{
 			Stage stage = primaryStage;
 			stage.setTitle(" Battle Ship Game");
 			launchStartupWindow(stage);
-			
+
 			Player player = new Player();
 			Computer computer = new Computer();
 			HitStrategy strategy = new HitStrategy();
 			ob = new GridUser(player, computer, strategy);
 			ShipGrid sg = new ShipGrid(player, ob, strategy);
-			
-			
-			 ScrollPane sp = new ScrollPane();
-	
+
+			ScrollPane sp = new ScrollPane();
+
 			SplitPane split_pane = new SplitPane();
 			g_pane1 = new GridPane();
 			g_pane2 = new GridPane();
@@ -91,54 +87,53 @@ public class Main extends Application{
 			imageView.setFitWidth(800);
 			imageView.setPreserveRatio(true);
 			imageView.fitWidthProperty().bind(v_box2.widthProperty());
-		//	Battleship_Grid_Pane obj = new Battleship_Grid_Pane();
+			// Battleship_Grid_Pane obj = new Battleship_Grid_Pane();
 
-			//MenuBar menuBar = obj.battleMenu(v_box1, stage);
+			// MenuBar menuBar = obj.battleMenu(v_box1, stage);
 			MenuBar menuBar = battleMenu(v_box1, stage);
 
-			 g_pane1.setVgap(10);
-			 g_pane1.setHgap(10);
+			g_pane1.setVgap(10);
+			g_pane1.setHgap(10);
 
-			 g_pane2.setVgap(10);
-			 g_pane2.setHgap(10);
+			g_pane2.setVgap(10);
+			g_pane2.setHgap(10);
 			// g_pane.setStyle("-fx-color: black;");
-			//g_pane1.setGridLinesVisible(true);
-			//g_pane2.setGridLinesVisible(true);
+			// g_pane1.setGridLinesVisible(true);
+			// g_pane2.setGridLinesVisible(true);
 
 			// g_pane.alignmentProperty().addListener(listener );
-			 Label l1 = new Label();
-			 seeResultUser("User ");
-				v_box3.getChildren().add(l1);
-				seeResultComp("Computer ");
-				Score("Player SCORE");
-				ScoreComp("Computer SCORE");
+			Label l1 = new Label();
+			seeResultUser("User ");
+			v_box3.getChildren().add(l1);
+			seeResultComp("Computer ");
+			Score("Player SCORE");
+			ScoreComp("Computer SCORE");
 
-				RadarGrid radarGridObserver = new RadarGrid(computer, resulttext2, resulttext1,resulttext3,resulttext4, ob, strategy);
-			 radarGridObserver.setUserRadarGrid(g_pane1, resulttext2);
-			
+			RadarGrid radarGridObserver = new RadarGrid(computer, resulttext2, resulttext1, resulttext3, resulttext4,
+					ob, strategy);
+			radarGridObserver.setUserRadarGrid(g_pane1, resulttext2);
+
 			sg.setUserShipGrid(g_pane2);
 			Button userRandomShips = new Button("Feelin' Lazy?");
 			VBox v_box4 = new VBox();
 
 			v_box1.getChildren().addAll(g_pane1, g_pane2, userRandomShips);
 			v_box1.setSpacing(20.0);
-			
+
 			userRandomShips.setOnAction((ActionEvent event) -> {
-				if(player.numOfShipsDep==0)
+				if (player.numOfShipsDep == 0)
 					player.deployUserRandomShips();
 			});
-			
 
 			v_box2.setStyle("-fx-background-color: #000000;");
 			v_box2.getChildren().addAll(imageView, v_box3);
 
 			split_pane.setDividerPositions(0.7);
-			//sp.setBackground(Color.WHITE);
+			// sp.setBackground(Color.WHITE);
 			sp.setContent(v_box1);
 			split_pane.getItems().add(sp);
 			split_pane.getItems().add(v_box2);
 
-			
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
@@ -182,7 +177,7 @@ public class Main extends Application{
 			sp.getStylesheets().add("application/Views/application.css");
 			sp.fitToWidthProperty();
 			v_box1.prefWidthProperty().bind(sp.widthProperty());
-			//v_box1.prefHeightProperty().bind(sp.heightProperty());
+			// v_box1.prefHeightProperty().bind(sp.heightProperty());
 			split_pane.prefHeightProperty().bind(stage.heightProperty());
 			stage.show();
 
@@ -193,9 +188,9 @@ public class Main extends Application{
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public MenuBar battleMenu(VBox v_box1, Stage stage) {
 		Menu menu1 = new Menu("Game");
 		Menu menu2 = new Menu("BattleShip");
@@ -214,7 +209,7 @@ public class Main extends Application{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		//	ob.reInitialize();
+			// ob.reInitialize();
 		});
 
 		menu1Item2.setOnAction(e -> {
@@ -252,7 +247,7 @@ public class Main extends Application{
 		Battleship.setOnAction(e -> {
 
 			shipType = "Battleship";
-			
+
 		});
 		Cruiser.setOnAction(e -> {
 
@@ -260,17 +255,16 @@ public class Main extends Application{
 		});
 		Submarine.setOnAction(e -> {
 			shipType = "Submarine";
-			
 
 		});
 		Destroyer.setOnAction(e -> {
 			shipType = "Destroyer";
-			
+
 		});
 
 		return menuBar;
 	}
-	
+
 	/**
 	 * The startup window gets launched with this method
 	 * 
@@ -298,17 +292,17 @@ public class Main extends Application{
 		MenuItem mI3 = new MenuItem("Hard");
 		MenuButton menuButton = new MenuButton("Please select a mode.");
 		menuButton.getItems().addAll(mI1, mI2, mI3);
-		
+
 		mI1.setOnAction(event -> {
-		   gameMode = "Easy";
+			gameMode = "Easy";
 		});
 		mI2.setOnAction(event -> {
-		    gameMode = "Medium";
+			gameMode = "Medium";
 		});
 		mI3.setOnAction(event -> {
-		    gameMode = "Hard";
+			gameMode = "Hard";
 		});
-		
+
 		Button btn1 = new Button("Start New Game");
 		btn1.setStyle("-fx-background-color: #a3a0a0; ");
 		Button btn2 = new Button("Exit Game");
@@ -327,7 +321,7 @@ public class Main extends Application{
 		root1.add(btn2, 0, 2);
 		stg.setScene(scene2);
 	}
-	
+
 	/**
 	 * Places the result of the user on the screen
 	 * 
@@ -356,7 +350,7 @@ public class Main extends Application{
 		resulttext2.setStyle("-fx-background-color: white;");
 		v_box3.getChildren().addAll(resultLabel, resulttext2);
 	}
-	
+
 	/**
 	 * Places the Score of the user on the screen
 	 * 
@@ -370,6 +364,7 @@ public class Main extends Application{
 		v_box3.getChildren().addAll(resultLabel, resulttext3);
 
 	}
+
 	/**
 	 * Places the Score of the Computer on the screen
 	 * 
@@ -383,6 +378,5 @@ public class Main extends Application{
 		v_box3.getChildren().addAll(resultLabel, resulttext4);
 
 	}
-
 
 }

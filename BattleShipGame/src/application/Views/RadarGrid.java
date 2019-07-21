@@ -13,22 +13,16 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import main.Main;
-
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 import java.util.Observable;
 import java.util.Observer;
-
 import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
-import application.Models.Player;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
-import javafx.scene.*;
 
-@SuppressWarnings("deprecation")
 public class RadarGrid implements Observer {
 
 	int rowButtonCount;
@@ -44,7 +38,8 @@ public class RadarGrid implements Observer {
 	Boolean lastCompResult = false;
 	private HitStrategy strategy;
 
-	public RadarGrid(Computer computer, Label resulttext2, Label resulttext1,Label resulttext3,Label resulttext4, GridUser ob, HitStrategy strategy) {
+	public RadarGrid(Computer computer, Label resulttext2, Label resulttext1, Label resulttext3, Label resulttext4,
+			GridUser ob, HitStrategy strategy) {
 
 		this.resulttext2 = resulttext2;
 		this.resulttext1 = resulttext1;
@@ -143,28 +138,26 @@ public class RadarGrid implements Observer {
 
 			if (arg.equals("HITORMISS")) {
 				String res = computer.getReply();
-				int score1=computer.getScoreComp();
-				resulttext3.setText(""+score1);
+				int score1 = computer.getScoreComp();
+				resulttext3.setText("" + score1);
 				afterCompReply(res);
 
 			}
-		}
-		else {
-			String reply =  ((HitStrategy) o).getReply();
-			int  score =  ((HitStrategy) o).getScore();
-			
-			int coord[] =  ((HitStrategy) o).getCoords();
-			if(reply.contains("Hit")) {
+		} else {
+			String reply = ((HitStrategy) o).getReply();
+			int score = ((HitStrategy) o).getScore();
+
+			int coord[] = ((HitStrategy) o).getCoords();
+			if (reply.contains("Hit")) {
 				lastCompResult = true;
-			}
-			else {
+			} else {
 				lastCompResult = false;
-			}	
+			}
 
 			resulttext1.setText(reply);
-			resulttext4.setText(""+score);
+			resulttext4.setText("" + score);
 			ob.callCheckIfCompWon();
-			
+
 		}
 
 	}
@@ -195,7 +188,6 @@ public class RadarGrid implements Observer {
 			ob.callCheckIfUserWon();
 
 			ob.computerTurn(lastCompResult, Main.gameMode);
-			
 
 		} catch (
 

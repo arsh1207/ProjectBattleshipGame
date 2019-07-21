@@ -102,7 +102,7 @@ public class ShipGrid implements Observer {
 								if (!player.isShipDeployed(Main.shipType)) {
 									String res = initialCoordinates + " " + finalCoordinates;
 
-									player.deployUserGrid(res, Main.shipType);
+									ob.callDeployUserGrid(res, Main.shipType);
 
 								} else {
 									userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");

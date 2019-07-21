@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import application.Models.*;
+import main.Main;
 
 
 /**
@@ -87,6 +88,10 @@ public class GridUser {
 	 */
 	public void callDeployComputerShips(Computer computer) {
 		computer.deployComputerShips();
+	}
+	
+	public void callDeployUserGrid(String coordinates, String shipType) {
+		player.deployUserGrid(coordinates, shipType);
 	}
 
 }

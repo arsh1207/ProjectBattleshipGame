@@ -62,19 +62,21 @@ private int scoringComp=0;
 			// change the grid value from 1 to 2 to signify hit
 
 			computerGrid[x][y] = 2;
+			
+			setScoreComp(5);
 			System.out.println("Hit");
 
 			setReply("It's a Hit!!!!!");
 			
 			//return "It's a Hit!!!!!";
-			setScoreComp(5);
+			
 			// incrementing computer score for a successful hit
 			
 		} else if (computerGrid[x][y] == 0) {
-
+			setScoreComp(-2);
 			setReply("It's a miss!!!!!");
 			//return "It's a miss!!!!!";
-			setScoreComp(-2);
+			
 			//loosing points for a miss
 
 		} else if (computerGrid[x][y] == 2) {
@@ -93,15 +95,8 @@ private int scoringComp=0;
 		//return "Some other error";
 
 	}
-	/*
-	 * Returning computer score
-	 */
-
-	/**
-	 * Provides if its a hit or miss while hitting on the computer grid
-	 * 
-	 * @return String defining the computer turn results
-	 */
+	
+	
 	
 
 	/**

@@ -81,8 +81,9 @@ public class HitStrategy extends Observable {
 		if (Player.userGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
 			Player.userGrid[x][y] = 2;
-			setReply("It's a Hit!!!!!");
 			setScore(5);
+			setReply("It's a Hit!!!!!");
+			
 		} else if (Player.userGrid[x][y] == 0) {
 			Player.userGrid[x][y] = 2;
 			setScore(-2);
