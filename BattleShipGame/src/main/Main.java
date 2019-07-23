@@ -69,8 +69,9 @@ public class Main extends Application {
 			Computer computer = new Computer();
 			HitStrategy strategy = new HitStrategy();
 			ob = new GridUser(player, computer, strategy);
-			ShipGrid sg = new ShipGrid(player, ob, strategy);
-
+			ShipGrid sg = new ShipGrid(player, ob);
+			player.addObserver(sg);
+			strategy.addObserver(sg);
 			ScrollPane sp = new ScrollPane();
 
 			SplitPane split_pane = new SplitPane();
@@ -109,17 +110,15 @@ public class Main extends Application {
 			Score("Player SCORE");
 			ScoreComp("Computer SCORE");
 
-			RadarGrid radarGridObserver = new RadarGrid(computer, resulttext2, resulttext1, resulttext3, resulttext4,
-					ob, strategy);
+			RadarGrid radarGridObserver = new RadarGrid(resulttext2, resulttext1, resulttext3, resulttext4, ob);
+			computer.addObserver(radarGridObserver);
+			strategy.addObserver(radarGridObserver);
 			radarGridObserver.setUserRadarGrid(g_pane1, resulttext2);
-
 			sg.setUserShipGrid(g_pane2);
 			Button userRandomShips = new Button("Feelin' Lazy?");
 			VBox v_box4 = new VBox();
-
 			v_box1.getChildren().addAll(g_pane1, g_pane2, userRandomShips);
 			v_box1.setSpacing(20.0);
-
 			userRandomShips.setOnAction((ActionEvent event) -> {
 				if (player.numOfShipsDep == 0)
 					player.deployUserRandomShips();

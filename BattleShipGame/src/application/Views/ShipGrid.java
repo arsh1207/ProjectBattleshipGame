@@ -30,14 +30,14 @@ public class ShipGrid implements Observer {
 	private GridUser ob;
 
 	private Player player;
-	private HitStrategy strategy;
+	//private HitStrategy strategy;
 
-	public ShipGrid(Player player, GridUser ob, HitStrategy strategy) {
+	public ShipGrid(Player player, GridUser ob) {
 		this.player = player;
-		player.addObserver(this);
+	//	player.addObserver(this);
 		this.ob = ob;
-		this.strategy = strategy;
-		strategy.addObserver(this);
+		//this.strategy = strategy;
+		//strategy.addObserver(this);
 	}
 
 	/**

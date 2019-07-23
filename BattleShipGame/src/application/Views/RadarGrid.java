@@ -28,7 +28,7 @@ public class RadarGrid implements Observer {
 	int rowButtonCount;
 	int columnButtonCount;
 	public Button[][] radarButton;
-	Computer computer;
+	//Computer computer;
 	int coordX = 0;
 	int coordY = 0;
 	Label resulttext2, resulttext1, resulttext3, resulttext4;
@@ -36,21 +36,16 @@ public class RadarGrid implements Observer {
 	GridUser ob;
 
 	Boolean lastCompResult = false;
-	private HitStrategy strategy;
+	//private HitStrategy strategy;
 
-	public RadarGrid(Computer computer, Label resulttext2, Label resulttext1, Label resulttext3, Label resulttext4,
-			GridUser ob, HitStrategy strategy) {
+	public RadarGrid(Label resulttext2, Label resulttext1, Label resulttext3, Label resulttext4,
+			GridUser ob) {
 
 		this.resulttext2 = resulttext2;
 		this.resulttext1 = resulttext1;
 		this.resulttext3 = resulttext3;
 		this.resulttext4 = resulttext4;
-		this.computer = computer;
-		this.computer.addObserver(this);
 		this.ob = ob;
-		this.strategy = strategy;
-		strategy.addObserver(this);
-
 	}
 
 	/**
@@ -104,7 +99,7 @@ public class RadarGrid implements Observer {
 					String xy[] = b.getId().split(":");
 					coordX = Integer.parseInt(xy[0]);
 					coordY = Integer.parseInt(xy[1]);
-					ob.callUserTurn(computer, coordX, coordY);
+					ob.callUserTurn(coordX, coordY);
 
 				});
 				g_pane.add(b, columnButtonCount, rowButtonCount);
@@ -137,8 +132,8 @@ public class RadarGrid implements Observer {
 			// TODO Auto-generated method stub
 
 			if (arg.equals("HITORMISS")) {
-				String res = computer.getReply();
-				int score1 = computer.getScoreComp();
+				String res = ((Computer) o).getReply();
+				int score1 = ((Computer) o).getScoreComp();
 				resulttext3.setText("" + score1);
 				afterCompReply(res);
 

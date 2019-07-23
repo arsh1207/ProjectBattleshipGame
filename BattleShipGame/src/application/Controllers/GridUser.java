@@ -76,7 +76,7 @@ public class GridUser {
 	 * @param coordX
 	 * @param coordY
 	 */
-	public void callUserTurn(Computer computer, int coordX, int coordY) {
+	public void callUserTurn(int coordX, int coordY) {
 		computer.userTurn(coordX, coordY);
 
 	}
