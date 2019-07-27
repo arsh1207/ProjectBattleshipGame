@@ -20,7 +20,7 @@ public class HitStrategySalvo extends Observable {
 	private String reply = "";
 	private int[] coords = {};
 	public static int buttonCount = 0;
-	ArrayList<int[]> coordsList = new ArrayList<>();
+	//ArrayList<int> coordsList = new ArrayList<>();
 
 	public HitStrategySalvo() {
 		for (int i = 0; i < 9; i++) {
@@ -200,20 +200,22 @@ public class HitStrategySalvo extends Observable {
 			hitY = y;
 			// System.out.println(x +" ; "+ y);
 			//I need different coordinates to get selected to over here
-			hitCoord[0] = x;
-			hitCoord[1] = y;
 			selectedcoordsx.add(x);
 			selectedcoordsy.add(y);
-			coordsList.add(hitCoord);
+		//	coordsList.add(hitCoord);
 			buttonCount++;
 		}
 		buttonCount = 4;
 		//from this part set will be called n number of times to set
 		//buttons based on whether comp targets were a hit or a miss
 		while(buttonCount >= 0) {
-			hitCoord = coordsList.get(buttonCount);
-			x = hitCoord[0];
-			y = hitCoord[1];
+			//hitCoord = coordsList.get(buttonCount);
+			//x = hitCoord[0];
+			//y = hitCoord[1];
+			x = selectedcoordsx.get(buttonCount);
+			y = selectedcoordsy.get(buttonCount);
+			hitCoord[0] = x;
+			hitCoord[1] = y;
 			System.out.println("Checking coordinates "+x+" and "+y);
 			setCoords(hitCoord);
 			if (Player.userGrid[x][y] == 1) {
