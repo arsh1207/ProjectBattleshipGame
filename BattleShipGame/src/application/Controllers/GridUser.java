@@ -20,14 +20,16 @@ public class GridUser {
 	Computer computer;
 	Player player;
 	HitStrategy strategy;
+	HitStrategySalvo strategySalvo;
 
 	/**
 	 * Constructor used for initializing the required objects
 	 */
-	public GridUser(Player player, Computer computer, HitStrategy strategy) {
+	public GridUser(Player player, Computer computer, HitStrategy strategy, HitStrategySalvo strategySalvo) {
 		this.computer = computer;
 		this.player = player;
 		this.strategy = strategy;
+		this.strategySalvo = strategySalvo;
 
 	}
 
@@ -37,13 +39,22 @@ public class GridUser {
 	 * @return String defining the computer turn results
 	 */
 	public void computerTurn(Boolean hitResult, String gameMode) {
-
-		if (gameMode.equals("Easy"))
-			strategy.randomHit();
-		else if (gameMode.equals("Medium"))
-			strategy.mediumMode(hitResult);
-		else
-			strategy.hardMode(hitResult);
+		if(Main.gameType.equals("Salvo")) {
+			if (gameMode.equals("Easy"))
+				strategySalvo.randomHit();
+			else if (gameMode.equals("Medium"))
+				strategySalvo.mediumMode(hitResult);
+			else
+				strategySalvo.hardMode(hitResult);
+		}
+		else {
+			if (gameMode.equals("Easy"))
+				strategy.randomHit();
+			else if (gameMode.equals("Medium"))
+				strategy.mediumMode(hitResult);
+			else
+				strategy.hardMode(hitResult);
+		}
 
 	}
 
@@ -92,6 +103,10 @@ public class GridUser {
 	
 	public void callDeployUserGrid(String coordinates, String shipType) {
 		player.deployUserGrid(coordinates, shipType);
+	}
+	
+	public void callSunkenShips(Computer computer) {
+		computer.checkSunkenShips();
 	}
 
 }
