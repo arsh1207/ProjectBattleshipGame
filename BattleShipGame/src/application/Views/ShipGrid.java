@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import application.Controllers.GridUser;
 import application.Models.HitStrategy;
+import application.Models.HitStrategySalvo;
 import application.Models.Player;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -20,6 +21,7 @@ public class ShipGrid implements Observer {
 	static int columnButtonCount;
 	static Button[][] userButton;
 	static int noButtonsClicked = 0;
+	static int buttonCount = 0;
 	int xInitialCo;
 	int yInitialCo;
 
@@ -158,7 +160,7 @@ public class ShipGrid implements Observer {
 				userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
 				AlertBox.displayError(Main.shipType, value);
 			}
-		} else {
+		} else if(o instanceof HitStrategy) {
 			String reply =  ((HitStrategy) o).getReply();
 			int coord[] =  ((HitStrategy) o).getCoords();
 			if(reply.contains("Hit")) {
@@ -167,7 +169,17 @@ public class ShipGrid implements Observer {
 			else {
 				setUserShipCoordinates(coord[0], coord[1], "Miss");
 			}
+		}else {
+			String reply =  ((HitStrategySalvo) o).getReply();
+			int coord[] =  ((HitStrategySalvo) o).getCoords();
+			if(reply.contains("Hit")) {
+				setUserShipCoordinates(coord[0], coord[1], "Hit");
+			}
+			else {
+				setUserShipCoordinates(coord[0], coord[1], "Miss");
+			}
 		}
+		
 	}
 
 	/**

@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
+import application.Models.HitStrategySalvo;
 import application.Models.Player;
 import application.Views.*;
 import javafx.application.Application;
@@ -50,6 +51,7 @@ public class Main extends Application {
 	int columnButtonCount;
 	int buttonRowIndex;
 	Label resulttext1, resulttext2, resulttext3, resulttext4;
+	public static String gameType = "Salvo";
 	public static String shipType = "";
 	public static String gameMode = "Medium";
 
@@ -68,13 +70,17 @@ public class Main extends Application {
 			Player player = new Player();
 			Computer computer = new Computer();
 			HitStrategy strategy = new HitStrategy();
-			ob = new GridUser(player, computer, strategy);
+			HitStrategySalvo strategySalvo = new HitStrategySalvo();
+			ob = new GridUser(player, computer, strategy, strategySalvo);
 			ShipGrid sg = new ShipGrid(player, ob);
 			player.addObserver(sg);
 			strategy.addObserver(sg);
+			strategySalvo.addObserver(sg);
 			ScrollPane sp = new ScrollPane();
 
 			SplitPane split_pane = new SplitPane();
+			ScrollPane sp2 = new ScrollPane(split_pane);
+			sp2.setFitToWidth(true);
 			g_pane1 = new GridPane();
 			g_pane2 = new GridPane();
 
@@ -142,6 +148,10 @@ public class Main extends Application {
 					alert.setHeaderText("The battle ships are placed correctly.");
 					alert.setContentText("You can start playing!");
 					alert.showAndWait();
+					//Salve mode alert box
+					if(gameType.equals("Salvo")) {
+						salvoAlertCall(alert);
+					}
 					for (int i = 0; i < 9; i++) {
 						for (int j = 0; j < 11; j++) {
 							radarGridObserver.radarButton[i][j].setDisable(false);
@@ -170,7 +180,8 @@ public class Main extends Application {
 			}
 
 			v_box3.getChildren().addAll(startBtn);
-			v_box4.getChildren().addAll(menuBar, split_pane);
+			//v_box4.getChildren().addAll(menuBar, split_pane);
+			v_box4.getChildren().addAll(menuBar, sp2);
 			v_box1.fillWidthProperty();
 			scene1 = new Scene(v_box4, 800, 750);
 			sp.getStylesheets().add("application/Views/application.css");
@@ -376,6 +387,17 @@ public class Main extends Application {
 		resulttext4.setStyle("-fx-background-color: white;");
 		v_box3.getChildren().addAll(resultLabel, resulttext4);
 
+	}
+	
+	/**
+	 * Method to call the alert box for salvo variation in the starting
+	 * @param alert
+	 */
+	public static void salvoAlertCall(Alert alert) {
+		alert.setTitle("Salvo Mode");
+		alert.setHeaderText("You are in Salvo mode.");
+		alert.setContentText("The number of shots you take depends on the number of ships you have left.");
+		alert.showAndWait();
 	}
 
 }

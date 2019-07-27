@@ -20,7 +20,7 @@ public class Player extends Observable {
 	public int numOfShipsDep = 0;
 
 	public String shipType = "";
-
+	
 	int[] coords = {};
 
 	String axis = "";
@@ -41,7 +41,6 @@ public class Player extends Observable {
 	public Player() {
 
 		initialize();
-
 	}
 
 	public String getShipType() {

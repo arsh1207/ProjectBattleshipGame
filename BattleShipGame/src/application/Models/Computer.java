@@ -1,6 +1,8 @@
 package application.Models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
@@ -14,7 +16,11 @@ public class Computer extends Observable {
 	final int cols = 11;
 
 	public Integer[][] computerGrid = new Integer[rows][cols];
-private int scoringComp=0;
+	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
+	static ArrayList<String> tempList = new ArrayList<String>();
+	static ArrayList<String> sunkenShips = new ArrayList<String>();
+	static ArrayList<String> coordinatesHit = new ArrayList<String>();
+	private int scoringComp=0;
 	private String reply = "";
 
 	// public Integer[][] changedComputerGrid = new Integer[rows][cols];
@@ -34,6 +40,15 @@ private int scoringComp=0;
 	}
 	public int getScoreComp() {
 		return scoringComp;
+	}
+	
+	public void setSunkenShips(String shipType) {
+		sunkenShips.add(shipType);
+	}
+	public ArrayList<String> getSunkenShips() {
+		
+		return sunkenShips;
+		
 	}
 
 	
@@ -58,6 +73,8 @@ private int scoringComp=0;
 
 		// get the X and y coordinate from the input
 		System.out.println("reached here" + x + "; " + y);
+		String coordx = Integer.toString(x);
+		String coordy = Integer.toString(y);
 		if (computerGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
 
@@ -65,8 +82,9 @@ private int scoringComp=0;
 			
 			setScoreComp(5);
 			System.out.println("Hit");
-
+			coordinatesHit.add(coordx+","+coordy);
 			setReply("It's a Hit!!!!!");
+			
 			
 			//return "It's a Hit!!!!!";
 			
@@ -120,10 +138,12 @@ private int scoringComp=0;
 
 						for (int i = 0; i < 5; i++) {
 							Carrier.put((carrierY + i), carrierX);
+							putIntoShipsMap("Carrier", carrierY + i, carrierX, "horizontal");
 						}
 					} else {
 						for (int i = 0; i < 5; i++) {
 							Carrier.put((carrierY - i), carrierX);
+							putIntoShipsMap("Carrier", carrierY - i, carrierX, "horizontal");
 						}
 					}
 					placed = true;
@@ -141,9 +161,11 @@ private int scoringComp=0;
 
 			int battleShipX = rand.nextInt(9);
 			int battleShipY = rand.nextInt(11);
-
+			
 			HashMap<Integer, Integer> BattleShip = new HashMap<>();
-
+			
+			tempList = new ArrayList<String>();
+			
 			placed = false;
 			while (!placed) {
 				if (check(battleShipX, battleShipY, "vertical", 4)) {
@@ -151,10 +173,12 @@ private int scoringComp=0;
 
 						for (int i = 0; i < 4; i++) {
 							BattleShip.put((battleShipX + i), battleShipY);
+							putIntoShipsMap("Battleship", battleShipX + i, battleShipY, "vertical");
 						}
 					} else {
 						for (int i = 0; i < 4; i++) {
 							BattleShip.put((battleShipX - i), battleShipY);
+							putIntoShipsMap("Battleship", battleShipX - i, battleShipY, "vertical");
 						}
 					}
 					placed = true;
@@ -170,11 +194,13 @@ private int scoringComp=0;
 				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}
+			
 
 			int cruiserX = rand.nextInt(9);
 			int cruiserY = rand.nextInt(11);
 
 			HashMap<Integer, Integer> Cruiser = new HashMap<>();
+			tempList = new ArrayList<String>();
 			placed = false;
 			while (!placed) {
 				if (check(cruiserX, cruiserY, "vertical", 3)) {
@@ -182,10 +208,12 @@ private int scoringComp=0;
 
 						for (int i = 0; i < 3; i++) {
 							Cruiser.put((cruiserX + i), cruiserY);
+							putIntoShipsMap("Cruiser", cruiserX + i, cruiserY, "vertical");
 						}
 					} else {
 						for (int i = 0; i < 3; i++) {
 							Cruiser.put((cruiserX - i), cruiserY);
+							putIntoShipsMap("Cruiser", cruiserX - i, cruiserY, "vertical");
 						}
 					}
 					placed = true;
@@ -205,6 +233,7 @@ private int scoringComp=0;
 			int subX = rand.nextInt(9);
 			int subY = rand.nextInt(11);
 			HashMap<Integer, Integer> Submarine = new HashMap<>();
+			tempList = new ArrayList<String>();
 
 			placed = false;
 			while (!placed) {
@@ -213,10 +242,12 @@ private int scoringComp=0;
 
 						for (int i = 0; i < 3; i++) {
 							Submarine.put((subX + i), subY);
+							putIntoShipsMap("Submarine", subX + i, subY, "vertical");
 						}
 					} else {
 						for (int i = 0; i < 3; i++) {
 							Submarine.put((subX - i), subY);
+							putIntoShipsMap("Submarine", subX - i, subY, "vertical");
 						}
 					}
 					placed = true;
@@ -236,7 +267,7 @@ private int scoringComp=0;
 			int destroyerY = rand.nextInt(11);
 
 			HashMap<Integer, Integer> Destroyer = new HashMap<>();
-
+			tempList = new ArrayList<String>();
 			placed = false;
 			while (!placed) {
 				if (check(destroyerX, destroyerY, "horizontal", 2)) {
@@ -244,10 +275,12 @@ private int scoringComp=0;
 
 						for (int i = 0; i < 2; i++) {
 							Destroyer.put((destroyerY + i), destroyerX);
+							putIntoShipsMap("Destroyer", destroyerY + i, destroyerX, "horizontal");
 						}
 					} else {
 						for (int i = 0; i < 2; i++) {
 							Destroyer.put((destroyerY - i), destroyerX);
+							putIntoShipsMap("Destroyer", destroyerY - i, destroyerX, "horizontal");
 						}
 					}
 					placed = true;
@@ -383,6 +416,70 @@ private int scoringComp=0;
 			System.out.println();
 		}
 
+	}
+	
+	
+	/**
+	 * The method puts the values in ships and coordinates hashmap
+	 * @param shipType
+	 * @param cY coordinate X
+	 * @param cX coordinate Y
+	 */
+	public void putIntoShipsMap(String shipType, int cY, int cX, String direction) {
+		String coordy = new String();
+		String coordx = new String();
+		if(direction.equals("horizontal")) {
+			coordy = Integer.toString(cX);
+			coordx = Integer.toString(cY);
+		}
+		else {
+			coordy = Integer.toString(cY);
+			coordx = Integer.toString(cX);
+		}
+		tempList.add(coordy+","+coordx);
+		shipsMap.put(shipType, tempList);
+		
+	}
+	
+	
+	/**
+	 * This function checks whether any ships have sunk or not
+	 * @param coordX X-coordinate
+	 * @param coordY Y-coordinate
+	 */
+	public void checkSunkenShips() {
+		
+		System.out.print("checkSunkenShips called\n");
+		Map<String, ArrayList<String>> tempMap; 
+		for (String coords : coordinatesHit) {
+			System.out.println("Checking coordinates "+coords);
+			tempMap = new HashMap<>();
+			tempMap.putAll(shipsMap);
+			for (Map.Entry<String, ArrayList<String>> entry : shipsMap.entrySet()) {
+				System.out.println("Checking "+entry.getKey());
+				System.out.println(entry);
+				if(!shipsMap.get(entry.getKey()).isEmpty()) {
+					//if any ship has been placed on the assigned coordinate
+					if(shipsMap.get(entry.getKey()).contains(coords)) {
+						tempMap.get(entry.getKey()).remove(coords);
+						
+						//if no coordinates are remaining to be hit then add the ship to sunken ships
+						//and remove the ships from the shipsMap
+						if(shipsMap.get(entry.getKey()).isEmpty()) {
+							setSunkenShips(entry.getKey());
+							System.out.println(entry.getKey()+" destroyed");
+							tempMap.remove(entry.getKey());
+							System.out.println(entry.getKey()+" removed");
+						}
+					}
+					
+				}
+	
+			}
+			shipsMap = new HashMap<>();
+			shipsMap.putAll(tempMap);
+		}
+		
 	}
 
 }

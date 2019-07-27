@@ -6,11 +6,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
-import application.Controllers.*;
-import main.Main;
-
-
-public class HitStrategy extends Observable {
+public class HitStrategySalvo extends Observable {
+	
 	Integer[][] randomGrid = new Integer[9][11];
 	Integer[][] probabilityGrid = new Integer[9][11];
 	ArrayList<String> hitFound = new ArrayList<>();
@@ -23,8 +20,9 @@ public class HitStrategy extends Observable {
 	private String reply = "";
 	private int[] coords = {};
 	public static int buttonCount = 0;
+	ArrayList<int[]> coordsList = new ArrayList<>();
 
-	public HitStrategy() {
+	public HitStrategySalvo() {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 11; j++) {
 				probabilityGrid[i][j] = 0;
@@ -97,116 +95,139 @@ public class HitStrategy extends Observable {
 	}
 
 	public void mediumMode(Boolean hitResult) {
-		Random ran = new Random();
-		int x = ran.nextInt(9);
-		int y = ran.nextInt(11);
-
-		if (!hitResult && direction.isEmpty()) {
-			boolean newHit = false;
-			while (!newHit) {
-				if (Player.userGrid[x][y] == 2) {
-					x = ran.nextInt(9);
-					y = ran.nextInt(11);
-				} else
-					newHit = true;
-			}
-		} else if (direction.isEmpty()) {
-			hitFound.add(hitX + ";" + hitY);
-			counter++;
-			if ((hitX + 1) < 9) {
-				x = hitX + 1;
-				y = hitY;
-				direction = "HorizontalFront";
-			} else {
-				x = hitX - 1;
-				y = hitY;
-				direction = "HorizontalBack";
-			}
-		} else {
-			if (direction.equals("HorizontalFront")) {
-				int tempX = Integer.parseInt(hitFound.get(0).split(";")[0]);
-				int tempY = Integer.parseInt(hitFound.get(0).split(";")[1]);
-				if (hitResult && (hitX + 1 < 9)) {
-					counter++;
+		
+		System.out.println("Hit strategy salvo called!");
+		int[] hitCoord = new int[2];
+		ArrayList<Integer> selectedcoordsx = new ArrayList<>();;
+		ArrayList<Integer> selectedcoordsy = new ArrayList<>();;
+		int x, y;
+		while(buttonCount != 5) {
+			Random ran = new Random();
+			x = ran.nextInt(9);
+			y = ran.nextInt(11);
+			if (!hitResult && direction.isEmpty()) {
+				boolean newHit = false;
+				while (!newHit) {
+					if (Player.userGrid[x][y] == 2) {
+						x = ran.nextInt(9);
+						y = ran.nextInt(11);
+					} else
+						newHit = true;
+				}
+			} else if (direction.isEmpty()) {
+				hitFound.add(hitX + ";" + hitY);
+				counter++;
+				if ((hitX + 1) < 9) {
 					x = hitX + 1;
 					y = hitY;
-				} else if (tempX > 0) {
-					x = tempX - 1;
-					y = tempY;
-					direction = "HorizontalBack";
-				} else if ((Integer.parseInt(hitFound.get(0).split(";")[1]) + 1 < 11)) {
-					x = Integer.parseInt(hitFound.get(0).split(";")[0]);
-					y = Integer.parseInt(hitFound.get(0).split(";")[1]) + 1;
-					direction = "VerticalFront";
+					direction = "HorizontalFront";
 				} else {
-					x = Integer.parseInt(hitFound.get(0).split(";")[0]);
-					y = Integer.parseInt(hitFound.get(0).split(";")[1]) - 1;
-					direction = "VerticalBack";
-				}
-			} else if (direction.equals("HorizontalBack")) {
-				if (hitResult && (hitX > 0)) {
-					counter++;
 					x = hitX - 1;
 					y = hitY;
-				} else if (Integer.parseInt(hitFound.get(0).split(";")[1]) + 1 < 11 && counter < 2) {
-					x = Integer.parseInt(hitFound.get(0).split(";")[0]);
-					y = Integer.parseInt(hitFound.get(0).split(";")[1]) + 1;
-					direction = "VerticalFront";
-				} else if (counter < 2) {
-					x = Integer.parseInt(hitFound.get(0).split(";")[0]);
-					y = Integer.parseInt(hitFound.get(0).split(";")[1]) - 1;
-					direction = "VerticalBack";
-				} else {
-					x = ran.nextInt(9);
-					y = ran.nextInt(11);
-					direction = "";
-					hitFound.clear();
-					counter = 0;
-				}
-			} else if (direction.equals("VerticalFront") && counter < 2) {
-				if (hitResult && (hitY + 1 < 11)) {
-					x = hitX;
-					y = hitY + 1;
-				} else if (Integer.parseInt(hitFound.get(0).split(";")[1]) > 0) {
-					x = Integer.parseInt(hitFound.get(0).split(";")[0]);
-					y = Integer.parseInt(hitFound.get(0).split(";")[1]) - 1;
-					direction = "VerticalBack";
-				} else {
-					x = ran.nextInt(9);
-					y = ran.nextInt(11);
-					direction = "";
-					hitFound.clear();
-					counter = 0;
+					direction = "HorizontalBack";
 				}
 			} else {
-				if (hitResult && (hitY > 0) && counter < 2) {
-					x = hitX;
-					y = hitY - 1;
+				if (direction.equals("HorizontalFront")) {
+					int tempX = Integer.parseInt(hitFound.get(0).split(";")[0]);
+					int tempY = Integer.parseInt(hitFound.get(0).split(";")[1]);
+					if (hitResult && (hitX + 1 < 9)) {
+						counter++;
+						x = hitX + 1;
+						y = hitY;
+					} else if (tempX > 0) {
+						x = tempX - 1;
+						y = tempY;
+						direction = "HorizontalBack";
+					} else if ((Integer.parseInt(hitFound.get(0).split(";")[1]) + 1 < 11)) {
+						x = Integer.parseInt(hitFound.get(0).split(";")[0]);
+						y = Integer.parseInt(hitFound.get(0).split(";")[1]) + 1;
+						direction = "VerticalFront";
+					} else {
+						x = Integer.parseInt(hitFound.get(0).split(";")[0]);
+						y = Integer.parseInt(hitFound.get(0).split(";")[1]) - 1;
+						direction = "VerticalBack";
+					}
+				} else if (direction.equals("HorizontalBack")) {
+					if (hitResult && (hitX > 0)) {
+						counter++;
+						x = hitX - 1;
+						y = hitY;
+					} else if (Integer.parseInt(hitFound.get(0).split(";")[1]) + 1 < 11 && counter < 2) {
+						x = Integer.parseInt(hitFound.get(0).split(";")[0]);
+						y = Integer.parseInt(hitFound.get(0).split(";")[1]) + 1;
+						direction = "VerticalFront";
+					} else if (counter < 2) {
+						x = Integer.parseInt(hitFound.get(0).split(";")[0]);
+						y = Integer.parseInt(hitFound.get(0).split(";")[1]) - 1;
+						direction = "VerticalBack";
+					} else {
+						x = ran.nextInt(9);
+						y = ran.nextInt(11);
+						direction = "";
+						hitFound.clear();
+						counter = 0;
+					}
+				} else if (direction.equals("VerticalFront") && counter < 2) {
+					if (hitResult && (hitY + 1 < 11)) {
+						x = hitX;
+						y = hitY + 1;
+					} else if (Integer.parseInt(hitFound.get(0).split(";")[1]) > 0) {
+						x = Integer.parseInt(hitFound.get(0).split(";")[0]);
+						y = Integer.parseInt(hitFound.get(0).split(";")[1]) - 1;
+						direction = "VerticalBack";
+					} else {
+						x = ran.nextInt(9);
+						y = ran.nextInt(11);
+						direction = "";
+						hitFound.clear();
+						counter = 0;
+					}
 				} else {
-					x = ran.nextInt(9);
-					y = ran.nextInt(11);
-					direction = "";
-					hitFound.clear();
-					counter = 0;
+					if (hitResult && (hitY > 0) && counter < 2) {
+						x = hitX;
+						y = hitY - 1;
+					} else {
+						x = ran.nextInt(9);
+						y = ran.nextInt(11);
+						direction = "";
+						hitFound.clear();
+						counter = 0;
+					}
 				}
 			}
+	
+			hitX = x;
+			hitY = y;
+			// System.out.println(x +" ; "+ y);
+			//I need different coordinates to get selected to over here
+			hitCoord[0] = x;
+			hitCoord[1] = y;
+			selectedcoordsx.add(x);
+			selectedcoordsy.add(y);
+			coordsList.add(hitCoord);
+			buttonCount++;
 		}
-
-		hitX = x;
-		hitY = y;
-		// System.out.println(x +" ; "+ y);
-		int hitCoord[] = { x, y };
-		setCoords(hitCoord);
-		if (Player.userGrid[x][y] == 1) {
-			// change the grid value from 1 to 2 to signify hit
-			Player.userGrid[x][y] = 2;
-			setReply("It's a Hit!!!!!");
-		} else if (Player.userGrid[x][y] == 0) {
-			Player.userGrid[x][y] = 2;
-			setReply("It's a miss!!!!!");
-		} else if (Player.userGrid[x][y] == 2) {
-			setReply("The location has been hit earlier");
-
+		buttonCount = 4;
+		//from this part set will be called n number of times to set
+		//buttons based on whether comp targets were a hit or a miss
+		while(buttonCount >= 0) {
+			hitCoord = coordsList.get(buttonCount);
+			x = hitCoord[0];
+			y = hitCoord[1];
+			System.out.println("Checking coordinates "+x+" and "+y);
+			setCoords(hitCoord);
+			if (Player.userGrid[x][y] == 1) {
+				// change the grid value from 1 to 2 to signify hit
+				Player.userGrid[x][y] = 2;
+				setReply("It's a Hit!!!!!");
+			} else if (Player.userGrid[x][y] == 0) {
+				Player.userGrid[x][y] = 2;
+				setReply("It's a miss!!!!!");
+			} else if (Player.userGrid[x][y] == 2) {
+				setReply("The location has been hit earlier");
+	
+			}
+			buttonCount--;
 		}
 
 	}
@@ -663,5 +684,16 @@ public class HitStrategy extends Observable {
 		return canPlace;
 
 	}
-
+	
+	boolean areCoordinatesValid(ArrayList<Integer> selectedcoordsx, ArrayList<Integer> selectedcoordsy, int x , int y) {
+		if(selectedcoordsx.isEmpty() && selectedcoordsy.isEmpty()) {
+			return true;
+		}
+		else if(!selectedcoordsx.contains(x) || !selectedcoordsx.contains(x)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 }
