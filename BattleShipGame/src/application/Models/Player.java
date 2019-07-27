@@ -35,8 +35,6 @@ public class Player extends Observable {
 
 	// original Grid that remains unchanged throughout the game
 	public static Integer[][] userGrid = new Integer[rows][cols];
-	
-	
 
 	public Player() {
 
@@ -112,7 +110,7 @@ public class Player extends Observable {
 	 * @param y coordinates
 	 * @return String defining if the user hit or miss the computer grid
 	 */
-	public void userTurn(int x, int y,Integer[][] computerGrid) {
+	public void userTurn(int x, int y, Integer[][] computerGrid) {
 
 		// get the X and y coordinate from the input
 		System.out.println("reached here" + x + "; " + y);
@@ -122,38 +120,37 @@ public class Player extends Observable {
 			computerGrid[x][y] = 2;
 
 			setReply("It's a Hit!!!!!");
-			userScore+=10;
+			userScore += 10;
 			// incrementing user score for a successful hit
-			
-			//return "It's a Hit!!!!!";
+
+			// return "It's a Hit!!!!!";
 		} else if (computerGrid[x][y] == 0) {
 
 			setReply("It's a miss!!!!!");
-			//return "It's a miss!!!!!";
-			
-			userScore-=2;
-			//loosing points for a miss
+			// return "It's a miss!!!!!";
+
+			userScore -= 2;
+			// loosing points for a miss
 
 		} else if (computerGrid[x][y] == 2) {
 
-			
 			setReply("The location has been hit earlier");
-			//return "The location has been hit earlier";
+			// return "The location has been hit earlier";
 
 		}
 
-		
 		setReply("Some other error");
 		// some other case or error
-		//return "Some other error";
+		// return "Some other error";
 
 	}
+
 	/*
 	 * Returning user score
 	 */
 	public int GetScore() {
-		return userScore;	
-		}
+		return userScore;
+	}
 
 	/**
 	 * Takes the input based on the event listener Provides the hit or miss while
@@ -173,7 +170,6 @@ public class Player extends Observable {
 	public void deployUserGrid(String coordinates, String shipType) {
 
 		try {
-			
 
 			/*
 			 * int x1 = convert.get(str[0]);
@@ -184,15 +180,15 @@ public class Player extends Observable {
 			 * // decrease the value of Y since the coordinated start from 0 in grid int y2
 			 * = Integer.parseInt(str[3]) - 1;
 			 */
-			
+
 			String str[] = coordinates.split("\\s");
 
-			//int x1 = convert.get(str[0]);
+			// int x1 = convert.get(str[0]);
 			int y1 = Integer.parseInt(str[0]);
 
 			// decrease the value of Y since the coordinated start from 0 in grid
 			int x1 = Integer.parseInt(str[1]);
-			//int x2 = convert.get(str[2]);
+			// int x2 = convert.get(str[2]);
 			int y2 = Integer.parseInt(str[2]);
 
 			// decrease the value of Y since the coordinated start from 0 in grid
@@ -243,43 +239,31 @@ public class Player extends Observable {
 
 				}
 				String res = areHolesValid(y2 - y1 + 1, shipType);
-				if (res.equals("YES")) {
-
+				if (res.equals("YES") && deployedShips.contains(shipType)) {
 					for (int i = y1; i <= y2; i++) {
-
 						if ((x1 >= 0 && x1 < cols) && (y1 >= 0 && y1 < rows) && (y2 >= 0 && y2 < rows)
 								&& (userGrid[i][x1] == 0)) {
 							userGrid[i][x1] = 1;
 							count++;
-
 						}
 					}
-
 					if (((y2 + 1) - (y1 + 1)) + 1 == count) {
 						int[] coords = { x1, y1, x2, y2 };
 						// calling the function on front end to color the
 						// coordinates of the ship as required
-
 						setCoords(coords);
 						setShipType(shipType);
 						setAxis("Y");
-
 						// shipObject.deployShipsWithColors(coords, shipType, "Y");
-
 						// result done signifies everything went right
 						// changedUserGrid = userGrid;
 						numOfShipsDep++;
-
 						setReply("Done");
-
 						// return "Done";
 					}
-				} else {
-					deployedShips.remove(shipType);
-
-					setReply(res);
-					// return res;
-				}
+				} /*
+					 * else { deployedShips.remove(shipType); setReply(res); // return res; }
+					 */
 
 			}
 
@@ -299,13 +283,12 @@ public class Player extends Observable {
 					if (userGrid[y1][i] == 1) {
 						// displayUserShips();
 						deployedShips.remove(shipType);
-
 						setReply("ships cannot be placed on the same location");
 						// return "ships cannot be placed on the same location";
 					}
 				}
 				String res = areHolesValid(x2 - x1 + 1, shipType);
-				if (res.equals("YES")) {
+				if (res.equals("YES") && deployedShips.contains(shipType)) {
 					// increment the X values to set the ship location
 					for (int i = x1; i <= x2; i++) {
 
@@ -336,12 +319,11 @@ public class Player extends Observable {
 						// return "Done";
 					}
 
-				} else {
-					deployedShips.remove(shipType);
-
-					setReply(res);
-					// return res;
-				}
+				} /*
+					 * else { deployedShips.remove(shipType);
+					 * 
+					 * setReply(res); // return res; }
+					 */
 			}
 
 			else {// case when anything Diagonal
@@ -352,18 +334,17 @@ public class Player extends Observable {
 
 			}
 
-		//	deployedShips.remove(shipType);
+			// deployedShips.remove(shipType);
 			// signifies some other error
 
-		//	setReply("Invalid input, please try again.");
+			// setReply("Invalid input, please try again.");
 			// return "Invalid input, please try again.";
 		} catch (Exception e) {
 			deployedShips.remove(shipType);
 			e.printStackTrace();
 			setReply("Invalid input, please try again.");
 			// return "Invalid input, please try again.";
-		}
-		finally {
+		} finally {
 			setChanged();
 			notifyObservers();
 		}
@@ -475,8 +456,7 @@ public class Player extends Observable {
 		else
 			return false;
 	}
-	
-	
+
 	public void deployUserRandomShips() {
 		try {
 			Random rand = new Random();
@@ -511,21 +491,20 @@ public class Player extends Observable {
 				// computerGrid[entry.getKey()][entry.getValue()] = 1;
 
 			}
-			
-			if(shipPlacementFlag) {
-				int[] coords = { carrierY, carrierX, carrierY+4, (carrierX) };
+
+			if (shipPlacementFlag) {
+				int[] coords = { carrierY, carrierX, carrierY + 4, (carrierX) };
+				setCoords(coords);
+				// shipObject.deployShipsWithColors(coords, "Carrier", "X");
+			} else {
+				int[] coords = { carrierY - 4, carrierX, carrierY, (carrierX) };
 				setCoords(coords);
 				// shipObject.deployShipsWithColors(coords, "Carrier", "X");
 			}
-			else {
-				int[] coords = { carrierY-4, carrierX, carrierY, (carrierX) };
-				setCoords(coords);
-			//	shipObject.deployShipsWithColors(coords, "Carrier", "X");
-			}
-			
+
 			setShipType("Carrier");
 			setAxis("X");
-			
+
 			setChanged();
 			notifyObservers();
 
@@ -560,23 +539,21 @@ public class Player extends Observable {
 				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}
-			if(shipPlacementFlag) {
-				int[] coords = { battleShipY, battleShipX, (battleShipY), battleShipX+3 };
+			if (shipPlacementFlag) {
+				int[] coords = { battleShipY, battleShipX, (battleShipY), battleShipX + 3 };
 				setCoords(coords);
-			}
-			else {
-				
-				int[] coords = { battleShipY, battleShipX-3, (battleShipY), battleShipX };
+			} else {
+
+				int[] coords = { battleShipY, battleShipX - 3, (battleShipY), battleShipX };
 				setCoords(coords);
 			}
 
-			
 			setShipType("Battleship");
 			setAxis("Y");
-			
+
 			setChanged();
 			notifyObservers();
-			
+
 			int cruiserX = rand.nextInt(9);
 			int cruiserY = rand.nextInt(11);
 
@@ -609,23 +586,21 @@ public class Player extends Observable {
 
 			}
 
-			if(shipPlacementFlag) {
-				int[] coords = { cruiserY, cruiserX, (cruiserY), cruiserX+2 };
+			if (shipPlacementFlag) {
+				int[] coords = { cruiserY, cruiserX, (cruiserY), cruiserX + 2 };
+				setCoords(coords);
+			} else {
+				// int[] coords = { cruiserX, cruiserY, (cruiserX - 3), cruiserY };
+				int[] coords = { cruiserY, cruiserX - 2, (cruiserY), cruiserX };
 				setCoords(coords);
 			}
-			else {
-				//int[] coords = { cruiserX, cruiserY, (cruiserX - 3), cruiserY };
-				int[] coords = { cruiserY, cruiserX-2, (cruiserY), cruiserX };
-				setCoords(coords);
-			}
-			
-		
+
 			setShipType("Cruiser");
 			setAxis("Y");
-			
+
 			setChanged();
 			notifyObservers();
-			
+
 			int subX = rand.nextInt(9);
 			int subY = rand.nextInt(11);
 			HashMap<Integer, Integer> Submarine = new HashMap<>();
@@ -655,25 +630,23 @@ public class Player extends Observable {
 				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}
-			if(shipPlacementFlag) {
-				int[] coords = { subY, subX, (subY), subX+2 };
+			if (shipPlacementFlag) {
+				int[] coords = { subY, subX, (subY), subX + 2 };
 				setCoords(coords);
-			
-			}
-			else {
-			
-				int[] coords = { subY, subX-2, (subY), subX };
+
+			} else {
+
+				int[] coords = { subY, subX - 2, (subY), subX };
 				setCoords(coords);
-			
+
 			}
-			
-			
+
 			setShipType("Submarine");
 			setAxis("Y");
-			
+
 			setChanged();
 			notifyObservers();
-			
+
 			int destroyerX = rand.nextInt(9);
 			int destroyerY = rand.nextInt(11);
 
@@ -704,24 +677,23 @@ public class Player extends Observable {
 				userGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}
-			if(shipPlacementFlag) {
-				int[] coords = { destroyerY, destroyerX, destroyerY+1, (destroyerX) };
+			if (shipPlacementFlag) {
+				int[] coords = { destroyerY, destroyerX, destroyerY + 1, (destroyerX) };
+				setCoords(coords);
+			} else {
+
+				int[] coords = { destroyerY - 1, destroyerX, destroyerY, (destroyerX) };
 				setCoords(coords);
 			}
-			else {
-				
-				int[] coords = { destroyerY-1, destroyerX, destroyerY, (destroyerX) };
-				setCoords(coords);
-			}
-		
+
 			setShipType("Destroyer");
 			setAxis("X");
-			
+
 			setChanged();
 			notifyObservers();
-			
+
 			numOfShipsDep = 5;
-			
+
 			/*
 			 * System.out.println("user grid"); for (int i = 0; i < rows; i++) {
 			 * 
@@ -732,14 +704,12 @@ public class Player extends Observable {
 			 * } System.out.println(); }
 			 */
 
-
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 
+		}
 	}
-	}
-	
+
 	public Boolean checkUserShip(int x, int y, String direction, int points) {
 		Boolean canPlace = true;
 		if (direction.equals("horizontal")) {
@@ -774,7 +744,7 @@ public class Player extends Observable {
 		return canPlace;
 
 	}
-	
+
 	/**
 	 * 
 	 * checks the grid of the User to verify if user has won or not displays the Win
@@ -808,8 +778,6 @@ public class Player extends Observable {
 		}
 
 	}
-	
-	
 
 	/**
 	 * Method to display the computer grid

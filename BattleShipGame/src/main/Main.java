@@ -1,6 +1,9 @@
 package main;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Observable;
+import java.util.Observer;
 import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
@@ -8,6 +11,7 @@ import application.Models.Player;
 import application.Views.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -18,18 +22,23 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -37,15 +46,16 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class Main extends Application implements Observer {
 
+	Player player;
+	ShipGrid sg;
 	static GridUser ob;
 	Scene scene1;
 	Scene scene2;
 	GridPane g_pane1, g_pane2;
 	VBox v_box1, v_box2, v_box3;
-	// static Button[][] radarButton;
-	// static Button[][] userButton;
+	HBox h_box1, h_box2;
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;
@@ -59,36 +69,40 @@ public class Main extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) {
 		try {
 			Stage stage = primaryStage;
 			stage.setTitle(" Battle Ship Game");
 			launchStartupWindow(stage);
-
-			Player player = new Player();
+			Main main = new Main();
+			player = new Player();
 			Computer computer = new Computer();
 			HitStrategy strategy = new HitStrategy();
 			ob = new GridUser(player, computer, strategy);
-			ShipGrid sg = new ShipGrid(player, ob);
+			sg = new ShipGrid(player, ob);
 			player.addObserver(sg);
 			strategy.addObserver(sg);
-			ScrollPane sp = new ScrollPane();
+			player.addObserver(main);
 
 			SplitPane split_pane = new SplitPane();
+			SplitPane split_pane2 = new SplitPane();
+			// HBox h_box = new HBox();
+
 			g_pane1 = new GridPane();
 			g_pane2 = new GridPane();
 
 			v_box3 = new VBox();
 			v_box1 = new VBox();
 			v_box2 = new VBox();
+			h_box1 = new HBox();
+			h_box2 = new HBox();
 			v_box1.setId("glass-grey");
-			Image image = new Image(new FileInputStream("images/bombs.png"));
-			ImageView imageView = new ImageView(image);
-			imageView.setFitHeight(500);
-			imageView.setFitWidth(800);
-			imageView.setPreserveRatio(true);
-			imageView.fitWidthProperty().bind(v_box2.widthProperty());
-			// Battleship_Grid_Pane obj = new Battleship_Grid_Pane();
+			v_box2.setId("glass-grey");
+
+			String[] shipNames = { "Carrier", "Battleship", "Cruiser", "Submarine", "Destroyer" };
+			for (String name : shipNames) {
+				setShipImages(v_box2, name);
+			}
 
 			// MenuBar menuBar = obj.battleMenu(v_box1, stage);
 			MenuBar menuBar = battleMenu(v_box1, stage);
@@ -98,11 +112,7 @@ public class Main extends Application {
 
 			g_pane2.setVgap(10);
 			g_pane2.setHgap(10);
-			// g_pane.setStyle("-fx-color: black;");
-			// g_pane1.setGridLinesVisible(true);
-			// g_pane2.setGridLinesVisible(true);
 
-			// g_pane.alignmentProperty().addListener(listener );
 			Label l1 = new Label();
 			seeResultUser("User ");
 			v_box3.getChildren().add(l1);
@@ -115,22 +125,23 @@ public class Main extends Application {
 			strategy.addObserver(radarGridObserver);
 			radarGridObserver.setUserRadarGrid(g_pane1, resulttext2);
 			sg.setUserShipGrid(g_pane2);
+			setShipPlacementActions();
 			Button userRandomShips = new Button("Feelin' Lazy?");
 			VBox v_box4 = new VBox();
 			v_box1.getChildren().addAll(g_pane1, g_pane2, userRandomShips);
 			v_box1.setSpacing(20.0);
+			// v_box2.setSpacing(10.0);
 			userRandomShips.setOnAction((ActionEvent event) -> {
 				if (player.numOfShipsDep == 0)
 					player.deployUserRandomShips();
 			});
 
-			v_box2.setStyle("-fx-background-color: #000000;");
-			v_box2.getChildren().addAll(imageView, v_box3);
+			// v_box2.setStyle("-fx-background-color: #000000;");
+			v_box2.getChildren().addAll(v_box3);
 
 			split_pane.setDividerPositions(0.7);
-			// sp.setBackground(Color.WHITE);
-			sp.setContent(v_box1);
-			split_pane.getItems().add(sp);
+
+			split_pane.getItems().add(v_box1);
 			split_pane.getItems().add(v_box2);
 
 			Button startBtn = new Button("Start Playing");
@@ -157,7 +168,6 @@ public class Main extends Application {
 
 				}
 			});
-
 			for (Node node : g_pane2.getChildren()) {
 				node.setOnMouseEntered((MouseEvent t) -> {
 					node.setStyle("-fx-background-color: blue;");
@@ -168,19 +178,22 @@ public class Main extends Application {
 				});
 
 			}
+			split_pane2.getItems().addAll(h_box1, h_box2);
+			/*
+			 * h_box.getChildren().addAll(h_box1, h_box2); h_box.setSpacing(100);
+			 */
 
 			v_box3.getChildren().addAll(startBtn);
-			v_box4.getChildren().addAll(menuBar, split_pane);
+			v_box4.getChildren().addAll(menuBar, split_pane2, split_pane);
 			v_box1.fillWidthProperty();
-			scene1 = new Scene(v_box4, 800, 750);
-			sp.getStylesheets().add("application/Views/application.css");
-			sp.fitToWidthProperty();
-			v_box1.prefWidthProperty().bind(sp.widthProperty());
-			// v_box1.prefHeightProperty().bind(sp.heightProperty());
+			scene1 = new Scene(v_box4, 850, 850);
+
+			v_box1.getStylesheets().add("application/Views/application.css");
+			v_box2.getStylesheets().add("application/Views/application.css");
+
+			// v_box1.prefWidthProperty().bind(sp.widthProperty());
 			split_pane.prefHeightProperty().bind(stage.heightProperty());
 			stage.show();
-
-			// deployment has been done start the game turn by turn now
 		}
 
 		catch (Exception e) {
@@ -188,6 +201,495 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if (o instanceof Player) {
+			// TODO Auto-generated method stub
+			System.out.println("observer called");
+			String value = ((Player) o).getReply();
+			System.out.println(value);
+
+			int coord[] = ((Player) o).getCoords();
+			String shipType = ((Player) o).getShipType();
+			String axis = ((Player) o).getAxis();
+			ShipGrid.deployShipsWithColors(coord, shipType, axis);
+
+			if (!(value.equals("Done")) && !value.isEmpty()) {
+				// ShipGrid.userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color:
+				// black;");
+				AlertBox.displayError(shipType, value);
+			}
+
+		}
+	}
+
+	public void setShipPlacementActions() {
+		for (Node node : g_pane2.getChildren()) {
+
+			node.setOnDragEntered(new EventHandler<DragEvent>() {
+				@Override
+				public void handle(DragEvent event) {
+					// Dragboard db = event.getDragboard();
+					// node.setStyle("-fx-background-color: blue;");
+					int iniX = Integer.parseInt(node.getId().split(" ")[0]);
+					int iniY = Integer.parseInt(node.getId().split(" ")[1]);
+					if (event.getDragboard().getString().split(";")[0].equals("Primary")) {
+						if (event.getDragboard().getString().split(";")[1].equals("Carrier")) {
+							if (iniY - 2 >= 0 && iniY + 2 < 11) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX][iniY - 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY - 1].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX][iniY - 2].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY - 2].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX][iniY + 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 1].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX][iniY + 2].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 2].setStyle("-fx-background-color: blue;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Battleship")) {
+							if (iniY - 1 >= 0 && iniY + 2 < 11) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX][iniY - 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY - 1].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX][iniY + 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 1].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX][iniY + 2].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 2].setStyle("-fx-background-color: blue;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Cruiser")) {
+							if (iniY - 1 >= 0 && iniY + 1 < 11) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX][iniY - 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY - 1].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX][iniY + 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 1].setStyle("-fx-background-color: blue;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Submarine")) {
+							if (iniY - 1 >= 0 && iniY + 1 < 11) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX][iniY - 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY - 1].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX][iniY + 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 1].setStyle("-fx-background-color: blue;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Destroyer")) {
+							if (iniY >= 0 && iniY + 1 < 11) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX][iniY + 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 1].setStyle("-fx-background-color: blue;");
+							}
+						}
+					} else {
+						if (event.getDragboard().getString().split(";")[1].equals("Carrier")) {
+							if (iniX - 2 >= 0 && iniX + 2 < 9) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX - 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX - 1][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX - 2][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX - 2][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX + 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 1][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX + 2][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 2][iniY].setStyle("-fx-background-color: blue;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Battleship")) {
+							if (iniX - 1 >= 0 && iniX + 2 < 9) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX - 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX - 1][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX + 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 1][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX + 2][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 2][iniY].setStyle("-fx-background-color: blue;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Cruiser")) {
+							if (iniX - 1 >= 0 && iniX + 1 < 9) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX - 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX - 1][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX + 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 1][iniY].setStyle("-fx-background-color: blue;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Submarine")) {
+							if (iniX - 1 >= 0 && iniX + 1 < 9) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX - 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX - 1][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX + 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 1][iniY].setStyle("-fx-background-color: blue;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Destroyer")) {
+							if (iniX >= 0 && iniX + 1 < 9) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: blue;");
+								if (!ShipGrid.userButton[iniX + 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 1][iniY].setStyle("-fx-background-color: blue;");
+							}
+						}
+					}
+					event.consume();
+				}
+			});
+
+			node.setOnDragExited(new EventHandler<DragEvent>() {
+				@Override
+				public void handle(DragEvent event) {
+					int iniX = Integer.parseInt(node.getId().split(" ")[0]);
+					int iniY = Integer.parseInt(node.getId().split(" ")[1]);
+					if (event.getDragboard().getString().split(";")[0].equals("Primary")) {
+						if (event.getDragboard().getString().split(";")[1].equals("Carrier")) {
+							if (iniY - 2 >= 0 && iniY + 2 < 11) {
+
+								//System.out.println("here :"+ShipGrid.userButton[iniX][iniY].getText());
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX][iniY - 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY - 1].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX][iniY - 2].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY - 2].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX][iniY + 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 1].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX][iniY + 2].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 2].setStyle("-fx-background-color: black;");
+
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Battleship")) {
+							if (iniY - 1 >= 0 && iniY + 2 < 11) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX][iniY - 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY - 1].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX][iniY + 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 1].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX][iniY + 2].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 2].setStyle("-fx-background-color: black;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Cruiser")) {
+							if (iniY - 1 >= 0 && iniY + 1 < 11) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX][iniY - 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY - 1].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX][iniY + 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 1].setStyle("-fx-background-color: black;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Submarine")) {
+							if (iniY - 1 >= 0 && iniY + 1 < 11) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX][iniY - 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY - 1].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX][iniY + 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 1].setStyle("-fx-background-color: black;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Destroyer")) {
+							if (iniY >= 0 && iniY + 1 < 11) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX][iniY + 1].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY + 1].setStyle("-fx-background-color: black;");
+							}
+						}
+					} else {
+						if (event.getDragboard().getString().split(";")[1].equals("Carrier")) {
+							if (iniX - 2 >= 0 && iniX + 2 < 9) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX - 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX - 1][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX - 2][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX - 2][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX + 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 1][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX + 2][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 2][iniY].setStyle("-fx-background-color: black;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Battleship")) {
+							if (iniX - 1 >= 0 && iniX + 2 < 9) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX - 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX - 1][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX + 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 1][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX + 2][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 2][iniY].setStyle("-fx-background-color: black;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Cruiser")) {
+							if (iniX - 1 >= 0 && iniX + 1 < 9) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX - 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX - 1][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX + 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 1][iniY].setStyle("-fx-background-color: black;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Submarine")) {
+							if (iniX - 1 >= 0 && iniX + 1 < 9) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX - 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX - 1][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX + 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 1][iniY].setStyle("-fx-background-color: black;");
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Destroyer")) {
+							if (iniX >= 0 && iniX + 1 < 9) {
+								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: black;");
+								if (!ShipGrid.userButton[iniX + 1][iniY].getText().contains("placed"))
+									ShipGrid.userButton[iniX + 1][iniY].setStyle("-fx-background-color: black;");
+							}
+						}
+					}
+					event.consume();
+				}
+			});
+			node.setOnDragOver(new EventHandler<DragEvent>() {
+				public void handle(DragEvent event) {
+					Dragboard db = event.getDragboard();
+					if (db.hasImage()) {
+						event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+					}
+					event.consume();
+				}
+			});
+			node.setOnDragDropped(new EventHandler<DragEvent>() {
+				@Override
+				public void handle(DragEvent event) {
+					String initialCoordinates, finalCoordinates;
+					int iniX = Integer.parseInt(node.getId().split(" ")[0]);
+					int iniY = Integer.parseInt(node.getId().split(" ")[1]);
+					if (event.getDragboard().getString().split(";")[0].equals("Primary")) {
+						if (event.getDragboard().getString().split(";")[1].equals("Carrier")) {
+							if (iniY - 2 >= 0 && iniY + 2 < 11) {
+								initialCoordinates = Integer.toString(iniX) + " " + Integer.toString(iniY - 2);
+								finalCoordinates = Integer.toString(iniX) + " " + Integer.toString(iniY + 2);
+								if (!player.areAllShipsDeployed()) {
+									if (!player.isShipDeployed("Carrier")) {
+										String res = initialCoordinates + " " + finalCoordinates;
+										ob.callDeployUserGrid(res, "Carrier");
+									} else {
+										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+										AlertBox.displayError("Carrier", "Already Deployed!");
+									}
+								} else {
+									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									AlertBox.displayError("Carrier", "All Ships Deployed!");
+								}
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Battleship")) {
+							if (iniY - 1 >= 0 && iniY + 2 < 11) {
+								initialCoordinates = Integer.toString(iniX) + " " + Integer.toString(iniY - 1);
+								finalCoordinates = Integer.toString(iniX) + " " + Integer.toString(iniY + 2);
+								if (!player.areAllShipsDeployed()) {
+									if (!player.isShipDeployed("Battleship")) {
+										String res = initialCoordinates + " " + finalCoordinates;
+										ob.callDeployUserGrid(res, "Battleship");
+									} else {
+										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+										AlertBox.displayError("Battleship", "Already Deployed!");
+									}
+								} else {
+									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									AlertBox.displayError("Battleship", "All Ships Deployed!");
+								}
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Cruiser")) {
+							if (iniY - 1 >= 0 && iniY + 1 < 11) {
+								initialCoordinates = Integer.toString(iniX) + " " + Integer.toString(iniY - 1);
+								finalCoordinates = Integer.toString(iniX) + " " + Integer.toString(iniY + 1);
+								if (!player.areAllShipsDeployed()) {
+									if (!player.isShipDeployed("Cruiser")) {
+										String res = initialCoordinates + " " + finalCoordinates;
+										ob.callDeployUserGrid(res, "Cruiser");
+									} else {
+										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+										AlertBox.displayError("Cruiser", "Already Deployed!");
+									}
+								} else {
+									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									AlertBox.displayError("Cruiser", "All Ships Deployed!");
+								}
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Submarine")) {
+							if (iniY - 1 >= 0 && iniY + 1 < 11) {
+								initialCoordinates = Integer.toString(iniX) + " " + Integer.toString(iniY - 1);
+								finalCoordinates = Integer.toString(iniX) + " " + Integer.toString(iniY + 1);
+								if (!player.areAllShipsDeployed()) {
+									if (!player.isShipDeployed("Submarine")) {
+										String res = initialCoordinates + " " + finalCoordinates;
+										ob.callDeployUserGrid(res, "Submarine");
+									} else {
+										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+										AlertBox.displayError("Submarine", "Already Deployed!");
+									}
+								} else {
+									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									AlertBox.displayError("Submarine", "All Ships Deployed!");
+								}
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Destroyer")) {
+							if (iniY >= 0 && iniY + 1 < 11) {
+								initialCoordinates = Integer.toString(iniX) + " " + Integer.toString(iniY);
+								finalCoordinates = Integer.toString(iniX) + " " + Integer.toString(iniY + 1);
+								if (!player.areAllShipsDeployed()) {
+									if (!player.isShipDeployed("Destroyer")) {
+										String res = initialCoordinates + " " + finalCoordinates;
+										ob.callDeployUserGrid(res, "Destroyer");
+									} else {
+										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+										AlertBox.displayError("Destroyer", "Already Deployed!");
+									}
+								} else {
+									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									AlertBox.displayError("Destroyer", "All Ships Deployed!");
+								}
+							}
+						}
+					} else {
+						if (event.getDragboard().getString().split(";")[1].equals("Carrier")) {
+							if (iniX - 2 >= 0 && iniX + 2 < 9) {
+								initialCoordinates = Integer.toString(iniX - 2) + " " + Integer.toString(iniY);
+								finalCoordinates = Integer.toString(iniX + 2) + " " + Integer.toString(iniY);
+								if (!player.areAllShipsDeployed()) {
+									if (!player.isShipDeployed("Carrier")) {
+										String res = initialCoordinates + " " + finalCoordinates;
+										ob.callDeployUserGrid(res, "Carrier");
+									} else {
+										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+										AlertBox.displayError("Carrier", "Already Deployed!");
+									}
+								} else {
+									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									AlertBox.displayError("Carrier", "All Ships Deployed!");
+								}
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Battleship")) {
+							if (iniX - 1 >= 0 && iniX + 2 < 9) {
+								initialCoordinates = Integer.toString(iniX - 1) + " " + Integer.toString(iniY);
+								finalCoordinates = Integer.toString(iniX + 2) + " " + Integer.toString(iniY);
+								if (!player.areAllShipsDeployed()) {
+									if (!player.isShipDeployed("Battleship")) {
+										String res = initialCoordinates + " " + finalCoordinates;
+										ob.callDeployUserGrid(res, "Battleship");
+									} else {
+										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+										AlertBox.displayError("Battleship", "Already Deployed!");
+									}
+								} else {
+									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									AlertBox.displayError("Battleship", "All Ships Deployed!");
+								}
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Cruiser")) {
+							if (iniX - 1 >= 0 && iniX + 1 < 9) {
+								initialCoordinates = Integer.toString(iniX - 1) + " " + Integer.toString(iniY);
+								finalCoordinates = Integer.toString(iniX + 1) + " " + Integer.toString(iniY);
+								if (!player.areAllShipsDeployed()) {
+									if (!player.isShipDeployed("Cruiser")) {
+										String res = initialCoordinates + " " + finalCoordinates;
+										ob.callDeployUserGrid(res, "Cruiser");
+									} else {
+										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+										AlertBox.displayError("Cruiser", "Already Deployed!");
+									}
+								} else {
+									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									AlertBox.displayError("Cruiser", "All Ships Deployed!");
+								}
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Submarine")) {
+							if (iniX - 1 >= 0 && iniX + 1 < 9) {
+								initialCoordinates = Integer.toString(iniX - 1) + " " + Integer.toString(iniY);
+								finalCoordinates = Integer.toString(iniX + 1) + " " + Integer.toString(iniY);
+								if (!player.areAllShipsDeployed()) {
+									if (!player.isShipDeployed("Submarine")) {
+										String res = initialCoordinates + " " + finalCoordinates;
+										ob.callDeployUserGrid(res, "Submarine");
+									} else {
+										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+										AlertBox.displayError("Submarine", "Already Deployed!");
+									}
+								} else {
+									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									AlertBox.displayError("Submarine", "All Ships Deployed!");
+								}
+							}
+						} else if (event.getDragboard().getString().split(";")[1].equals("Destroyer")) {
+							if (iniX >= 0 && iniX + 1 < 9) {
+								initialCoordinates = Integer.toString(iniX) + " " + Integer.toString(iniY);
+								finalCoordinates = Integer.toString(iniX + 1) + " " + Integer.toString(iniY);
+								if (!player.areAllShipsDeployed()) {
+									if (!player.isShipDeployed("Destroyer")) {
+										String res = initialCoordinates + " " + finalCoordinates;
+										ob.callDeployUserGrid(res, "Destroyer");
+									} else {
+										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+										AlertBox.displayError("Destroyer", "Already Deployed!");
+									}
+								} else {
+									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									AlertBox.displayError("Destroyer", "All Ships Deployed!");
+								}
+							}
+						}
+					}
+				}
+			});
+		}
+	}
+
+	public void setShipImages(VBox v_box2, String shipName) {
+		try {
+			Image image = new Image(new FileInputStream("images/ships/" + shipName + ".png"));
+			ImageView imageView = new ImageView(image);
+			imageView.setFitHeight(70);
+			imageView.setFitWidth(100);
+			imageView.setPreserveRatio(true);
+			imageView.fitWidthProperty().bind(v_box2.widthProperty());
+
+			Image image2 = new Image(new FileInputStream("images/ships/" + shipName + "90.png"));
+			Label shipNameLabel = new Label(shipName);
+			shipNameLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
+			shipNameLabel.setTextFill(Color.web("#c40831"));
+			v_box2.getChildren().addAll(shipNameLabel, imageView);
+
+			imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
+				public void handle(MouseEvent event) {
+					Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
+					System.out.println("drag detected");
+					ClipboardContent content = new ClipboardContent();
+
+					if (event.getButton() == MouseButton.PRIMARY) {
+						content.putString("Primary;" + shipName);
+						content.putImage(imageView.getImage());
+						// content.putImage(image);
+					} else if (event.getButton() == MouseButton.SECONDARY) {
+						content.putString("Secondary;" + shipName);
+						content.putImage(image2);
+					}
+
+					db.setContent(content);
+					event.consume();
+
+				}
+			});
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public MenuBar battleMenu(VBox v_box1, Stage stage) {
@@ -328,7 +830,7 @@ public class Main extends Application {
 	 */
 	public void seeResultUser(String title) {
 		Label resultLabel = new Label(title + "Turn: ");
-		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
+		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
 		resulttext1 = new Label();
 		resulttext1.setStyle("-fx-background-color: white;");
@@ -343,7 +845,7 @@ public class Main extends Application {
 	 */
 	public void seeResultComp(String title) {
 		Label resultLabel = new Label(title + "Turn: ");
-		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
+		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
 		resulttext2 = new Label();
 		resulttext2.setStyle("-fx-background-color: white;");
@@ -356,11 +858,13 @@ public class Main extends Application {
 	 */
 	public void Score(String title) {
 		Label resultLabel = new Label(title + ": ");
-		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
+		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
 		resulttext3 = new Label();
+
 		resulttext3.setStyle("-fx-background-color: white;");
-		v_box3.getChildren().addAll(resultLabel, resulttext3);
+		// v_box3.getChildren().addAll(resultLabel, resulttext3);
+		h_box1.getChildren().addAll(resultLabel, resulttext3);
 
 	}
 
@@ -370,11 +874,11 @@ public class Main extends Application {
 	 */
 	public void ScoreComp(String title) {
 		Label resultLabel = new Label(title + ": ");
-		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
+		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
 		resulttext4 = new Label();
 		resulttext4.setStyle("-fx-background-color: white;");
-		v_box3.getChildren().addAll(resultLabel, resulttext4);
+		h_box2.getChildren().addAll(resultLabel, resulttext4);
 
 	}
 

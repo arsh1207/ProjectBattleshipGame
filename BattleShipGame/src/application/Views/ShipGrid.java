@@ -18,7 +18,7 @@ import main.Main;
 public class ShipGrid implements Observer {
 	static int rowButtonCount;
 	static int columnButtonCount;
-	static Button[][] userButton;
+	public static Button[][] userButton;
 	static int noButtonsClicked = 0;
 	int xInitialCo;
 	int yInitialCo;
@@ -45,7 +45,7 @@ public class ShipGrid implements Observer {
 	 */
 	public void setUserShipGrid(GridPane g_pane2) {
 
-		double r = 10;
+		double r = 12;
 		userButton = new Button[9][11];
 		Text t = new Text("User Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
@@ -115,11 +115,6 @@ public class ShipGrid implements Observer {
 							Main.shipType = "";
 						}
 					}
-					/*
-					 * if (event.getButton() == MouseButton.PRIMARY) {
-					 * b.setStyle("-fx-background-color: red;"); } else if (event.getButton() ==
-					 * MouseButton.SECONDARY) { b.setStyle("-fx-background-color: yellow;"); }
-					 */
 
 				});
 
@@ -177,18 +172,18 @@ public class ShipGrid implements Observer {
 	 * @param shipType The type of ship being placed
 	 * @param axis     tell either horizontal of vertical
 	 */
-	public void deployShipsWithColors(int[] coords, String shipType, String axis) {
+	public static void deployShipsWithColors(int[] coords, String shipType, String axis) {
 
 		// if the ship is to be placed along Y-axis
 		if (axis.equals("Y")) {
 			if (shipType.equals("Carrier"))
 				colorShipYCoords(coords, "#000080");
 			if (shipType.equals("Battleship"))
-				colorShipYCoords(coords, "#654321");
+				colorShipYCoords(coords, "#D2691E");
 			if (shipType.equals("Cruiser"))
 				colorShipYCoords(coords, "#008000");
 			if (shipType.equals("Submarine"))
-				colorShipYCoords(coords, "#FFC0CB");
+				colorShipYCoords(coords, "#FFA500");
 			if (shipType.equals("Destroyer"))
 				colorShipYCoords(coords, "#FFFF00");
 		}
@@ -214,13 +209,16 @@ public class ShipGrid implements Observer {
 	 * @param coords coordinates that need to be updated for ship placement
 	 * @param color  Which color needs to be placed
 	 */
-	public void colorShipYCoords(int[] coords, String color) {
+	public static void colorShipYCoords(int[] coords, String color) {
 
 		for (int i = coords[1]; i <= coords[3]; i++) {
 			userButton[i][coords[0]].setStyle("-fx-background-color: " + color + "; ");
 			userButton[i][coords[0]].setOnMouseEntered(null);
 			userButton[i][coords[0]].setOnMouseExited(null);
 			userButton[i][coords[0]].setOnMouseClicked(null);
+			userButton[i][coords[0]].setOnDragEntered(null);
+			userButton[i][coords[0]].setOnDragExited(null);
+			userButton[i][coords[0]].setText("placed");
 
 		}
 	}
@@ -231,13 +229,17 @@ public class ShipGrid implements Observer {
 	 * @param coords coordinates that need to be updated for ship placement
 	 * @param color  Which color needs to be placed
 	 */
-	public void colorShipXCoords(int[] coords, String color) {
+	public static void colorShipXCoords(int[] coords, String color) {
 
 		for (int i = coords[0]; i <= coords[2]; i++) {
 			userButton[coords[1]][i].setStyle("-fx-background-color: " + color + "; ");
 			userButton[coords[1]][i].setOnMouseEntered(null);
 			userButton[coords[1]][i].setOnMouseExited(null);
 			userButton[coords[1]][i].setOnMouseClicked(null);
+			userButton[coords[1]][i].setOnDragExited(null);
+			userButton[coords[1]][i].setOnDragEntered(null);
+			userButton[coords[1]][i].setText("placed");
+			
 		}
 	}
 

@@ -63,7 +63,7 @@ public class GridUser {
 	 * 
 	 */
 	public void callCheckIfCompWon() {
-		player.checkIfUserWon();
+		player.checkIfCompWon();
 
 	}
 

@@ -56,7 +56,7 @@ public class RadarGrid implements Observer {
 		radarButton = new Button[9][11];
 		this.resulttext2 = resulttext2;
 		System.out.println("Setting radarGrid");
-		double r = 10;
+		double r = 12;
 		int buttonRowIndex;
 		Text t = new Text("Radar Grid");
 		t.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
@@ -179,9 +179,7 @@ public class RadarGrid implements Observer {
 				radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
 			}
 			resulttext2.setText(res);
-
 			ob.callCheckIfUserWon();
-
 			ob.computerTurn(lastCompResult, Main.gameMode);
 
 		} catch (
