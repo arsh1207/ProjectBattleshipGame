@@ -470,6 +470,7 @@ public class Player extends Observable {
 			Random rand = new Random();
 			int carrierX = rand.nextInt(9);
 			int carrierY = rand.nextInt(11);
+			List<String> templist = new ArrayList<>();
 
 			HashMap<Integer, Integer> Carrier = new HashMap<>();
 			Boolean placed = false;
@@ -481,10 +482,14 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 5; i++) {
 							Carrier.put((carrierY + i), carrierX);
+							templist.add(Integer.toString(carrierY + i) + ","+ Integer.toString(carrierX));
+							shipsMap.put("Carrier", (ArrayList)templist);
 						}
 					} else {
 						for (int i = 0; i < 5; i++) {
 							Carrier.put((carrierY - i), carrierX);
+							templist.add(Integer.toString(carrierY - i) + ","+ Integer.toString(carrierX));
+							shipsMap.put("Carrier", (ArrayList)templist);
 						}
 					}
 					placed = true;
@@ -528,10 +533,14 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 4; i++) {
 							BattleShip.put((battleShipX + i), battleShipY);
+							templist.add(Integer.toString(battleShipX + i) + ","+ Integer.toString(battleShipY));
+							shipsMap.put("Battleship", (ArrayList)templist);
 						}
 					} else {
 						for (int i = 0; i < 4; i++) {
 							BattleShip.put((battleShipX - i), battleShipY);
+							templist.add(Integer.toString(battleShipX - i) + ","+ Integer.toString(battleShipY));
+							shipsMap.put("Battleship", (ArrayList)templist);
 						}
 					}
 					placed = true;
@@ -574,10 +583,14 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 3; i++) {
 							Cruiser.put((cruiserX + i), cruiserY);
+							templist.add(Integer.toString(cruiserX + i) + ","+ Integer.toString(cruiserY));
+							shipsMap.put("Cruiser", (ArrayList)templist);
 						}
 					} else {
 						for (int i = 0; i < 3; i++) {
 							Cruiser.put((cruiserX - i), cruiserY);
+							templist.add(Integer.toString(cruiserX - i) + ","+ Integer.toString(cruiserY));
+							shipsMap.put("Cruiser", (ArrayList)templist);
 						}
 					}
 					placed = true;
@@ -620,10 +633,14 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 3; i++) {
 							Submarine.put((subX + i), subY);
+							templist.add(Integer.toString(subX + i) + ","+ Integer.toString(subY));
+							shipsMap.put("Submarine", (ArrayList)templist);
 						}
 					} else {
 						for (int i = 0; i < 3; i++) {
 							Submarine.put((subX - i), subY);
+							templist.add(Integer.toString(subX - i) + ","+ Integer.toString(subY));
+							shipsMap.put("Submarine", (ArrayList)templist);
 						}
 					}
 					placed = true;
@@ -667,10 +684,14 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 2; i++) {
 							Destroyer.put((destroyerY + i), destroyerX);
+							templist.add(Integer.toString(destroyerY + i) + ","+ Integer.toString(destroyerX));
+							shipsMap.put("Destroyer", (ArrayList)templist);
 						}
 					} else {
 						for (int i = 0; i < 2; i++) {
 							Destroyer.put((destroyerY - i), destroyerX);
+							templist.add(Integer.toString(destroyerY - i) + ","+ Integer.toString(destroyerX));
+							shipsMap.put("Destroyer", (ArrayList)templist);
 						}
 					}
 					placed = true;
