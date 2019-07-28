@@ -15,7 +15,6 @@ public class Player extends Observable {
 	//
 	public static int userScore;
 	public List<String> deployedShips = new ArrayList<>();
-
 	public HashMap<String, Integer> convert = new HashMap<>();
 	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 	public static ArrayList<String> sunkenShips = new ArrayList<String>();
@@ -150,7 +149,7 @@ public class Player extends Observable {
 
 		}
 
-		setReply("Some other error");
+		
 		// some other case or error
 		// return "Some other error";
 

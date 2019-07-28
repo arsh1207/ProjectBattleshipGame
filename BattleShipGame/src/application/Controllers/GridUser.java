@@ -1,11 +1,10 @@
 package application.Controllers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import application.Models.*;
+import application.Models.Computer;
+import application.Models.HitStrategy;
+import application.Models.HitStrategySalvo;
+import application.Models.Player;
 import main.Main;
-
 
 /**
  * 
@@ -21,6 +20,15 @@ public class GridUser {
 	Player player;
 	HitStrategy strategy;
 	HitStrategySalvo strategySalvo;
+	String callType = "";
+
+	public String getCallType() {
+		return callType;
+	}
+
+	public void setCallType(String callType) {
+		this.callType = callType;
+	}
 
 	/**
 	 * Constructor used for initializing the required objects
@@ -39,15 +47,23 @@ public class GridUser {
 	 * @return String defining the computer turn results
 	 */
 	public void computerTurn(Boolean hitResult, String gameMode) {
-		if(Main.gameType.equals("Salvo")) {
+		if (Main.gameType.equals("Salvo")) {
+
+			// set call type for junit
+
+			setCallType("Salvo");
+
 			if (gameMode.equals("Easy"))
 				strategySalvo.randomHit();
 			else if (gameMode.equals("Medium"))
 				strategySalvo.mediumMode(hitResult);
 			else
 				strategySalvo.hardMode(hitResult);
-		}
-		else {
+		} else {
+
+			// set call type for junit
+			setCallType("Normal");
+
 			if (gameMode.equals("Easy"))
 				strategy.randomHit();
 			else if (gameMode.equals("Medium"))
@@ -66,7 +82,7 @@ public class GridUser {
 	public void callCheckIfUserWon() {
 		computer.checkIfUserWon();
 	}
-	
+
 	public void deployCompShips() {
 		computer.deployComputerShips();
 	}
@@ -74,7 +90,7 @@ public class GridUser {
 	public void deployUserShips() {
 		player.deployUserRandomShips();
 	}
-	
+
 	/**
 	 * 
 	 * checks the grid of the User to verify if user has won or not displays the Win
@@ -85,7 +101,6 @@ public class GridUser {
 		player.checkIfCompWon();
 
 	}
-
 
 	/**
 	 * This method will user turn in the model to check whether the coordinates are
@@ -108,11 +123,11 @@ public class GridUser {
 	public void callDeployComputerShips(Computer computer) {
 		computer.deployComputerShips();
 	}
-	
+
 	public void callDeployUserGrid(String coordinates, String shipType) {
 		player.deployUserGrid(coordinates, shipType);
 	}
-	
+
 	public void callSunkenShips(Computer computer) {
 		computer.checkSunkenShips();
 	}

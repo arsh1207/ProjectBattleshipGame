@@ -11,6 +11,7 @@ public class HitStrategySalvo extends Observable {
 	Integer[][] randomGrid = new Integer[9][11];
 	Integer[][] probabilityGrid = new Integer[9][11];
 	ArrayList<String> hitFound = new ArrayList<>();
+	Random ran = new Random();
 	String direction = "";
 	int hitX, hitY;
 	int counter = 0;
@@ -66,7 +67,7 @@ public class HitStrategySalvo extends Observable {
 	}
 	
 	public void randomHit() {
-		Random ran = new Random();
+		
 		int x = ran.nextInt(9);
 		int y = ran.nextInt(11);
 
@@ -764,5 +765,16 @@ public class HitStrategySalvo extends Observable {
 		
 		return false;
 	}
+	public int randomX() {
+
+		return ran.nextInt(9);
+	}
+
+	public int randomY() {
+
+		return ran.nextInt(11);
+
+	}
+
 	
 }
