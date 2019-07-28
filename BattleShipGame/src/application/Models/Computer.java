@@ -2,6 +2,7 @@ package application.Models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
@@ -12,6 +13,9 @@ public class Computer extends Observable {
 
 	final int rows = 9;
 	final int cols = 11;
+	boolean time1=false,time2=false;
+	double  timea=0;
+	double timeb=0;
 	Random rand = new Random();
 	//to check if all ships have been placed or not 
 	int counter = 0;
@@ -20,7 +24,7 @@ public class Computer extends Observable {
 	static ArrayList<String> tempList = new ArrayList<String>();
 	static ArrayList<String> sunkenShips = new ArrayList<String>();
 	static ArrayList<String> coordinatesHit = new ArrayList<String>();
-	private int scoringComp = 0;
+	private int scoringComp=0;
 	private String reply = "";
 
 	// public Integer[][] changedComputerGrid = new Integer[rows][cols];
