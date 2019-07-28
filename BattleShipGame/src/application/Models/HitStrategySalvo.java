@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
+import main.Main;
+
 public class HitStrategySalvo extends Observable {
 	
 	Integer[][] randomGrid = new Integer[9][11];
@@ -103,7 +105,8 @@ public class HitStrategySalvo extends Observable {
 		buttonCount = 0;
 		System.out.println("Number of computer ships sunk "+Computer.sunkenShips.size());
 		int x, y;
-		while(buttonCount < 5 - Computer.sunkenShips.size()) {
+		int shipsremaining = Main.TOTAL_SHIPS - Computer.sunkenShips.size();
+		while(buttonCount < shipsremaining) {
 			System.out.println(buttonCount);
 			Random ran = new Random();
 			x = ran.nextInt(9);

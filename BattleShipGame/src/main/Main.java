@@ -58,6 +58,7 @@ public class Main extends Application implements Observer {
 	GridPane g_pane1, g_pane2;
 	VBox v_box1, v_box2, v_box3;
 	HBox h_box1, h_box2;
+	public static final int TOTAL_SHIPS = 5;
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;

@@ -832,12 +832,12 @@ public class Player extends Observable {
 		System.out.print("checkSunkenShips called\n");
 		Map<String, ArrayList<String>> tempMap; 
 		for (String coords : coordinatesHit) {
-			System.out.println("Checking coordinates "+coords);
+			//System.out.println("Checking coordinates "+coords);
 			tempMap = new HashMap<>();
 			tempMap.putAll(shipsMap);
 			for (Map.Entry<String, ArrayList<String>> entry : shipsMap.entrySet()) {
-				System.out.println("Checking "+entry.getKey());
-				System.out.println(entry);
+				//System.out.println("Checking "+entry.getKey());
+				//System.out.println(entry);
 				if(!shipsMap.get(entry.getKey()).isEmpty()) {
 					//if any ship has been placed on the assigned coordinate
 					if(shipsMap.get(entry.getKey()).contains(coords)) {
@@ -847,9 +847,9 @@ public class Player extends Observable {
 						//and remove the ships from the shipsMap
 						if(shipsMap.get(entry.getKey()).isEmpty()) {
 							setSunkenShips(entry.getKey());
-							System.out.println(entry.getKey()+" destroyed");
+							//System.out.println(entry.getKey()+" destroyed");
 							tempMap.remove(entry.getKey());
-							System.out.println(entry.getKey()+" removed");
+							//System.out.println(entry.getKey()+" removed");
 						}
 					}
 					
