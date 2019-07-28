@@ -23,6 +23,7 @@ import java.util.Observer;
 import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
+import application.Models.Player;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 
@@ -223,18 +224,18 @@ public class RadarGrid implements Observer {
 	 */
 	public void salvaFunc(String[] xy) {
 		System.out.println("Number of buttons"+buttonCount);
-		if(buttonCount == 5) {
-			for(buttonCount = 4;buttonCount>=0; buttonCount--) {
+		if(buttonCount >= Player.shipsMap.size() - 1) {
+			for(buttonCount = Player.shipsMap.size() - 1;buttonCount>=0; buttonCount--) {
 				coordX = Integer.parseInt(selectedButtons[buttonCount][0]);
 				coordY = Integer.parseInt(selectedButtons[buttonCount][1]);
 				ob.callUserTurn(coordX, coordY);
 			}
-			
 			buttonCount = 0;
 		}
 		else {
 			selectedButtons[buttonCount][0] = xy[0];
 			selectedButtons[buttonCount][1] = xy[1];
+			System.out.println("Selected buttons are "+selectedButtons[buttonCount][0]+" and "+selectedButtons[buttonCount][1]);
 			buttonCount++;
 			if(buttonCount == 5) {
 				salvaFunc(null);
@@ -250,12 +251,12 @@ public class RadarGrid implements Observer {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Salva Mode");
 		if(sunkenShips.isEmpty()) {
-			alert.setHeaderText("Number of ships Hit: 0");
+			alert.setHeaderText("Number of Comp ships Hit: 0");
 			alert.setContentText("No ships sunk this time");
 		}
 		else {
 			String ships = new String();
-			alert.setHeaderText("Number of ships Hit: "+sunkenShips.size());
+			alert.setHeaderText("Number of Comp ships Hit: "+sunkenShips.size());
 			ships = "Ships destroyed:\n";
 			for(int i = 0; i < sunkenShips.size(); i++) {
 				ships = ships + sunkenShips.get(i)+"\n";

@@ -1,5 +1,6 @@
 package application.Views;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -7,7 +8,9 @@ import application.Controllers.GridUser;
 import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
 import application.Models.Player;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -262,6 +265,29 @@ public class ShipGrid implements Observer {
 		else if (res.equals("Hit"))
 			userButton[x][y].setStyle("-fx-background-color: #ff1100; ");
 
+	}
+	
+	/**
+	 * Method to display the enemy ships that have sunk in the latest round
+	 * @param sunkenShips list of sunken ships
+	 */
+	public static void salvaAlertCall(ArrayList<String> sunkenShips) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Salvo Mode");
+		if(sunkenShips.isEmpty()) {
+			alert.setHeaderText("Number of User ships Hit: 0");
+			alert.setContentText("No ships sunk this time");
+		}
+		else {
+			String ships = new String();
+			alert.setHeaderText("Number of User ships Hit: "+sunkenShips.size());
+			ships = "Ships destroyed:\n";
+			for(int i = 0; i < sunkenShips.size(); i++) {
+				ships = ships + sunkenShips.get(i)+"\n";
+			}
+			alert.setContentText(ships);
+		}
+		alert.showAndWait();
 	}
 
 }

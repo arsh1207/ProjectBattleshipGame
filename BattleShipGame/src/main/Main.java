@@ -62,7 +62,7 @@ public class Main extends Application implements Observer {
 	int columnButtonCount;
 	int buttonRowIndex;
 	Label resulttext1, resulttext2, resulttext3, resulttext4;
-	public static String gameType = "Salvo";
+	public static String gameType = "None";
 	public static String shipType = "";
 	public static String gameMode = "Medium";
 
@@ -797,20 +797,18 @@ public class Main extends Application implements Observer {
 
 		root1.setBackground(background);
 
-		MenuItem mI1 = new MenuItem("Easy");
-		MenuItem mI2 = new MenuItem("Medium");
-		MenuItem mI3 = new MenuItem("Hard");
-		MenuButton menuButton = new MenuButton("Please select a mode.");
-		menuButton.getItems().addAll(mI1, mI2, mI3);
+		MenuItem mI1 = new MenuItem("Salvo");
+		MenuItem mI2 = new MenuItem("Classic");
+		MenuButton menuButton = new MenuButton("Please select game type.");
+		menuButton.getItems().addAll(mI1, mI2);
 
 		mI1.setOnAction(event -> {
-			gameMode = "Easy";
+			gameType = "Salvo";
+			menuButton.setText(gameType);
 		});
 		mI2.setOnAction(event -> {
-			gameMode = "Medium";
-		});
-		mI3.setOnAction(event -> {
-			gameMode = "Hard";
+			gameType = "Classic";
+			menuButton.setText(gameType);
 		});
 
 		Button btn1 = new Button("Start New Game");
@@ -818,7 +816,14 @@ public class Main extends Application implements Observer {
 		Button btn2 = new Button("Exit Game");
 		btn2.setStyle("-fx-background-color: #a3a0a0; ");
 		btn1.setOnAction((ActionEvent event) -> {
-			stg.setScene(scene1);
+			if(gameType.equals("None")) {
+				AlertBox.displayError("Start up error", "Please select game type(salvo or classic).");
+			}
+			else {
+				if(gameType.equals("Classic"))
+					gameMode = AlertBox.displayDifficulty();
+				stg.setScene(scene1);
+			}
 		});
 		btn2.setOnAction((ActionEvent event) -> {
 			Boolean res = ConfirmBox.display("Confirmation box", "Are you sure?");

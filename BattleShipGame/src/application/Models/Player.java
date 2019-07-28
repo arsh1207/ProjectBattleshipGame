@@ -8,6 +8,7 @@ import java.util.Observable;
 import java.util.Random;
 
 import application.Views.AlertBox;
+import application.Views.ShipGrid;
 
 public class Player extends Observable {
 
@@ -16,7 +17,10 @@ public class Player extends Observable {
 	public List<String> deployedShips = new ArrayList<>();
 
 	public HashMap<String, Integer> convert = new HashMap<>();
-
+	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
+	public static ArrayList<String> sunkenShips = new ArrayList<String>();
+	public static ArrayList<String> coordinatesHit = new ArrayList<String>();
+	
 	public int numOfShipsDep = 0;
 
 	public String shipType = "";
@@ -100,6 +104,14 @@ public class Player extends Observable {
 	public void setAxis(String axis) {
 		this.axis = axis;
 	}
+	public static void setSunkenShips(String shipType) {
+		sunkenShips.add(shipType);
+	}
+	public ArrayList<String> getSunkenShips() {
+		
+		return sunkenShips;
+		
+	}
 
 	/**
 	 * Takes the input based on the event listener Provides the hit or miss while
@@ -181,6 +193,7 @@ public class Player extends Observable {
 			 */
 
 			String str[] = coordinates.split("\\s");
+			List<String> templist = new ArrayList<>();
 
 			// int x1 = convert.get(str[0]);
 			int y1 = Integer.parseInt(str[0]);
@@ -243,10 +256,13 @@ public class Player extends Observable {
 						if ((x1 >= 0 && x1 < cols) && (y1 >= 0 && y1 < rows) && (y2 >= 0 && y2 < rows)
 								&& (userGrid[i][x1] == 0)) {
 							userGrid[i][x1] = 1;
+							templist.add(Integer.toString(i) + ","+ Integer.toString(x1));
 							count++;
 						}
 					}
+					
 					if (((y2 + 1) - (y1 + 1)) + 1 == count) {
+						shipsMap.put(shipType, (ArrayList)templist);
 						int[] coords = { x1, y1, x2, y2 };
 						// calling the function on front end to color the
 						// coordinates of the ship as required
@@ -295,6 +311,7 @@ public class Player extends Observable {
 								&& (userGrid[y1][i] == 0)) {
 							System.out.println("For coordinates " + y1 + " and " + i);
 							userGrid[y1][i] = 1;
+							templist.add(Integer.toString(y1) + ","+ Integer.toString(i));
 							count++;
 
 						}
@@ -302,6 +319,7 @@ public class Player extends Observable {
 					}
 
 					if (((x2 + 1) - (x1 + 1)) + 1 == count) {
+						shipsMap.put(shipType, (ArrayList)templist);
 						int[] coords = { x1, y1, x2, y2 };
 						// calling the function on front end to color the
 						// coordinates of the ship as required
@@ -812,5 +830,47 @@ public class Player extends Observable {
 		}
 
 	}
+	
+	/**
+	 * This function checks whether any ships have sunk or not
+	 * @param coordX X-coordinate
+	 * @param coordY Y-coordinate
+	 */
+	public static void checkSunkenShips() {
+		
+		System.out.print("checkSunkenShips called\n");
+		Map<String, ArrayList<String>> tempMap; 
+		for (String coords : coordinatesHit) {
+			System.out.println("Checking coordinates "+coords);
+			tempMap = new HashMap<>();
+			tempMap.putAll(shipsMap);
+			for (Map.Entry<String, ArrayList<String>> entry : shipsMap.entrySet()) {
+				System.out.println("Checking "+entry.getKey());
+				System.out.println(entry);
+				if(!shipsMap.get(entry.getKey()).isEmpty()) {
+					//if any ship has been placed on the assigned coordinate
+					if(shipsMap.get(entry.getKey()).contains(coords)) {
+						tempMap.get(entry.getKey()).remove(coords);
+						
+						//if no coordinates are remaining to be hit then add the ship to sunken ships
+						//and remove the ships from the shipsMap
+						if(shipsMap.get(entry.getKey()).isEmpty()) {
+							setSunkenShips(entry.getKey());
+							System.out.println(entry.getKey()+" destroyed");
+							tempMap.remove(entry.getKey());
+							System.out.println(entry.getKey()+" removed");
+						}
+					}
+					
+				}
+	
+			}
+			shipsMap = new HashMap<>();
+			shipsMap.putAll(tempMap);
+		}
+		ShipGrid.salvaAlertCall(sunkenShips);
+		
+	}
+
 
 }
