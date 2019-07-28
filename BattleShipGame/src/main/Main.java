@@ -91,7 +91,7 @@ public class Main extends Application implements Observer {
 			strategy.addObserver(sg);
 			strategySalvo.addObserver(sg);
 			player.addObserver(main);
-			//strategy.addObserver(main);
+			// strategy.addObserver(main);
 
 			SplitPane split_pane = new SplitPane();
 			SplitPane split_pane2 = new SplitPane();
@@ -156,12 +156,36 @@ public class Main extends Application implements Observer {
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
+				if (Player.numOfShipsDep == 5) {
+					/*
+					 * Alert alert = new Alert(AlertType.INFORMATION);
+					 * alert.setTitle("Battleship Game");
+					 * alert.setHeaderText("The battle ships are placed correctly.");
+					 * alert.setContentText("You can start playing!"); alert.showAndWait();
+					 */
+					// Salve mode alert box
+					
+					  if (gameType.equals("Salvo")) { salvoAlertCall(); }
+					 
+					for (int i = 0; i < 9; i++) {
+						for (int j = 0; j < 11; j++) {
+							radarGridObserver.radarButton[i][j].setDisable(false);
+						}
+					}
+					ob.deployCompShips();
+					
+				} else {
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Battleship Game");
+					alert.setHeaderText("The battle ships are not placed correctly.");
+					alert.setContentText("Please place them before starting.");
+					alert.showAndWait();
 
+				}
 			});
 
 			tossBtn = new Button("Toss");
 			radarGridObserver.addTossAction();
-			
 
 			for (Node node : g_pane2.getChildren()) {
 				node.setOnMouseEntered((MouseEvent t) -> {
@@ -802,11 +826,10 @@ public class Main extends Application implements Observer {
 		Button btn2 = new Button("Exit Game");
 		btn2.setStyle("-fx-background-color: #a3a0a0; ");
 		btn1.setOnAction((ActionEvent event) -> {
-			if(gameType.equals("None")) {
+			if (gameType.equals("None")) {
 				AlertBox.displayError("Start up error", "Please select game type(salvo or classic).");
-			}
-			else {
-				if(gameType.equals("Classic"))
+			} else {
+				if (gameType.equals("Classic"))
 					gameMode = AlertBox.displayDifficulty();
 				stg.setScene(scene1);
 			}
