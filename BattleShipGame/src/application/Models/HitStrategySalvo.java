@@ -19,7 +19,7 @@ public class HitStrategySalvo extends Observable {
 	private int scoringComp=0;
 	private String reply = "";
 	private int[] coords = {};
-	public static int buttonCount = 0;
+	public static int buttonCount;
 	//ArrayList<int> coordsList = new ArrayList<>();
 
 	public HitStrategySalvo() {
@@ -98,10 +98,13 @@ public class HitStrategySalvo extends Observable {
 		
 		System.out.println("Hit strategy salvo called!");
 		int[] hitCoord = new int[2];
-		ArrayList<Integer> selectedcoordsx = new ArrayList<>();;
-		ArrayList<Integer> selectedcoordsy = new ArrayList<>();;
+		ArrayList<Integer> selectedcoordsx = new ArrayList<>();
+		ArrayList<Integer> selectedcoordsy = new ArrayList<>();
+		buttonCount = 0;
+		System.out.println("Number of computer ships sunk "+Computer.sunkenShips.size());
 		int x, y;
-		while(buttonCount != 5) {
+		while(buttonCount < 5 - Computer.sunkenShips.size()) {
+			System.out.println(buttonCount);
 			Random ran = new Random();
 			x = ran.nextInt(9);
 			y = ran.nextInt(11);
@@ -205,7 +208,9 @@ public class HitStrategySalvo extends Observable {
 		//	coordsList.add(hitCoord);
 			buttonCount++;
 		}
-		buttonCount = 4;
+		
+		buttonCount--;
+		
 		//from this part set will be called n number of times to set
 		//buttons based on whether comp targets were a hit or a miss
 		while(buttonCount >= 0) {
@@ -230,7 +235,11 @@ public class HitStrategySalvo extends Observable {
 	
 			}
 			buttonCount--;
+			String coordx = Integer.toString(x);
+			String coordy = Integer.toString(y);
+			Player.coordinatesHit.add(coordx+","+coordy);
 		}
+		Player.checkSunkenShips();
 
 	}
 

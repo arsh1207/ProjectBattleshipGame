@@ -6,24 +6,20 @@
 
 package application.Views;
 
-
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-
-
 public class InputBox {
-	
 
-		
-		static String result;
-		
-		public static String display(String title) {
+	static String result;
+
+	public static String display(String title) {
 		Stage stage = new Stage();
 		
 		GridPane grid = new GridPane();
@@ -36,38 +32,31 @@ public class InputBox {
 		stage.setMinWidth(550);
 		stage.setMinHeight(300);
 		
-		final TextField x1 = new TextField();
-		x1.setPromptText("Initial X co-ordinate ");
-		x1.setPrefColumnCount(10);
-		x1.getText();
-		GridPane.setConstraints(x1, 0, 0);
-		grid.getChildren().add(x1);
-		
-		final TextField y1 = new TextField();
-		y1.setPromptText("Initial Y co-ordinate");
-		GridPane.setConstraints(y1, 1, 0);
-		grid.getChildren().add(y1);
-		
-		final TextField x2 = new TextField();
-		x2.setPrefColumnCount(15);
-		x2.setPromptText("Final X co-ordinate");
-		GridPane.setConstraints(x2, 0, 1);
-		grid.getChildren().add(x2);
-	
-		final TextField y2 = new TextField();
-		y2.setPrefColumnCount(15);
-		y2.setPromptText("Final Y co-ordinate");
-		GridPane.setConstraints(y2, 1, 1);
-		grid.getChildren().add(y2);
+		final ToggleGroup headOrTails = new ToggleGroup();
+
+		RadioButton head = new RadioButton("Head");
+		head.setToggleGroup(headOrTails);
+		head.setSelected(true);
+
+		RadioButton tail = new RadioButton("Tail");
+		tail.setToggleGroup(headOrTails);
+		grid.getChildren().addAll(head,tail);
 		
 		Button submit = new Button("Submit");
 		
 		submit.setOnAction(e -> {
-		result = x1.getText() + " " + y1.getText()+" " + x2.getText() + " " + y2.getText();	
+			
+				RadioButton rb = (RadioButton)headOrTails.getSelectedToggle(); 
+			  
+            if (rb != null) { 
+            	result = rb.getText(); 
+               
+            }
 		stage.close();
 		});
-		
-		GridPane.setConstraints(submit, 0, 2);
+		GridPane.setConstraints(head, 0, 1);
+		GridPane.setConstraints(tail, 0, 2);
+		GridPane.setConstraints(submit, 0, 3);
 		grid.getChildren().add(submit);
 		
 		Scene scene = new Scene(grid);
