@@ -14,6 +14,9 @@ public class Computer extends Observable {
 
 	final int rows = 9;
 	final int cols = 11;
+	boolean time1=false,time2=false;
+	double  timea=0;
+	double timeb=0;
 
 	public Integer[][] computerGrid = new Integer[rows][cols];
 	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
@@ -80,7 +83,28 @@ public class Computer extends Observable {
 
 			computerGrid[x][y] = 2;
 			
-			setScoreComp(5);
+			if(!time1) {
+				
+				timea=java.lang.System.currentTimeMillis();
+				time1=!time1;
+			}else if(!time2) {
+				timeb=java.lang.System.currentTimeMillis();
+					time2=!time2;
+			}else {
+				double t=timeb-timea;
+				if(t<5000) {
+					setScoreComp(20);
+				}
+				time1=false;
+				time2=false;
+				timea=0;
+				timeb=0;
+				
+			}
+			//if time between consecutive hit is less than 5 seconds ,then bonus score
+			
+			setScoreComp(10);
+			
 			System.out.println("Hit");
 			coordinatesHit.add(coordx+","+coordy);
 			setReply("It's a Hit!!!!!");
@@ -91,7 +115,9 @@ public class Computer extends Observable {
 			// incrementing computer score for a successful hit
 			
 		} else if (computerGrid[x][y] == 0) {
+			
 			setScoreComp(-2);
+			
 			setReply("It's a miss!!!!!");
 			//return "It's a miss!!!!!";
 			
