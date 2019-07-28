@@ -276,22 +276,22 @@ public class RadarGrid implements Observer {
 	 */
 	public void salvaFunc(String[] xy) {
 		System.out.println("Number of buttons"+buttonCount);
-		if(buttonCount >= Player.shipsMap.size() - 1) {
-			for(buttonCount = Player.shipsMap.size() - 1;buttonCount>=0; buttonCount--) {
+		int shipsremaining = Main.TOTAL_SHIPS - Player.sunkenShips.size();
+		if(buttonCount < shipsremaining) {
+			selectedButtons[buttonCount][0] = xy[0];
+			selectedButtons[buttonCount][1] = xy[1];
+			buttonCount++;
+			if(buttonCount == Main.TOTAL_SHIPS - Player.sunkenShips.size())
+				salvaFunc(null);
+		}
+		else {
+			for(buttonCount = (Main.TOTAL_SHIPS - Player.sunkenShips.size()) - 1;buttonCount>=0; buttonCount--) {
+				System.out.println("Number of buttons"+buttonCount);
 				coordX = Integer.parseInt(selectedButtons[buttonCount][0]);
 				coordY = Integer.parseInt(selectedButtons[buttonCount][1]);
 				ob.callUserTurn(coordX, coordY);
 			}
 			buttonCount = 0;
-		}
-		else {
-			selectedButtons[buttonCount][0] = xy[0];
-			selectedButtons[buttonCount][1] = xy[1];
-			System.out.println("Selected buttons are "+selectedButtons[buttonCount][0]+" and "+selectedButtons[buttonCount][1]);
-			buttonCount++;
-			if(buttonCount == 5) {
-				salvaFunc(null);
-			}
 		}
 	}
 	

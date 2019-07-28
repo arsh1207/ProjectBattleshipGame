@@ -474,32 +474,33 @@ public class Computer extends Observable {
 		System.out.print("checkSunkenShips called\n");
 		Map<String, ArrayList<String>> tempMap;
 		for (String coords : coordinatesHit) {
-			System.out.println("Checking coordinates " + coords);
 			tempMap = new HashMap<>();
 			tempMap.putAll(shipsMap);
 			for (Map.Entry<String, ArrayList<String>> entry : shipsMap.entrySet()) {
-				System.out.println("Checking " + entry.getKey());
-				System.out.println(entry);
-				if (!shipsMap.get(entry.getKey()).isEmpty()) {
-					// if any ship has been placed on the assigned coordinate
-					if (shipsMap.get(entry.getKey()).contains(coords)) {
-						tempMap.get(entry.getKey()).remove(coords);
+				if(!shipsMap.get(entry.getKey()).isEmpty()) {
+					//if any ship has been placed on the assigned coordinate
+					if(shipsMap.get(entry.getKey()).contains(coords)) {
+						if (!shipsMap.get(entry.getKey()).isEmpty()) {
+							// if any ship has been placed on the assigned coordinate
+							if (shipsMap.get(entry.getKey()).contains(coords)) {
+								tempMap.get(entry.getKey()).remove(coords);
 
-						// if no coordinates are remaining to be hit then add the ship to sunken ships
-						// and remove the ships from the shipsMap
-						if (shipsMap.get(entry.getKey()).isEmpty()) {
-							setSunkenShips(entry.getKey());
-							System.out.println(entry.getKey() + " destroyed");
-							tempMap.remove(entry.getKey());
-							System.out.println(entry.getKey() + " removed");
+								// if no coordinates are remaining to be hit then add the ship to sunken ships
+								// and remove the ships from the shipsMap
+								if (shipsMap.get(entry.getKey()).isEmpty()) {
+									setSunkenShips(entry.getKey());
+									tempMap.remove(entry.getKey());
+
+								}
+							}
+
 						}
+
 					}
-
 				}
-
+				shipsMap = new HashMap<>();
+				shipsMap.putAll(tempMap);
 			}
-			shipsMap = new HashMap<>();
-			shipsMap.putAll(tempMap);
 		}
 
 	}
