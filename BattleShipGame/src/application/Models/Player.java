@@ -170,15 +170,6 @@ public class Player extends Observable {
 
 		try {
 
-			/*
-			 * int x1 = convert.get(str[0]);
-			 * 
-			 * // decrease the value of Y since the coordinated start from 0 in grid int y1
-			 * = Integer.parseInt(str[1]) - 1; int x2 = convert.get(str[2]);
-			 * 
-			 * // decrease the value of Y since the coordinated start from 0 in grid int y2
-			 * = Integer.parseInt(str[3]) - 1;
-			 */
 
 			String str[] = coordinates.split("\\s");
 
@@ -201,7 +192,7 @@ public class Player extends Observable {
 				deployedShips.remove(shipType);
 
 				setReply("You can't place ships outside the " + rows + " by " + cols + " grid");
-				// return "You can't place ships outside the " + rows + " by " + cols + " grid";
+				
 
 			}
 
@@ -211,7 +202,7 @@ public class Player extends Observable {
 				deployedShips.remove(shipType);
 
 				setReply("You can't place ships outside the " + rows + " by " + cols + " grid");
-				// return "You can't place ships outside the " + rows + " by " + cols + " grid";
+				
 
 			}
 

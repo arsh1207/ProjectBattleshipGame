@@ -6,20 +6,19 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
-import application.Controllers.*;
-import main.Main;
-
-
 public class HitStrategy extends Observable {
+	final int rows = 9;
+	final int cols = 11;
 	Integer[][] randomGrid = new Integer[9][11];
 	Integer[][] probabilityGrid = new Integer[9][11];
 	ArrayList<String> hitFound = new ArrayList<>();
+	Random ran = new Random();
 	String direction = "";
 	int hitX, hitY;
 	int counter = 0;
 	int minMax = 0;
-	private int scoring=0;
-	private int scoringComp=0;
+	private int scoring = 0;
+	private int scoringComp = 0;
 	private String reply = "";
 	private int[] coords = {};
 	public static int buttonCount = 0;
@@ -58,16 +57,17 @@ public class HitStrategy extends Observable {
 	}
 
 	public void setScore(int s) {
-		scoring=scoring+s;
+		scoring = scoring + s;
 	}
+
 	public int getScore() {
 		return scoring;
 	}
-	
+
 	public void randomHit() {
-		Random ran = new Random();
-		int x = ran.nextInt(9);
-		int y = ran.nextInt(11);
+		// Random ran = new Random();
+		int x = randomX();
+		int y = randomY();
 
 		boolean newHit = false;
 		while (!newHit) {
@@ -85,7 +85,7 @@ public class HitStrategy extends Observable {
 			Player.userGrid[x][y] = 2;
 			setScore(5);
 			setReply("It's a Hit!!!!!");
-			
+
 		} else if (Player.userGrid[x][y] == 0) {
 			Player.userGrid[x][y] = 2;
 			setScore(-2);
@@ -97,7 +97,7 @@ public class HitStrategy extends Observable {
 	}
 
 	public void mediumMode(Boolean hitResult) {
-		Random ran = new Random();
+		// Random ran = new Random();
 		int x = ran.nextInt(9);
 		int y = ran.nextInt(11);
 
@@ -432,7 +432,7 @@ public class HitStrategy extends Observable {
 
 		int hitCoord[] = { x, y };
 		setCoords(hitCoord);
-		
+
 		if (Player.userGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
 			Player.userGrid[x][y] = 2;
@@ -661,6 +661,17 @@ public class HitStrategy extends Observable {
 		}
 
 		return canPlace;
+
+	}
+
+	public int randomX() {
+
+		return ran.nextInt(9);
+	}
+
+	public int randomY() {
+
+		return ran.nextInt(11);
 
 	}
 
