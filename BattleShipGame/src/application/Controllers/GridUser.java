@@ -66,7 +66,15 @@ public class GridUser {
 	public void callCheckIfUserWon() {
 		computer.checkIfUserWon();
 	}
+	
+	public void deployCompShips() {
+		computer.deployComputerShips();
+	}
 
+	public void deployUserShips() {
+		player.deployUserRandomShips();
+	}
+	
 	/**
 	 * 
 	 * checks the grid of the User to verify if user has won or not displays the Win

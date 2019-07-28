@@ -62,9 +62,12 @@ public class Main extends Application implements Observer {
 	int columnButtonCount;
 	int buttonRowIndex;
 	Label resulttext1, resulttext2, resulttext3, resulttext4;
-	public static String gameType = "Salvo";
+	// public static String gameType = "Salvo";
+	public static String gameType = "";
 	public static String shipType = "";
 	public static String gameMode = "Medium";
+
+	public static Button tossBtn;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -88,6 +91,7 @@ public class Main extends Application implements Observer {
 			strategy.addObserver(sg);
 			strategySalvo.addObserver(sg);
 			player.addObserver(main);
+			//strategy.addObserver(main);
 
 			SplitPane split_pane = new SplitPane();
 			SplitPane split_pane2 = new SplitPane();
@@ -137,8 +141,8 @@ public class Main extends Application implements Observer {
 			v_box1.setSpacing(20.0);
 			// v_box2.setSpacing(10.0);
 			userRandomShips.setOnAction((ActionEvent event) -> {
-				if (player.numOfShipsDep == 0)
-					player.deployUserRandomShips();
+				if (Player.numOfShipsDep == 0)
+					ob.deployUserShips();
 			});
 
 			// v_box2.setStyle("-fx-background-color: #000000;");
@@ -152,31 +156,13 @@ public class Main extends Application implements Observer {
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
-				if (player.numOfShipsDep == 5) {
-					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Battleship Game");
-					alert.setHeaderText("The battle ships are placed correctly.");
-					alert.setContentText("You can start playing!");
-					alert.showAndWait();
-					//Salve mode alert box
-					if(gameType.equals("Salvo")) {
-						salvoAlertCall(alert);
-					}
-					for (int i = 0; i < 9; i++) {
-						for (int j = 0; j < 11; j++) {
-							radarGridObserver.radarButton[i][j].setDisable(false);
-						}
-					}
-					computer.deployComputerShips();
-				} else {
-					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Battleship Game");
-					alert.setHeaderText("The battle ships are not placed correctly.");
-					alert.setContentText("Please place them before starting.");
-					alert.showAndWait();
 
-				}
 			});
+
+			tossBtn = new Button("Toss");
+			radarGridObserver.addTossAction();
+			
+
 			for (Node node : g_pane2.getChildren()) {
 				node.setOnMouseEntered((MouseEvent t) -> {
 					node.setStyle("-fx-background-color: blue;");
@@ -192,7 +178,7 @@ public class Main extends Application implements Observer {
 			 * h_box.getChildren().addAll(h_box1, h_box2); h_box.setSpacing(100);
 			 */
 
-			v_box3.getChildren().addAll(startBtn);
+			v_box3.getChildren().addAll(startBtn, tossBtn);
 			v_box4.getChildren().addAll(menuBar, split_pane2, split_pane);
 			v_box1.fillWidthProperty();
 			scene1 = new Scene(v_box4, 850, 850);
@@ -230,8 +216,8 @@ public class Main extends Application implements Observer {
 				// black;");
 				AlertBox.displayError(shipType, value);
 			}
-
 		}
+
 	}
 
 	public void setShipPlacementActions() {
@@ -360,7 +346,7 @@ public class Main extends Application implements Observer {
 						if (event.getDragboard().getString().split(";")[1].equals("Carrier")) {
 							if (iniY - 2 >= 0 && iniY + 2 < 11) {
 
-								//System.out.println("here :"+ShipGrid.userButton[iniX][iniY].getText());
+								// System.out.println("here :"+ShipGrid.userButton[iniX][iniY].getText());
 								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
 									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: black;");
 								if (!ShipGrid.userButton[iniX][iniY - 1].getText().contains("placed"))
@@ -890,12 +876,14 @@ public class Main extends Application implements Observer {
 		h_box2.getChildren().addAll(resultLabel, resulttext4);
 
 	}
-	
+
 	/**
 	 * Method to call the alert box for salvo variation in the starting
+	 * 
 	 * @param alert
 	 */
-	public static void salvoAlertCall(Alert alert) {
+	public static void salvoAlertCall() {
+		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Salvo Mode");
 		alert.setHeaderText("You are in Salvo mode.");
 		alert.setContentText("The number of shots you take depends on the number of ships you have left.");

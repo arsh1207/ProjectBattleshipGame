@@ -17,7 +17,7 @@ public class Player extends Observable {
 
 	public HashMap<String, Integer> convert = new HashMap<>();
 
-	public int numOfShipsDep = 0;
+	public static int numOfShipsDep = 0;
 
 	public String shipType = "";
 	

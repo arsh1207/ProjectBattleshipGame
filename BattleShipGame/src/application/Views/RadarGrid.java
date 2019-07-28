@@ -23,6 +23,7 @@ import java.util.Observer;
 import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
+import application.Models.Player;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 
@@ -40,8 +41,9 @@ public class RadarGrid implements Observer {
 	Label resulttext2, resulttext1, resulttext3, resulttext4;
 	GridPane g_pane1;
 	GridUser ob;
+	
 
-	Boolean lastCompResult = false;
+	public static Boolean lastCompResult = false;
 	//private HitStrategy strategy;
 
 	public RadarGrid(Label resulttext2, Label resulttext1, Label resulttext3, Label resulttext4,
@@ -53,6 +55,57 @@ public class RadarGrid implements Observer {
 		this.resulttext4 = resulttext4;
 		this.ob = ob;
 		this.selectedButtons = new String[5][2];
+		
+		
+	}
+	
+	public void addTossAction() {
+		Main.tossBtn.setOnAction((ActionEvent event) -> {
+			if (Player.numOfShipsDep == 5) {
+				/*
+				 * Alert alert = new Alert(AlertType.INFORMATION);
+				 * alert.setTitle("Battleship Game");
+				 * alert.setHeaderText("The battle ships are placed correctly.");
+				 * alert.setContentText("You can start playing!"); alert.showAndWait();
+				 */
+				// Salve mode alert box
+				/*
+				 * if (gameType.equals("Salvo")) { salvoAlertCall(); }
+				 */
+				for (int i = 0; i < 9; i++) {
+					for (int j = 0; j < 11; j++) {
+						radarButton[i][j].setDisable(false);
+					}
+				}
+				ob.deployCompShips();
+				String tossResult = InputBox.display("Please choose Head or Tail");
+				// double rAsFloat = 1 * (2 + Math.random( ) );
+				int r = (int) Math.round(Math.random());
+				if ((r == 1 && tossResult.equalsIgnoreCase("Head"))
+						|| (r == 0 && tossResult.equalsIgnoreCase("Tail"))) {
+					ob.computerTurn(lastCompResult, Main.gameMode);
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Battleship Game");
+					alert.setHeaderText("It's computer turn first.");
+					//alert.setContentText("You can start playing!");
+					alert.showAndWait();
+				}
+				else {
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Battleship Game");
+					alert.setHeaderText("It's a "+tossResult);
+					alert.setContentText("It's your turn first!");
+					alert.showAndWait();
+				}
+			} else {
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Battleship Game");
+				alert.setHeaderText("The battle ships are not placed correctly.");
+				alert.setContentText("Please place them before starting.");
+				alert.showAndWait();
+
+			}
+		});
 	}
 
 	/**
