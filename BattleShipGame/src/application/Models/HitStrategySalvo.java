@@ -23,6 +23,9 @@ public class HitStrategySalvo extends Observable {
 	private int[] coords = {};
 	public static int buttonCount;
 	//ArrayList<int> coordsList = new ArrayList<>();
+	boolean time1=false,time2=false;
+	double  timea=0;
+	double timeb=0;
 
 	public HitStrategySalvo() {
 		for (int i = 0; i < 9; i++) {
@@ -83,7 +86,24 @@ public class HitStrategySalvo extends Observable {
 		if (Player.userGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
 			Player.userGrid[x][y] = 2;
-			setScore(5);
+			if(!time1) {
+				timea=java.lang.System.currentTimeMillis();
+				time1=!time1;
+			}else if(!time2) {
+				timeb=java.lang.System.currentTimeMillis();
+					time2=!time2;
+			}else {
+				double t=timeb-timea;
+				if(t<3000) {
+					setScore(20);
+				}
+				time1=false;
+				time2=false;
+				timea=0;
+				timeb=0;
+				
+			}//if time between consecutive hit is less than 3 seconds ,then bonus score
+			setScore(10);
 			setReply("It's a Hit!!!!!");
 			
 		} else if (Player.userGrid[x][y] == 0) {
@@ -229,9 +249,28 @@ public class HitStrategySalvo extends Observable {
 			if (Player.userGrid[x][y] == 1) {
 				// change the grid value from 1 to 2 to signify hit
 				Player.userGrid[x][y] = 2;
+				if(!time1) {
+					timea=java.lang.System.currentTimeMillis();
+					time1=!time1;
+				}else if(!time2) {
+					timeb=java.lang.System.currentTimeMillis();
+						time2=!time2;
+				}else {
+					double t=timeb-timea;
+					if(t<3000) {
+						setScore(20);
+					}
+					time1=false;
+					time2=false;
+					timea=0;
+					timeb=0;
+					
+				}//if time between consecutive hit is less than 3 seconds ,then bonus score
+				setScore(10);
 				setReply("It's a Hit!!!!!");
 			} else if (Player.userGrid[x][y] == 0) {
 				Player.userGrid[x][y] = 2;
+				setScore(-2);
 				setReply("It's a miss!!!!!");
 			} else if (Player.userGrid[x][y] == 2) {
 				setReply("The location has been hit earlier");
@@ -471,9 +510,28 @@ public class HitStrategySalvo extends Observable {
 		if (Player.userGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
 			Player.userGrid[x][y] = 2;
+			if(!time1) {
+				timea=java.lang.System.currentTimeMillis();
+				time1=!time1;
+			}else if(!time2) {
+				timeb=java.lang.System.currentTimeMillis();
+					time2=!time2;
+			}else {
+				double t=timeb-timea;
+				if(t<3000) {
+					setScore(20);
+				}
+				time1=false;
+				time2=false;
+				timea=0;
+				timeb=0;
+				
+			}//if time between consecutive hit is less than 3 seconds ,then bonus score
+			setScore(10);
 			setReply("It's a Hit!!!!!");
 		} else if (Player.userGrid[x][y] == 0) {
 			Player.userGrid[x][y] = 2;
+			setScore(-2);
 			setReply("It's a miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2) {
 			setReply("The location has been hit earlier");
