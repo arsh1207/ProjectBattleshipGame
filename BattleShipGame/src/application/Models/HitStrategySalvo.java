@@ -19,7 +19,7 @@ public class HitStrategySalvo extends Observable {
 	int counter = 0;
 	int minMax = 0;
 	private int scoring=0;
-	private int scoringComp=0;
+	public static int scoringComp=0;
 	private String reply = "";
 	private int[] coords = {};
 	public static int buttonCount;

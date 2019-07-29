@@ -28,7 +28,7 @@ public class Computer extends Observable {
 	static ArrayList<String> tempList = new ArrayList<String>();
 	static ArrayList<String> sunkenShips = new ArrayList<String>();
 	static ArrayList<String> coordinatesHit = new ArrayList<String>();
-	private int scoringComp=0;
+	public static int scoringComp=0;
 	private String reply = "";
 
 	// public Integer[][] changedComputerGrid = new Integer[rows][cols];
