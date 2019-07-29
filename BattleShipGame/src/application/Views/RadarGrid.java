@@ -123,7 +123,6 @@ public class RadarGrid implements Observer {
 		g_pane1 = g_pane;
 		radarButton = new Button[9][11];
 		this.resulttext2 = resulttext2;
-		System.out.println("Setting radarGrid");
 		double r = 12;
 		int buttonRowIndex;
 		Text t = new Text("Radar Grid");
@@ -132,7 +131,6 @@ public class RadarGrid implements Observer {
 		columnButtonCount = 0;
 		g_pane.add(t, columnButtonCount, rowButtonCount);
 		for (rowButtonCount = 10; rowButtonCount >= 1; rowButtonCount--) {
-			System.out.println(rowButtonCount + " " + columnButtonCount);
 			int ch = 10;
 			Text text1 = new Text(Integer.toString(ch - rowButtonCount));
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
@@ -141,7 +139,6 @@ public class RadarGrid implements Observer {
 		// so that they can be accessed via ID
 		for (rowButtonCount = 0; rowButtonCount < 9; rowButtonCount++) {
 			for (columnButtonCount = 0; columnButtonCount < 11; columnButtonCount++) {
-				// System.out.println(rowButtonCount+" "+columnButtonCount);
 				radarButton[rowButtonCount][columnButtonCount] = new Button();
 			}
 		}
@@ -153,8 +150,6 @@ public class RadarGrid implements Observer {
 			columnButtonCount = 1;
 			// columnButtonCount = 0; columnButtonCount < 11; columnButtonCount += 1
 			for (Button b : radarButton[buttonRowIndex]) {
-				System.out.println(rowButtonCount + " " + columnButtonCount);
-				System.out.println(rowButtonCount + " " + columnButtonCount);
 				b.setStyle("-fx-background-color: #000000; ");
 				b.setId((buttonRowIndex) + ":" + (columnButtonCount - 1));
 				b.setDisable(true);
@@ -201,7 +196,6 @@ public class RadarGrid implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		if (o instanceof Computer) {
-			System.out.println("update called");
 			// TODO Auto-generated method stub
 
 			if (arg.equals("HITORMISS")) {
@@ -241,7 +235,6 @@ public class RadarGrid implements Observer {
 		} else if (o instanceof HitStrategySalvo) {
 			String reply = ((HitStrategySalvo) o).getReply();
 			int score = ((HitStrategySalvo) o).getScore();
-			System.out.println("111" + reply);
 
 			int coord[] = ((HitStrategy) o).getCoords();
 			if (reply.contains("Hit")) {
@@ -317,7 +310,6 @@ public class RadarGrid implements Observer {
 	 * @param xy coordinates
 	 */
 	public void salvaFunc(String[] xy) {
-		System.out.println("Number of buttons" + buttonCount);
 		int shipsremaining = Main.TOTAL_SHIPS - Player.sunkenShips.size();
 		if (buttonCount < shipsremaining) {
 			selectedButtons[buttonCount][0] = xy[0];
@@ -327,7 +319,6 @@ public class RadarGrid implements Observer {
 				salvaFunc(null);
 		} else {
 			for (buttonCount = (Main.TOTAL_SHIPS - Player.sunkenShips.size()) - 1; buttonCount >= 0; buttonCount--) {
-				System.out.println("Number of buttons" + buttonCount);
 				coordX = Integer.parseInt(selectedButtons[buttonCount][0]);
 				coordY = Integer.parseInt(selectedButtons[buttonCount][1]);
 				ob.callUserTurn(coordX, coordY);
