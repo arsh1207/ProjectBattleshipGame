@@ -276,8 +276,11 @@ public class ShipGrid implements Observer {
 
 	public static void setUserShipCoordinates(int x, int y, String res) {
 
-		if (res.equals("Miss"))
+		if (res.equals("Miss")) {
 			userButton[x][y].setStyle("-fx-background-color: #FFFFFF; ");
+			userButton[x][y].setOnMouseEntered(null);
+			userButton[x][y].setOnMouseExited(null);
+		}
 		else if (res.equals("Hit"))
 			userButton[x][y].setStyle("-fx-background-color: #ff1100; ");
 

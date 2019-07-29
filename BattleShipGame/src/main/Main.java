@@ -92,7 +92,7 @@ public class Main extends Application implements Observer {
 			strategy.addObserver(sg);
 			strategySalvo.addObserver(sg);
 			player.addObserver(main);
-			// strategy.addObserver(main);
+			//strategy.addObserver(main);
 
 			SplitPane split_pane = new SplitPane();
 			SplitPane split_pane2 = new SplitPane();

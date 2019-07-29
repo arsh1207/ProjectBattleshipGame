@@ -330,7 +330,8 @@ public class Computer extends Observable {
 			for (Map.Entry<Integer, Integer> entry : Destroyer.entrySet()) {
 
 				// ask about this
-				computerGrid[entry.getKey()][entry.getValue()] = 1;
+				System.out.println("key: "+entry.getKey()+" value: "+entry.getValue());
+				computerGrid[entry.getValue()][entry.getKey()] = 1;
 				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}

@@ -122,7 +122,7 @@ public class Player extends Observable {
 
 	public void setCompWon(String compWon) {
 		this.compWon = compWon;
-		
+
 		setChanged();
 		notifyObservers(compWon);
 	}
@@ -317,7 +317,7 @@ public class Player extends Observable {
 			// return "Invalid input, please try again.";
 		} catch (Exception e) {
 			deployedShips.remove(shipType);
-			// e.printStackTrace();
+			e.printStackTrace();
 			setReply("Invalid input, please try again.");
 			// return "Invalid input, please try again.";
 		} finally {
@@ -353,7 +353,7 @@ public class Player extends Observable {
 		if (!flaguser) {// set that user has won
 
 			setCompWon("Won");
-			//AlertBox.displayResult("Hurray!!", "User has Won ");
+			// AlertBox.displayResult("Hurray!!", "User has Won ");
 		} else {
 			// do nothing
 			setCompWon("Lost");
@@ -452,14 +452,10 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 5; i++) {
 							Carrier.put((carrierY + i), carrierX);
-							templist.add(Integer.toString(carrierY + i) + "," + Integer.toString(carrierX));
-							shipsMap.put("Carrier", (ArrayList) templist);
 						}
 					} else {
 						for (int i = 0; i < 5; i++) {
 							Carrier.put((carrierY - i), carrierX);
-							templist.add(Integer.toString(carrierY - i) + "," + Integer.toString(carrierX));
-							shipsMap.put("Carrier", (ArrayList) templist);
 						}
 					}
 					placed = true;
@@ -471,6 +467,8 @@ public class Player extends Observable {
 
 			for (Map.Entry<Integer, Integer> entry : Carrier.entrySet()) {
 				userGrid[entry.getValue()][entry.getKey()] = 1;
+				templist.add(Integer.toString(entry.getValue()) + "," + Integer.toString(entry.getKey()));
+				shipsMap.put("Carrier", (ArrayList) templist);
 				// computerGrid[entry.getKey()][entry.getValue()] = 1;
 
 			}
@@ -495,6 +493,7 @@ public class Player extends Observable {
 			int battleShipY = rand.nextInt(11);
 
 			HashMap<Integer, Integer> BattleShip = new HashMap<>();
+			templist = new ArrayList<>();
 			shipPlacementFlag = false;
 			placed = false;
 			while (!placed) {
@@ -503,14 +502,10 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 4; i++) {
 							BattleShip.put((battleShipX + i), battleShipY);
-							templist.add(Integer.toString(battleShipX + i) + "," + Integer.toString(battleShipY));
-							shipsMap.put("Battleship", (ArrayList) templist);
 						}
 					} else {
 						for (int i = 0; i < 4; i++) {
 							BattleShip.put((battleShipX - i), battleShipY);
-							templist.add(Integer.toString(battleShipX - i) + "," + Integer.toString(battleShipY));
-							shipsMap.put("Battleship", (ArrayList) templist);
 						}
 					}
 					placed = true;
@@ -523,6 +518,8 @@ public class Player extends Observable {
 			for (Map.Entry<Integer, Integer> entry : BattleShip.entrySet()) {
 
 				userGrid[entry.getKey()][entry.getValue()] = 1;
+				templist.add(Integer.toString(entry.getKey()) + "," + Integer.toString(entry.getValue()));
+				shipsMap.put("Battleship", (ArrayList) templist);
 				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}
@@ -545,6 +542,7 @@ public class Player extends Observable {
 			int cruiserY = rand.nextInt(11);
 
 			HashMap<Integer, Integer> Cruiser = new HashMap<>();
+			templist = new ArrayList<>();
 			shipPlacementFlag = false;
 			placed = false;
 			while (!placed) {
@@ -553,14 +551,10 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 3; i++) {
 							Cruiser.put((cruiserX + i), cruiserY);
-							templist.add(Integer.toString(cruiserX + i) + "," + Integer.toString(cruiserY));
-							shipsMap.put("Cruiser", (ArrayList) templist);
 						}
 					} else {
 						for (int i = 0; i < 3; i++) {
 							Cruiser.put((cruiserX - i), cruiserY);
-							templist.add(Integer.toString(cruiserX - i) + "," + Integer.toString(cruiserY));
-							shipsMap.put("Cruiser", (ArrayList) templist);
 						}
 					}
 					placed = true;
@@ -573,6 +567,8 @@ public class Player extends Observable {
 			for (Map.Entry<Integer, Integer> entry : Cruiser.entrySet()) {
 
 				userGrid[entry.getKey()][entry.getValue()] = 1;
+				templist.add(Integer.toString(entry.getKey()) + "," + Integer.toString(entry.getValue()));
+				shipsMap.put("Cruiser", (ArrayList) templist);
 				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}
@@ -595,6 +591,7 @@ public class Player extends Observable {
 			int subX = rand.nextInt(9);
 			int subY = rand.nextInt(11);
 			HashMap<Integer, Integer> Submarine = new HashMap<>();
+			templist = new ArrayList<>();
 			shipPlacementFlag = false;
 			placed = false;
 			while (!placed) {
@@ -603,14 +600,10 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 3; i++) {
 							Submarine.put((subX + i), subY);
-							templist.add(Integer.toString(subX + i) + "," + Integer.toString(subY));
-							shipsMap.put("Submarine", (ArrayList) templist);
 						}
 					} else {
 						for (int i = 0; i < 3; i++) {
 							Submarine.put((subX - i), subY);
-							templist.add(Integer.toString(subX - i) + "," + Integer.toString(subY));
-							shipsMap.put("Submarine", (ArrayList) templist);
 						}
 					}
 					placed = true;
@@ -622,6 +615,8 @@ public class Player extends Observable {
 			for (Map.Entry<Integer, Integer> entry : Submarine.entrySet()) {
 
 				userGrid[entry.getKey()][entry.getValue()] = 1;
+				templist.add(Integer.toString(entry.getKey()) + "," + Integer.toString(entry.getValue()));
+				shipsMap.put("Submarine", (ArrayList) templist);
 				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}
@@ -646,6 +641,7 @@ public class Player extends Observable {
 			int destroyerY = rand.nextInt(11);
 
 			HashMap<Integer, Integer> Destroyer = new HashMap<>();
+			templist = new ArrayList<>();
 			shipPlacementFlag = false;
 			placed = false;
 			while (!placed) {
@@ -654,14 +650,10 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 2; i++) {
 							Destroyer.put((destroyerY + i), destroyerX);
-							templist.add(Integer.toString(destroyerY + i) + "," + Integer.toString(destroyerX));
-							shipsMap.put("Destroyer", (ArrayList) templist);
 						}
 					} else {
 						for (int i = 0; i < 2; i++) {
 							Destroyer.put((destroyerY - i), destroyerX);
-							templist.add(Integer.toString(destroyerY - i) + "," + Integer.toString(destroyerX));
-							shipsMap.put("Destroyer", (ArrayList) templist);
 						}
 					}
 					placed = true;
@@ -674,6 +666,8 @@ public class Player extends Observable {
 			for (Map.Entry<Integer, Integer> entry : Destroyer.entrySet()) {
 
 				userGrid[entry.getValue()][entry.getKey()] = 1;
+				templist.add(Integer.toString(entry.getValue()) + "," + Integer.toString(entry.getKey()));
+				shipsMap.put("Destroyer", (ArrayList) templist);
 
 			}
 			if (shipPlacementFlag) {
@@ -771,9 +765,9 @@ public class Player extends Observable {
 		if (!flagcomp) {// set that user has won
 
 			setCompWon("Won");
-			//AlertBox.displayResult("Hurray!!", "AI has Won ");
+			// AlertBox.displayResult("Hurray!!", "AI has Won ");
 		} else {
-			
+
 			setCompWon("Lost");
 			// do nothing
 
@@ -842,9 +836,9 @@ public class Player extends Observable {
 						// and remove the ships from the shipsMap
 						if (shipsMap.get(entry.getKey()).isEmpty()) {
 							setSunkenShips(entry.getKey());
-							// System.out.println(entry.getKey()+" destroyed");
-							tempMap.remove(entry.getKey());
-							// System.out.println(entry.getKey()+" removed");
+							System.out.println(entry.getKey() + " destroyed");
+							tempMap.remove(entry.getKey());							System.out.println(entry.getKey() + " removed");
+						
 						}
 					}
 
@@ -854,6 +848,7 @@ public class Player extends Observable {
 			shipsMap = new HashMap<>();
 			shipsMap.putAll(tempMap);
 		}
+		System.out.println("user sunken ships are: " + sunkenShips);
 		ShipGrid.salvaAlertCall(sunkenShips);
 
 	}
