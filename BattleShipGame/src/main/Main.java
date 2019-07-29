@@ -63,7 +63,7 @@ public class Main extends Application {
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;
-	Label resulttext1, resulttext2, resulttext3, resulttext4;
+	static Label resulttext1, resulttext2, resulttext3, resulttext4;
 	// public static String gameType = "Salvo";
 	public static String gameType = "None";
 	public static String shipType = "";
@@ -85,6 +85,8 @@ public class Main extends Application {
 			Computer computer = new Computer();
 			HitStrategy strategy = new HitStrategy();
 			HitStrategySalvo strategySalvo = new HitStrategySalvo();
+			resulttext1 = new Label();
+			resulttext4 = new Label();
 			ob = new GridUser(player, computer, strategy, strategySalvo);
 			sg = new ShipGrid(player, ob, resulttext1, resulttext4);
 			player.addObserver(sg);
@@ -117,9 +119,9 @@ public class Main extends Application {
 			g_pane2.setVgap(10);
 			g_pane2.setHgap(10);
 			Label l1 = new Label();
-			seeResultUser("User ");
 			v_box3.getChildren().add(l1);
-			seeResultComp("Computer ");
+			seeResultComp("User ");
+			seeResultUser("Computer ");
 			Score("Player SCORE");
 			ScoreComp("Computer SCORE");
 
@@ -149,7 +151,6 @@ public class Main extends Application {
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
-				
 				if (Player.numOfShipsDep == 5) {
 					/*
 					 * Alert alert = new Alert(AlertType.INFORMATION);
@@ -204,7 +205,7 @@ public class Main extends Application {
 			v_box1.getStylesheets().add("application/Views/application.css");
 			v_box2.getStylesheets().add("application/Views/application.css");
 
-			// v_box1.prefWidthProperty().bind(sp.widthProperty());
+			//v_box1.prefWidthProperty().bind(sp.widthProperty());
 			split_pane.prefHeightProperty().bind(stage.heightProperty());
 			stage.show();
 
@@ -831,7 +832,6 @@ public class Main extends Application {
 		Label resultLabel = new Label(title + "Turn: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		resulttext1 = new Label();
 		resulttext1.setStyle("-fx-background-color: white;");
 		v_box3.getChildren().addAll(resultLabel, resulttext1);
 
@@ -875,7 +875,6 @@ public class Main extends Application {
 		Label resultLabel = new Label(title + ": ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		resulttext4 = new Label();
 		resulttext4.setStyle("-fx-background-color: white;");
 		h_box2.getChildren().addAll(resultLabel, resulttext4);
 

@@ -81,9 +81,9 @@ public class Computer extends Observable {
 
 	public void setUserWon(String userWon) {
 		this.UserWon = userWon;
-
-		setChanged();
-		notifyObservers(userWon);
+		
+		//setChanged();
+		//notifyObservers(userWon);
 	}
 
 	public Computer() {
@@ -449,7 +449,7 @@ public class Computer extends Observable {
 	}
 
 	public void checkIfUserWon() {
-
+		
 		boolean flaguser = false;
 
 		// check the computer grid if all the 1 are converted to 2
@@ -472,12 +472,14 @@ public class Computer extends Observable {
 		 * scoreReverse=false; if(cscore<pscore) { scoreReverse=true; }
 		 */
 		if (!flaguser) {
-			setUserWon("Won");
-
-			// AlertBox.displayResult("Hurray!!", "User has Won ");
+			//setUserWon("Won");
+			
+			//this has been changed
+			AlertBox.displayResult("Hurray!!", "User has Won ");
 		} else {
-
-			setUserWon("Lost"); // do nothing
+			
+			//setUserWon("Lost");
+			// do nothing
 
 		}
 
@@ -533,7 +535,6 @@ public class Computer extends Observable {
 	 */
 	public void checkSunkenShips() {
 
-		System.out.print("checkSunkenShips called\n");
 		Map<String, ArrayList<String>> tempMap;
 		for (String coords : coordinatesHit) {
 			tempMap = new HashMap<>();

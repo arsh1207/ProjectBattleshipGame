@@ -17,7 +17,7 @@ public class HitStrategy extends Observable {
 	int hitX, hitY;
 	int counter = 0;
 	int minMax = 0;
-	private int scoring = 0;
+	public static int scoring = 0;
 	public static int scoringComp = 0;
 	private String reply = "";
 	private int[] coords = {};

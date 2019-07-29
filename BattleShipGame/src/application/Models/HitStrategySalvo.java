@@ -110,7 +110,7 @@ public class HitStrategySalvo extends Observable {
 		} else if (Player.userGrid[x][y] == 0) {
 			Player.userGrid[x][y] = 2;
 			setScore(-1);
-			setReply("It's a miss!!!!!");
+			setReply("It's a Miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2) {
 			setReply("The location has been hit earlier");
 

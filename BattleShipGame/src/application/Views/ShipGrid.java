@@ -197,9 +197,10 @@ public class ShipGrid implements Observer {
 			System.out.println("user turn: "+reply);
 			System.out.println("user turn: "+score);
 
-			int coord[] = ((HitStrategy) o).getCoords();
+			int coord[] = ((HitStrategySalvo) o).getCoords();
 			if (reply.contains("Hit")) {
 				lastCompResult = true;
+				setUserShipCoordinates(coord[0], coord[1], "Hit");
 			} else {
 				lastCompResult = false;
 				setUserShipCoordinates(coord[0], coord[1], "Miss");

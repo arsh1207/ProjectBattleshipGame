@@ -679,9 +679,16 @@ public class Player extends Observable {
 		 */
 		if (!flagcomp) {
 			// set that user has won
-			setCompWon("Won");
-			// AlertBox.displayResult("Hurray!!", "User has Won ");
-		} else { // do nothing setCompWon("Lost");
+		int pscore=Computer.scoringComp;
+		int cscore=HitStrategy.scoring;
+		boolean scoreReverse=false;
+		if(cscore<pscore) {
+			scoreReverse=true;
+			//setCompWon("Won");
+			 AlertBox.displayResult("Hurray!!", "User has Won ");
+		} else { // do nothing 
+			//setCompWon("Lost");
+		}
 		}
 	}
 	// }
@@ -730,12 +737,9 @@ public class Player extends Observable {
 	public static void checkSunkenShips() {
 		Map<String, ArrayList<String>> tempMap;
 		for (String coords : coordinatesHit) {
-			System.out.println("Checking coordinates " + coords);
 			tempMap = new HashMap<>();
 			tempMap.putAll(shipsMap);
 			for (Map.Entry<String, ArrayList<String>> entry : shipsMap.entrySet()) {
-				System.out.println("Checking " + entry.getKey());
-				System.out.println(entry);
 				if (!shipsMap.get(entry.getKey()).isEmpty()) {
 					// if any ship has been placed on the assigned coordinate
 					if (shipsMap.get(entry.getKey()).contains(coords)) {
@@ -745,9 +749,7 @@ public class Player extends Observable {
 						// and remove the ships from the shipsMap
 						if (shipsMap.get(entry.getKey()).isEmpty()) {
 							setSunkenShips(entry.getKey());
-							System.out.println(entry.getKey() + " destroyed");
 							tempMap.remove(entry.getKey());
-							System.out.println(entry.getKey() + " removed");
 						}
 					}
 
@@ -757,7 +759,6 @@ public class Player extends Observable {
 			shipsMap = new HashMap<>();
 			shipsMap.putAll(tempMap);
 		}
-		System.out.println("user sunken ships are: " + sunkenShips);
 		ShipGrid.salvaAlertCall(sunkenShips);
 
 	}
