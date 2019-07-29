@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
-import application.Views.AlertBox;
-
 public class Computer extends Observable {
 
 	final int rows = 9;
