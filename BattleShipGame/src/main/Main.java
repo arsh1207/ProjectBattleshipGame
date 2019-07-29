@@ -2,8 +2,6 @@ package main;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Observable;
-import java.util.Observer;
 
 import application.Controllers.GridUser;
 import application.Models.Computer;
@@ -71,6 +69,7 @@ public class Main extends Application {
 	public static String shipType = "";
 	public static String gameMode = "Medium";
 	public static Button tossBtn;
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);
@@ -770,6 +769,7 @@ public class Main extends Application {
 	public void launchStartupWindow(Stage stg) throws Exception {
 
 		GridPane root1 = new GridPane();
+		scene2 = new Scene(root1, 800, 600);
 		root1.setVgap(10);
 		root1.setHgap(10);
 
@@ -819,6 +819,7 @@ public class Main extends Application {
 		root1.add(btn1, 0, 1);
 		root1.add(btn2, 0, 2);
 		stg.setScene(scene2);
+		
 	}
 
 	/**
@@ -845,6 +846,7 @@ public class Main extends Application {
 		Label resultLabel = new Label(title + "Turn: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
+		resulttext2 = new Label();
 		resulttext2.setStyle("-fx-background-color: white;");
 		v_box3.getChildren().addAll(resultLabel, resulttext2);
 	}

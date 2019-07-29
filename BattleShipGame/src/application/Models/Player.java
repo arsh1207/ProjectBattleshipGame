@@ -122,11 +122,8 @@ public class Player extends Observable {
 
 	public void setCompWon(String compWon) {
 		this.compWon = compWon;
-		}
+	}
 
-		
-
-	
 	public int GetScore() {
 		return userScore;
 	}
@@ -287,8 +284,6 @@ public class Player extends Observable {
 			return false;
 		return true;
 	}
-
-	
 
 	/**
 	 * Checking that the ships are of the exact size
@@ -627,7 +622,7 @@ public class Player extends Observable {
 		if (direction.equals("horizontal")) {
 			if ((y + points) < 11) {
 				for (int j = 0; j < points; j++) {
-					if (userGrid[x][y + j] != 0 || adjacentShipCheck(x, y+j))
+					if (userGrid[x][y + j] != 0 || adjacentShipCheck(x, y + j))
 						canPlace = false;
 				}
 			} else {
@@ -640,7 +635,7 @@ public class Player extends Observable {
 
 			if ((x + points) < 9) {
 				for (int j = 0; j < points; j++) {
-					if (userGrid[x + j][y] != 0 || adjacentShipCheck(x+j, y))
+					if (userGrid[x + j][y] != 0 || adjacentShipCheck(x + j, y))
 						canPlace = false;
 				}
 			} else {
@@ -662,43 +657,34 @@ public class Player extends Observable {
 	 * case if User won
 	 * 
 	 */
-	public void checkIfCompWon() {
 
+	public void checkIfCompWon() {
 		boolean flagcomp = false;
 
-		// check the computer grid if all the 1 are converted to 2
 		for (int i = 0; i < rows; i++) {
-
 			for (int j = 0; j < cols; j++) {
-
 				if (userGrid[i][j] == 1) {
-					// set the flag as true
 					flagcomp = true;
-
 				}
-
 			}
 		}
+
 		/**
-		 * If user destroys all ships but computer has more score
-		 * declares computer as winner
+		 * If user destroys all ships but computer has more score declares computer as
+		 * winner
 		 */
-		int pscore=Computer.scoringComp;
-		int cscore=HitStrategy.scoring;
-		boolean scoreReverse=false;
-		if(cscore<pscore) {
-			scoreReverse=true;
-
-		if (!flagcomp) {// set that user has won
-
+		/*
+		 * int pscore = Computer.scoringComp; int cscore = HitStrategy.scoring; boolean
+		 * scoreReverse = false; if (cscore < pscore) { scoreReverse = true;
+		 */
+		if (!flagcomp) {
+			// set that user has won
 			setCompWon("Won");
 			// AlertBox.displayResult("Hurray!!", "User has Won ");
-		} else {
-			// do nothing
-			setCompWon("Lost");
+		} else { // do nothing setCompWon("Lost");
 		}
-
 	}
+	// }
 
 	/**
 	 * Method to display the computer grid
@@ -742,7 +728,7 @@ public class Player extends Observable {
 	 * @param coordY Y-coordinate
 	 */
 	public static void checkSunkenShips() {
-		Map<String, ArrayList<String>> tempMap; 
+		Map<String, ArrayList<String>> tempMap;
 		for (String coords : coordinatesHit) {
 			System.out.println("Checking coordinates " + coords);
 			tempMap = new HashMap<>();

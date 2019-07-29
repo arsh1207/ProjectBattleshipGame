@@ -12,27 +12,25 @@ public class Computer extends Observable {
 
 	final int rows = 9;
 	final int cols = 11;
-	boolean time1=false,time2=false;
-	double  timea=0;
-	double timeb=0;
+	boolean time1 = false, time2 = false;
+	double timea = 0;
+	double timeb = 0;
 	Random rand = new Random();
-	//to check if all ships have been placed or not 
+	// to check if all ships have been placed or not
 	int counter = 0;
 	public Integer[][] computerGrid = new Integer[rows][cols];
-	
-	private String UserWon="";
-	
 
+	private String UserWon = "";
 
 	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 	static ArrayList<String> tempList = new ArrayList<String>();
 	static ArrayList<String> sunkenShips = new ArrayList<String>();
 	static ArrayList<String> coordinatesHit = new ArrayList<String>();
-	public static int scoringComp=0;
+	public static int scoringComp = 0;
 	private String reply = "";
 
 	// public Integer[][] changedComputerGrid = new Integer[rows][cols];
-	
+
 	public Integer[][] getComputerGrid() {
 		return computerGrid;
 	}
@@ -60,31 +58,30 @@ public class Computer extends Observable {
 	}
 
 	public void setCounter(int counter) {
-		
-		this.counter=counter;
+
+		this.counter = counter;
 
 	}
 
-
-	public int  getCounter() {
+	public int getCounter() {
 		return this.counter;
 
 	}
+
 	public ArrayList<String> getSunkenShips() {
 
 		return sunkenShips;
 
 	}
-	
 
 	public String getUserWon() {
-		
+
 		return UserWon;
 	}
 
 	public void setUserWon(String userWon) {
 		UserWon = userWon;
-		
+
 		setChanged();
 		notifyObservers(userWon);
 	}
@@ -114,22 +111,22 @@ public class Computer extends Observable {
 			// change the grid value from 1 to 2 to signify hit
 
 			computerGrid[x][y] = 2;
-			if(!time1) {
-				timea=java.lang.System.currentTimeMillis();
-				time1=!time1;
-			}else if(!time2) {
-				timeb=java.lang.System.currentTimeMillis();
-					time2=!time2;
-			}else {
-				double t=timeb-timea;
-				if(t<3000) {
+			if (!time1) {
+				timea = java.lang.System.currentTimeMillis();
+				time1 = !time1;
+			} else if (!time2) {
+				timeb = java.lang.System.currentTimeMillis();
+				time2 = !time2;
+			} else {
+				double t = timeb - timea;
+				if (t < 3000) {
 					setScoreComp(20);
 				}
-				time1=false;
-				time2=false;
-				timea=0;
-				timeb=0;
-				
+				time1 = false;
+				time2 = false;
+				timea = 0;
+				timeb = 0;
+
 			}
 
 			setScoreComp(10);
@@ -336,7 +333,7 @@ public class Computer extends Observable {
 					}
 					placed = true;
 					counter++;
-					
+
 					setCounter(counter);
 				} else {
 					destroyerX = rand.nextInt(9);
@@ -347,7 +344,7 @@ public class Computer extends Observable {
 			for (Map.Entry<Integer, Integer> entry : Destroyer.entrySet()) {
 
 				// ask about this
-				System.out.println("key: "+entry.getKey()+" value: "+entry.getValue());
+				System.out.println("key: " + entry.getKey() + " value: " + entry.getValue());
 				computerGrid[entry.getValue()][entry.getKey()] = 1;
 				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
@@ -410,7 +407,6 @@ public class Computer extends Observable {
 
 	}
 
-	
 	public Boolean adjacentShipCheck(int i, int j) {
 		Boolean shipPresence = false;
 		int m, n;
@@ -434,8 +430,7 @@ public class Computer extends Observable {
 			return false;
 		return true;
 	}
-	
-	
+
 	/**
 	 * Initialize all the grids to zero
 	 * 
@@ -463,33 +458,29 @@ public class Computer extends Observable {
 			for (int j = 0; j < cols; j++) {
 
 				if (computerGrid[i][j] == 1) {
-					// set the flag as true if there is still one present somewhere
-					flaguser = true;
 
 				}
+				flaguser = true;
 
 			}
-		}
-		/**
-		 * If user destroys all ships but computer has more score
-		 * declares computer as winner
-		 */
-		int pscore=Computer.scoringComp;
-		int cscore=HitStrategy.scoring;
-		boolean scoreReverse=false;
-		if(cscore<pscore) {
-			scoreReverse=true;
+
 		}
 
-		if (!flaguser) {// set that user has won
+		/**
+		 * If user destroys all ships but computer has more score declares computer as
+		 * winner
+		 */
+		/*
+		 * int pscore=Computer.scoringComp; int cscore=HitStrategy.scoring; boolean
+		 * scoreReverse=false; if(cscore<pscore) { scoreReverse=true; }
+		 */
+		if (!flaguser) {
 			setUserWon("Won");
-			
-			//this has been changed
-			//AlertBox.displayResult("Hurray!!", "User has Won ");
+
+			// AlertBox.displayResult("Hurray!!", "User has Won ");
 		} else {
-			
-			setUserWon("Lost");
-			// do nothing
+
+			setUserWon("Lost"); // do nothing
 
 		}
 
@@ -551,9 +542,9 @@ public class Computer extends Observable {
 			tempMap = new HashMap<>();
 			tempMap.putAll(shipsMap);
 			for (Map.Entry<String, ArrayList<String>> entry : shipsMap.entrySet()) {
-				if(!shipsMap.get(entry.getKey()).isEmpty()) {
-					//if any ship has been placed on the assigned coordinate
-					if(shipsMap.get(entry.getKey()).contains(coords)) {
+				if (!shipsMap.get(entry.getKey()).isEmpty()) {
+					// if any ship has been placed on the assigned coordinate
+					if (shipsMap.get(entry.getKey()).contains(coords)) {
 						if (!shipsMap.get(entry.getKey()).isEmpty()) {
 							// if any ship has been placed on the assigned coordinate
 							if (shipsMap.get(entry.getKey()).contains(coords)) {
