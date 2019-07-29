@@ -48,7 +48,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-public class Main extends Application implements Observer {
+public class Main extends Application {
 
 	Player player;
 	ShipGrid sg;
@@ -67,9 +67,7 @@ public class Main extends Application implements Observer {
 	public static String gameType = "None";
 	public static String shipType = "";
 	public static String gameMode = "Medium";
-
 	public static Button tossBtn;
-
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);
@@ -81,7 +79,6 @@ public class Main extends Application implements Observer {
 			Stage stage = primaryStage;
 			stage.setTitle(" Battle Ship Game");
 			launchStartupWindow(stage);
-			Main main = new Main();
 			player = new Player();
 			Computer computer = new Computer();
 			HitStrategy strategy = new HitStrategy();
@@ -91,9 +88,6 @@ public class Main extends Application implements Observer {
 			player.addObserver(sg);
 			strategy.addObserver(sg);
 			strategySalvo.addObserver(sg);
-			player.addObserver(main);
-			//strategy.addObserver(main);
-
 			SplitPane split_pane = new SplitPane();
 			SplitPane split_pane2 = new SplitPane();
 			// HBox h_box = new HBox();
@@ -116,13 +110,10 @@ public class Main extends Application implements Observer {
 
 			// MenuBar menuBar = obj.battleMenu(v_box1, stage);
 			MenuBar menuBar = battleMenu(v_box1, stage);
-
 			g_pane1.setVgap(10);
 			g_pane1.setHgap(10);
-
 			g_pane2.setVgap(10);
 			g_pane2.setHgap(10);
-
 			Label l1 = new Label();
 			seeResultUser("User ");
 			v_box3.getChildren().add(l1);
@@ -148,9 +139,7 @@ public class Main extends Application implements Observer {
 
 			// v_box2.setStyle("-fx-background-color: #000000;");
 			v_box2.getChildren().addAll(v_box3);
-
 			split_pane.setDividerPositions(0.7);
-
 			split_pane.getItems().add(v_box1);
 			split_pane.getItems().add(v_box2);
 
@@ -223,28 +212,7 @@ public class Main extends Application implements Observer {
 
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		if (o instanceof Player) {
-			// TODO Auto-generated method stub
-			System.out.println("observer called");
-			String value = ((Player) o).getReply();
-			System.out.println(value);
-
-			int coord[] = ((Player) o).getCoords();
-			String shipType = ((Player) o).getShipType();
-			String axis = ((Player) o).getAxis();
-			ShipGrid.deployShipsWithColors(coord, shipType, axis);
-
-			if (!(value.equals("Done")) && !value.isEmpty()) {
-				// ShipGrid.userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color:
-				// black;");
-				AlertBox.displayError(shipType, value);
-			}
-		}
-
-	}
-
+	
 	public void setShipPlacementActions() {
 		for (Node node : g_pane2.getChildren()) {
 
