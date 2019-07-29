@@ -165,33 +165,25 @@ public class PlayerTest {
 
 		assertTrue(flag);
 	}
-
+	
 	/**
 	 * 
-	 * To test if player hit or missed the the computer grid
+	 * Test Case to verify if the score is increased after a hit or not
 	 * 
-	 *//*
-		 * 
-		 * @Test public void userTurnTest() {
-		 * 
-		 * Computer comp = new Computer();
-		 * 
-		 * int x = 3; int y = 4;
-		 * 
-		 * int x1 = 5; int y1 = 6;
-		 * 
-		 * comp.computerGrid[x][y] = 1;
-		 * 
-		 * ob.userTurn(x, y);
-		 * 
-		 * assertEquals("It's a Hit!!!!!", ob.getReply());
-		 * 
-		 * ob.userTurn(x1, y1);
-		 * 
-		 * assertEquals("It's a miss!!!!!", ob.getReply());
-		 * 
-		 * }
-		 * 
-		 */
+	 */
+	
+	@Test
+	public void getScoreCompTest() {
+		//sets the score to update by 10 if a ship is hit
+		
+		ob.setScore(10);
+		
+		assertEquals(10, ob.getScore());
+		
+		
+	}
+
+		  
+		 
 
 }
