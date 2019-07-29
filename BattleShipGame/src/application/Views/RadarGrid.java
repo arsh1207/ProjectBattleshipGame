@@ -23,6 +23,7 @@ import java.util.Observer;
 import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
+import application.Models.HitStrategySalvo;
 import application.Models.Player;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
@@ -197,15 +198,16 @@ public class RadarGrid implements Observer {
 			System.out.println("update called");
 			// TODO Auto-generated method stub
 
-			if (arg.equals("HITORMISS")) {
+		//	if (arg.equals("HITORMISS")) {
 				
 				String res = ((Computer) o).getReply();
 				int score1 = ((Computer) o).getScoreComp();
+				//resulttext2.setText(res);
 				resulttext3.setText("" + score1);
 				afterCompReply(res, (Computer) o);
 				
-			}
-		} else {
+			//}
+		} else if(o instanceof HitStrategy) {
 			String reply = ((HitStrategy) o).getReply();
 			int score = ((HitStrategy) o).getScore();
 
@@ -220,6 +222,21 @@ public class RadarGrid implements Observer {
 			resulttext4.setText("" + score);
 			ob.callCheckIfCompWon();
 
+		}else if(o instanceof HitStrategySalvo) {
+			String reply = ((HitStrategySalvo) o).getReply();
+			int score = ((HitStrategySalvo) o).getScore();
+			System.out.println("111"+reply);
+
+			int coord[] = ((HitStrategy) o).getCoords();
+			if (reply.contains("Hit")) {
+				lastCompResult = true;
+			} else {
+				lastCompResult = false;
+			}
+
+			resulttext1.setText(reply);
+			resulttext4.setText("" + score);
+			ob.callCheckIfCompWon();
 		}
 
 	}

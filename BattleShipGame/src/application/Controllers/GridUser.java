@@ -6,7 +6,6 @@ import java.util.List;
 import application.Models.*;
 import main.Main;
 
-
 /**
  * 
  * Class provides the AI functionality of the Computer and the User
@@ -39,15 +38,11 @@ public class GridUser {
 	 * @return String defining the computer turn results
 	 */
 	public void computerTurn(Boolean hitResult, String gameMode) {
-		if(Main.gameType.equals("Salvo")) {
-			if (gameMode.equals("Easy"))
-				strategySalvo.randomHit();
-			else if (gameMode.equals("Medium"))
-				strategySalvo.mediumMode(hitResult);
-			else
-				strategySalvo.hardMode(hitResult);
-		}
-		else {
+		if (Main.gameType.equals("Salvo")) {
+
+			strategySalvo.mediumMode(hitResult);
+
+		} else {
 			if (gameMode.equals("Easy"))
 				strategy.randomHit();
 			else if (gameMode.equals("Medium"))
@@ -66,7 +61,7 @@ public class GridUser {
 	public void callCheckIfUserWon() {
 		computer.checkIfUserWon();
 	}
-	
+
 	public void deployCompShips() {
 		computer.deployComputerShips();
 	}
@@ -74,7 +69,7 @@ public class GridUser {
 	public void deployUserShips() {
 		player.deployUserRandomShips();
 	}
-	
+
 	/**
 	 * 
 	 * checks the grid of the User to verify if user has won or not displays the Win
@@ -85,7 +80,6 @@ public class GridUser {
 		player.checkIfCompWon();
 
 	}
-
 
 	/**
 	 * This method will user turn in the model to check whether the coordinates are
@@ -108,11 +102,11 @@ public class GridUser {
 	public void callDeployComputerShips(Computer computer) {
 		computer.deployComputerShips();
 	}
-	
+
 	public void callDeployUserGrid(String coordinates, String shipType) {
 		player.deployUserGrid(coordinates, shipType);
 	}
-	
+
 	public void callSunkenShips(Computer computer) {
 		computer.checkSunkenShips();
 	}

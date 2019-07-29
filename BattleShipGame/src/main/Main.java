@@ -15,6 +15,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -24,6 +25,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -46,6 +48,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Main extends Application implements Observer {
@@ -87,7 +90,7 @@ public class Main extends Application implements Observer {
 			HitStrategy strategy = new HitStrategy();
 			HitStrategySalvo strategySalvo = new HitStrategySalvo();
 			ob = new GridUser(player, computer, strategy, strategySalvo);
-			sg = new ShipGrid(player, ob);
+			sg = new ShipGrid(player, ob, resulttext1, resulttext4);
 			player.addObserver(sg);
 			strategy.addObserver(sg);
 			strategySalvo.addObserver(sg);
@@ -132,13 +135,13 @@ public class Main extends Application implements Observer {
 
 			RadarGrid radarGridObserver = new RadarGrid(resulttext2, resulttext1, resulttext3, resulttext4, ob);
 			computer.addObserver(radarGridObserver);
-			strategy.addObserver(radarGridObserver);
+			//strategy.addObserver(radarGridObserver);
 			radarGridObserver.setUserRadarGrid(g_pane1, resulttext2);
 			sg.setUserShipGrid(g_pane2);
 			setShipPlacementActions();
 			Button userRandomShips = new Button("Feelin' Lazy?");
 			VBox v_box4 = new VBox();
-			v_box1.getChildren().addAll(g_pane1, g_pane2, userRandomShips);
+			v_box1.getChildren().addAll(g_pane1, userRandomShips, g_pane2);
 			v_box1.setSpacing(20.0);
 			// v_box2.setSpacing(10.0);
 			userRandomShips.setOnAction((ActionEvent event) -> {
@@ -157,6 +160,7 @@ public class Main extends Application implements Observer {
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
+				ob.deployUserShips();
 				if (Player.numOfShipsDep == 5) {
 					/*
 					 * Alert alert = new Alert(AlertType.INFORMATION);
@@ -214,6 +218,7 @@ public class Main extends Application implements Observer {
 			// v_box1.prefWidthProperty().bind(sp.widthProperty());
 			split_pane.prefHeightProperty().bind(stage.heightProperty());
 			stage.show();
+
 		}
 
 		catch (Exception e) {
@@ -758,7 +763,7 @@ public class Main extends Application implements Observer {
 		place_ship.getItems().add(Cruiser);
 		place_ship.getItems().add(Submarine);
 		place_ship.getItems().add(Destroyer);
-
+		
 		menu2.getItems().add(place_ship);
 
 		Carrier.setOnAction(e -> {
@@ -782,6 +787,7 @@ public class Main extends Application implements Observer {
 			shipType = "Destroyer";
 
 		});
+		
 
 		return menuBar;
 	}
@@ -795,7 +801,6 @@ public class Main extends Application implements Observer {
 	public void launchStartupWindow(Stage stg) throws Exception {
 
 		GridPane root1 = new GridPane();
-		scene2 = new Scene(root1, 800, 600);
 		root1.setVgap(10);
 		root1.setHgap(10);
 

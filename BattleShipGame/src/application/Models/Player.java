@@ -349,7 +349,7 @@ public class Player extends Observable {
 			// return "Invalid input, please try again.";
 		} catch (Exception e) {
 			deployedShips.remove(shipType);
-			e.printStackTrace();
+			//e.printStackTrace();
 			setReply("Invalid input, please try again.");
 			// return "Invalid input, please try again.";
 		} finally {
@@ -467,6 +467,7 @@ public class Player extends Observable {
 
 	public void deployUserRandomShips() {
 		try {
+			System.out.println("deploy random user ships");
 			Random rand = new Random();
 			int carrierX = rand.nextInt(9);
 			int carrierY = rand.nextInt(11);
@@ -850,7 +851,7 @@ public class Player extends Observable {
 	 */
 	public static void checkSunkenShips() {
 		
-		System.out.print("checkSunkenShips called\n");
+		// System.out.print("checkSunkenShips called\n");
 		Map<String, ArrayList<String>> tempMap; 
 		for (String coords : coordinatesHit) {
 			//System.out.println("Checking coordinates "+coords);
