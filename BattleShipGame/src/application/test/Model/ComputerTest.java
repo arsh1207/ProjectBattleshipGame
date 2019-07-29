@@ -24,6 +24,23 @@ public class ComputerTest {
 		ob = null;
 
 	}
+	
+	/**
+	 * 
+	 * Test Case to verify if the score is increased after a hit or not
+	 * 
+	 */
+	
+	@Test
+	public void getScoreCompTest() {
+		//sets the score to update by 10 if a ship is hit
+		
+		ob.setScoreComp(10);
+		
+		assertEquals(10, ob.getScoreComp());
+		
+		
+	}
 
 	/**
 	 * 

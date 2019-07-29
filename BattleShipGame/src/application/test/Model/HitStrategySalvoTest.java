@@ -24,6 +24,22 @@ public class HitStrategySalvoTest {
 	}
 	
 	
+	/**
+	 * 
+	 * Below test case check if the score is incremented after a hit in Salvo mode or not
+	 * 
+	 */
+	
+	@Test
+	public void getScoreTest() {
+		 //Sets the score increment by 10 after a ship is hit
+		
+		ob.setScore(10);
+		
+		assertEquals(10, ob.getScore());
+		
+	}
+	
 	
 	/**
 	 * Below test check the hitting capacity of the AI in the medium mode
