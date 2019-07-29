@@ -10,6 +10,7 @@ import application.Models.HitStrategySalvo;
 import application.Models.Player;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
@@ -34,14 +35,20 @@ public class ShipGrid implements Observer {
 
 	static Boolean lastCompResult = false;
 	private GridUser ob;
+	Label resulttext1, resulttext4;
 
 	private Player player;
 	// private HitStrategy strategy;
 
-	public ShipGrid(Player player, GridUser ob) {
+	public ShipGrid(Player player, GridUser ob, Label resulttext1, Label resulttext4) {
 		this.player = player;
 		// player.addObserver(this);
 		this.ob = ob;
+
+		this.resulttext1 = resulttext1;
+		this.resulttext4 = resulttext4;
+		//this.strategy = strategy;
+		//strategy.addObserver(this);
 		// this.strategy = strategy;
 		// strategy.addObserver(this);
 	}
@@ -184,14 +191,23 @@ public class ShipGrid implements Observer {
 			} else {
 				setUserShipCoordinates(coord[0], coord[1], "Miss");
 			}
-		} else {
+		}else {
 			String reply = ((HitStrategySalvo) o).getReply();
-			int coord[] = ((HitStrategySalvo) o).getCoords();
+			int score = ((HitStrategySalvo) o).getScore();
+			System.out.println("user turn: "+reply);
+			System.out.println("user turn: "+score);
+
+			int coord[] = ((HitStrategy) o).getCoords();
 			if (reply.contains("Hit")) {
-				setUserShipCoordinates(coord[0], coord[1], "Hit");
+				lastCompResult = true;
 			} else {
+				lastCompResult = false;
 				setUserShipCoordinates(coord[0], coord[1], "Miss");
 			}
+
+			resulttext1.setText(reply);
+			resulttext4.setText("" + score);
+			ob.callCheckIfCompWon();
 		}
 
 	}

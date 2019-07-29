@@ -48,17 +48,10 @@ public class GridUser {
 	 */
 	public void computerTurn(Boolean hitResult, String gameMode) {
 		if (Main.gameType.equals("Salvo")) {
-
-			// set call type for junit
-
+			
 			setCallType("Salvo");
+			strategySalvo.mediumMode(hitResult);
 
-			if (gameMode.equals("Easy"))
-				strategySalvo.randomHit();
-			else if (gameMode.equals("Medium"))
-				strategySalvo.mediumMode(hitResult);
-			else
-				strategySalvo.hardMode(hitResult);
 		} else {
 
 			// set call type for junit

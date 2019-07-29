@@ -365,6 +365,7 @@ public class Player extends Observable {
 
 	public void deployUserRandomShips() {
 		try {
+			System.out.println("deploy random user ships");
 			Random rand = new Random();
 			int carrierX = rand.nextInt(9);
 			int carrierY = rand.nextInt(11);
@@ -732,9 +733,7 @@ public class Player extends Observable {
 	 * @param coordY Y-coordinate
 	 */
 	public static void checkSunkenShips() {
-
-		System.out.print("checkSunkenShips called\n");
-		Map<String, ArrayList<String>> tempMap;
+		Map<String, ArrayList<String>> tempMap; 
 		for (String coords : coordinatesHit) {
 			System.out.println("Checking coordinates " + coords);
 			tempMap = new HashMap<>();
