@@ -20,6 +20,9 @@ public class Computer extends Observable {
 	int counter = 0;
 	public Integer[][] computerGrid = new Integer[rows][cols];
 	
+	private String UserWon="";
+	
+
 
 	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 	static ArrayList<String> tempList = new ArrayList<String>();
@@ -71,6 +74,19 @@ public class Computer extends Observable {
 
 		return sunkenShips;
 
+	}
+	
+
+	public String getUserWon() {
+		
+		return UserWon;
+	}
+
+	public void setUserWon(String userWon) {
+		UserWon = userWon;
+		
+		setChanged();
+		notifyObservers(userWon);
 	}
 
 	public Computer() {
@@ -413,9 +429,13 @@ public class Computer extends Observable {
 		}
 
 		if (!flaguser) {// set that user has won
-
-			AlertBox.displayResult("Hurray!!", "User has Won ");
+			setUserWon("Won");
+			
+			//this has been changed
+			//AlertBox.displayResult("Hurray!!", "User has Won ");
 		} else {
+			
+			setUserWon("Lost");
 			// do nothing
 
 		}

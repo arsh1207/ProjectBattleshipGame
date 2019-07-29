@@ -30,6 +30,8 @@ public class Player extends Observable {
 
 	public String reply = "";
 
+	public String compWon = "";
+
 	public boolean Hit = false;
 	public boolean Miss = false;
 
@@ -114,42 +116,15 @@ public class Player extends Observable {
 
 	}
 
-	/**
-	 * Takes the input based on the event listener Provides the hit or miss while
-	 * hitting on the computer grid
-	 * 
-	 * @param x coordinate
-	 * @param y coordinates
-	 * @return String defining if the user hit or miss the computer grid
-	 */
+	public String getCompWon() {
+		return compWon;
+	}
 
-	public void userTurn(int x, int y, Integer[][] computerGrid) {
-
-		// get the X and y coordinate from the input
-		System.out.println("reached here" + x + "; " + y);
-		if (computerGrid[x][y] == 1) { // change the grid value from 1 to 2 to signify hit
-
-			computerGrid[x][y] = 2;
-
-			setReply("It's a Hit!!!!!");
-			userScore += 10;
-			// incrementing user score for a successful hit
-
-			// return "It's a Hit!!!!!"; } else if (computerGrid[x][y] == 0) {
-
-			setReply("It's a miss!!!!!"); // return "It's a miss!!!!!";
-
-			userScore -= 2; // loosing points for a miss
-
-		} else if (computerGrid[x][y] == 2) {
-
-			setReply("The location has been hit earlier");
-
+	public void setCompWon(String compWon) {
+		this.compWon = compWon;
 		}
 
-		// some other case or error // return "Some other error";
-
-	}
+		
 
 	/*
 	 * Returning user score
@@ -157,8 +132,6 @@ public class Player extends Observable {
 	public int GetScore() {
 		return userScore;
 	}
-
-
 
 	/**
 	 * 
@@ -316,6 +289,8 @@ public class Player extends Observable {
 			return false;
 		return true;
 	}
+
+	
 
 	/**
 	 * Checking that the ships are of the exact size
@@ -719,10 +694,11 @@ public class Player extends Observable {
 
 		if (!flagcomp) {// set that user has won
 
-			AlertBox.displayResult("Hurray!!", "AI has Won ");
+			setCompWon("Won");
+			// AlertBox.displayResult("Hurray!!", "User has Won ");
 		} else {
 			// do nothing
-
+			setCompWon("Lost");
 		}
 
 	}
