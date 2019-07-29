@@ -38,13 +38,30 @@ public class ComputerTest {
 
 		assertEquals(5, ob.getCounter());
 	}
+	
+	/**
+	 * 
+	 * Test Case to verify if the score is increased after a hit or not
+	 * 
+	 */
+	
+	@Test
+	public void getScoreCompTest() {
+		// checks if the score is increased after a hit.
+		ob.setScoreComp(10);
+		
+		assertEquals(10, getScoreComp());
+		
+	}
+
 
 	/**
 	 * 
 	 * Test case to verify the Check method for ship placement is working
 	 * 
 	 */
-
+	
+	
 	@Test
 	public void checkTest() {
 		// checks that all 5 ships are deployed or not

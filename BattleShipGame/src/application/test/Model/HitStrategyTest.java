@@ -24,6 +24,21 @@ public class HitStrategyTest {
 		hitstat = new HitStrategy();
 
 	}
+	
+	/**
+	 * 
+	 * Below test check if the score increments after a hit or not
+	 * 
+	 */
+	
+	@Test
+	public void getScoreTest() {
+		
+		ob.setScore(10);
+		
+		assertEquals(10, ob.getScore());
+	}
+	
 
 	/**
 	 * Below test check the random hitting capacity of the AI in the easy mode
