@@ -19,16 +19,18 @@ public class Player extends Observable {
 	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 	public static ArrayList<String> sunkenShips = new ArrayList<String>();
 	public static ArrayList<String> coordinatesHit = new ArrayList<String>();
-	
+
 	public static int numOfShipsDep = 0;
 
 	public String shipType = "";
-	
+
 	int[] coords = {};
 
 	String axis = "";
 
 	public String reply = "";
+
+	public String compWon = "";
 
 	public boolean Hit = false;
 	public boolean Miss = false;
@@ -103,56 +105,26 @@ public class Player extends Observable {
 	public void setAxis(String axis) {
 		this.axis = axis;
 	}
+
 	public static void setSunkenShips(String shipType) {
 		sunkenShips.add(shipType);
 	}
+
 	public ArrayList<String> getSunkenShips() {
-		
+
 		return sunkenShips;
-		
+
 	}
 
-	/**
-	 * Takes the input based on the event listener Provides the hit or miss while
-	 * hitting on the computer grid
-	 * 
-	 * @param x coordinate
-	 * @param y coordinates
-	 * @return String defining if the user hit or miss the computer grid
-	 */
-	public void userTurn(int x, int y, Integer[][] computerGrid) {
+	public String getCompWon() {
+		return compWon;
+	}
 
-		// get the X and y coordinate from the input
-		System.out.println("reached here" + x + "; " + y);
-		if (computerGrid[x][y] == 1) {
-			// change the grid value from 1 to 2 to signify hit
-
-			computerGrid[x][y] = 2;
-
-			setReply("It's a Hit!!!!!");
-			userScore += 10;
-			// incrementing user score for a successful hit
-
-			// return "It's a Hit!!!!!";
-		} else if (computerGrid[x][y] == 0) {
-
-			setReply("It's a miss!!!!!");
-			// return "It's a miss!!!!!";
-
-			userScore -= 2;
-			// loosing points for a miss
-
-		} else if (computerGrid[x][y] == 2) {
-
-			setReply("The location has been hit earlier");
-			// return "The location has been hit earlier";
-
-		}
-
+	public void setCompWon(String compWon) {
+		this.compWon = compWon;
 		
-		// some other case or error
-		// return "Some other error";
-
+		setChanged();
+		notifyObservers(compWon);
 	}
 
 	/*
@@ -181,7 +153,6 @@ public class Player extends Observable {
 
 		try {
 
-
 			String str[] = coordinates.split("\\s");
 			List<String> templist = new ArrayList<>();
 
@@ -204,7 +175,6 @@ public class Player extends Observable {
 				deployedShips.remove(shipType);
 
 				setReply("You can't place ships outside the " + rows + " by " + cols + " grid");
-				
 
 			}
 
@@ -214,7 +184,6 @@ public class Player extends Observable {
 				deployedShips.remove(shipType);
 
 				setReply("You can't place ships outside the " + rows + " by " + cols + " grid");
-				
 
 			}
 
@@ -246,13 +215,13 @@ public class Player extends Observable {
 						if ((x1 >= 0 && x1 < cols) && (y1 >= 0 && y1 < rows) && (y2 >= 0 && y2 < rows)
 								&& (userGrid[i][x1] == 0)) {
 							userGrid[i][x1] = 1;
-							templist.add(Integer.toString(i) + ","+ Integer.toString(x1));
+							templist.add(Integer.toString(i) + "," + Integer.toString(x1));
 							count++;
 						}
 					}
-					
+
 					if (((y2 + 1) - (y1 + 1)) + 1 == count) {
-						shipsMap.put(shipType, (ArrayList)templist);
+						shipsMap.put(shipType, (ArrayList) templist);
 						int[] coords = { x1, y1, x2, y2 };
 						// calling the function on front end to color the
 						// coordinates of the ship as required
@@ -301,7 +270,7 @@ public class Player extends Observable {
 								&& (userGrid[y1][i] == 0)) {
 							System.out.println("For coordinates " + y1 + " and " + i);
 							userGrid[y1][i] = 1;
-							templist.add(Integer.toString(y1) + ","+ Integer.toString(i));
+							templist.add(Integer.toString(y1) + "," + Integer.toString(i));
 							count++;
 
 						}
@@ -309,7 +278,7 @@ public class Player extends Observable {
 					}
 
 					if (((x2 + 1) - (x1 + 1)) + 1 == count) {
-						shipsMap.put(shipType, (ArrayList)templist);
+						shipsMap.put(shipType, (ArrayList) templist);
 						int[] coords = { x1, y1, x2, y2 };
 						// calling the function on front end to color the
 						// coordinates of the ship as required
@@ -348,7 +317,7 @@ public class Player extends Observable {
 			// return "Invalid input, please try again.";
 		} catch (Exception e) {
 			deployedShips.remove(shipType);
-			e.printStackTrace();
+			// e.printStackTrace();
 			setReply("Invalid input, please try again.");
 			// return "Invalid input, please try again.";
 		} finally {
@@ -383,9 +352,11 @@ public class Player extends Observable {
 
 		if (!flaguser) {// set that user has won
 
-			AlertBox.displayResult("Hurray!!", "User has Won ");
+			setCompWon("Won");
+			//AlertBox.displayResult("Hurray!!", "User has Won ");
 		} else {
 			// do nothing
+			setCompWon("Lost");
 
 		}
 
@@ -481,14 +452,14 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 5; i++) {
 							Carrier.put((carrierY + i), carrierX);
-							templist.add(Integer.toString(carrierY + i) + ","+ Integer.toString(carrierX));
-							shipsMap.put("Carrier", (ArrayList)templist);
+							templist.add(Integer.toString(carrierY + i) + "," + Integer.toString(carrierX));
+							shipsMap.put("Carrier", (ArrayList) templist);
 						}
 					} else {
 						for (int i = 0; i < 5; i++) {
 							Carrier.put((carrierY - i), carrierX);
-							templist.add(Integer.toString(carrierY - i) + ","+ Integer.toString(carrierX));
-							shipsMap.put("Carrier", (ArrayList)templist);
+							templist.add(Integer.toString(carrierY - i) + "," + Integer.toString(carrierX));
+							shipsMap.put("Carrier", (ArrayList) templist);
 						}
 					}
 					placed = true;
@@ -532,14 +503,14 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 4; i++) {
 							BattleShip.put((battleShipX + i), battleShipY);
-							templist.add(Integer.toString(battleShipX + i) + ","+ Integer.toString(battleShipY));
-							shipsMap.put("Battleship", (ArrayList)templist);
+							templist.add(Integer.toString(battleShipX + i) + "," + Integer.toString(battleShipY));
+							shipsMap.put("Battleship", (ArrayList) templist);
 						}
 					} else {
 						for (int i = 0; i < 4; i++) {
 							BattleShip.put((battleShipX - i), battleShipY);
-							templist.add(Integer.toString(battleShipX - i) + ","+ Integer.toString(battleShipY));
-							shipsMap.put("Battleship", (ArrayList)templist);
+							templist.add(Integer.toString(battleShipX - i) + "," + Integer.toString(battleShipY));
+							shipsMap.put("Battleship", (ArrayList) templist);
 						}
 					}
 					placed = true;
@@ -582,14 +553,14 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 3; i++) {
 							Cruiser.put((cruiserX + i), cruiserY);
-							templist.add(Integer.toString(cruiserX + i) + ","+ Integer.toString(cruiserY));
-							shipsMap.put("Cruiser", (ArrayList)templist);
+							templist.add(Integer.toString(cruiserX + i) + "," + Integer.toString(cruiserY));
+							shipsMap.put("Cruiser", (ArrayList) templist);
 						}
 					} else {
 						for (int i = 0; i < 3; i++) {
 							Cruiser.put((cruiserX - i), cruiserY);
-							templist.add(Integer.toString(cruiserX - i) + ","+ Integer.toString(cruiserY));
-							shipsMap.put("Cruiser", (ArrayList)templist);
+							templist.add(Integer.toString(cruiserX - i) + "," + Integer.toString(cruiserY));
+							shipsMap.put("Cruiser", (ArrayList) templist);
 						}
 					}
 					placed = true;
@@ -632,14 +603,14 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 3; i++) {
 							Submarine.put((subX + i), subY);
-							templist.add(Integer.toString(subX + i) + ","+ Integer.toString(subY));
-							shipsMap.put("Submarine", (ArrayList)templist);
+							templist.add(Integer.toString(subX + i) + "," + Integer.toString(subY));
+							shipsMap.put("Submarine", (ArrayList) templist);
 						}
 					} else {
 						for (int i = 0; i < 3; i++) {
 							Submarine.put((subX - i), subY);
-							templist.add(Integer.toString(subX - i) + ","+ Integer.toString(subY));
-							shipsMap.put("Submarine", (ArrayList)templist);
+							templist.add(Integer.toString(subX - i) + "," + Integer.toString(subY));
+							shipsMap.put("Submarine", (ArrayList) templist);
 						}
 					}
 					placed = true;
@@ -683,14 +654,14 @@ public class Player extends Observable {
 						shipPlacementFlag = true;
 						for (int i = 0; i < 2; i++) {
 							Destroyer.put((destroyerY + i), destroyerX);
-							templist.add(Integer.toString(destroyerY + i) + ","+ Integer.toString(destroyerX));
-							shipsMap.put("Destroyer", (ArrayList)templist);
+							templist.add(Integer.toString(destroyerY + i) + "," + Integer.toString(destroyerX));
+							shipsMap.put("Destroyer", (ArrayList) templist);
 						}
 					} else {
 						for (int i = 0; i < 2; i++) {
 							Destroyer.put((destroyerY - i), destroyerX);
-							templist.add(Integer.toString(destroyerY - i) + ","+ Integer.toString(destroyerX));
-							shipsMap.put("Destroyer", (ArrayList)templist);
+							templist.add(Integer.toString(destroyerY - i) + "," + Integer.toString(destroyerX));
+							shipsMap.put("Destroyer", (ArrayList) templist);
 						}
 					}
 					placed = true;
@@ -799,8 +770,11 @@ public class Player extends Observable {
 
 		if (!flagcomp) {// set that user has won
 
-			AlertBox.displayResult("Hurray!!", "AI has Won ");
+			setCompWon("Won");
+			//AlertBox.displayResult("Hurray!!", "AI has Won ");
 		} else {
+			
+			setCompWon("Lost");
 			// do nothing
 
 		}
@@ -841,47 +815,47 @@ public class Player extends Observable {
 		}
 
 	}
-	
+
 	/**
 	 * This function checks whether any ships have sunk or not
+	 * 
 	 * @param coordX X-coordinate
 	 * @param coordY Y-coordinate
 	 */
 	public static void checkSunkenShips() {
-		
+
 		System.out.print("checkSunkenShips called\n");
-		Map<String, ArrayList<String>> tempMap; 
+		Map<String, ArrayList<String>> tempMap;
 		for (String coords : coordinatesHit) {
-			//System.out.println("Checking coordinates "+coords);
+			// System.out.println("Checking coordinates "+coords);
 			tempMap = new HashMap<>();
 			tempMap.putAll(shipsMap);
 			for (Map.Entry<String, ArrayList<String>> entry : shipsMap.entrySet()) {
-				//System.out.println("Checking "+entry.getKey());
-				//System.out.println(entry);
-				if(!shipsMap.get(entry.getKey()).isEmpty()) {
-					//if any ship has been placed on the assigned coordinate
-					if(shipsMap.get(entry.getKey()).contains(coords)) {
+				// System.out.println("Checking "+entry.getKey());
+				// System.out.println(entry);
+				if (!shipsMap.get(entry.getKey()).isEmpty()) {
+					// if any ship has been placed on the assigned coordinate
+					if (shipsMap.get(entry.getKey()).contains(coords)) {
 						tempMap.get(entry.getKey()).remove(coords);
-						
-						//if no coordinates are remaining to be hit then add the ship to sunken ships
-						//and remove the ships from the shipsMap
-						if(shipsMap.get(entry.getKey()).isEmpty()) {
+
+						// if no coordinates are remaining to be hit then add the ship to sunken ships
+						// and remove the ships from the shipsMap
+						if (shipsMap.get(entry.getKey()).isEmpty()) {
 							setSunkenShips(entry.getKey());
-							//System.out.println(entry.getKey()+" destroyed");
+							// System.out.println(entry.getKey()+" destroyed");
 							tempMap.remove(entry.getKey());
-							//System.out.println(entry.getKey()+" removed");
+							// System.out.println(entry.getKey()+" removed");
 						}
 					}
-					
+
 				}
-	
+
 			}
 			shipsMap = new HashMap<>();
 			shipsMap.putAll(tempMap);
 		}
 		ShipGrid.salvaAlertCall(sunkenShips);
-		
-	}
 
+	}
 
 }

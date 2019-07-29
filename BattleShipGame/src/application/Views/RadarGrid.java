@@ -41,7 +41,16 @@ public class RadarGrid implements Observer {
 	Label resulttext2, resulttext1, resulttext3, resulttext4;
 	GridPane g_pane1;
 	GridUser ob;
+	String userWon="";
 	
+
+	public String getUserWon() {
+		return userWon;
+	}
+
+	public void setUserWon(String userWon) {
+		this.userWon = userWon;
+	}
 
 	public static Boolean lastCompResult = false;
 	//private HitStrategy strategy;
@@ -205,6 +214,12 @@ public class RadarGrid implements Observer {
 				afterCompReply(res, (Computer) o);
 				
 			}
+			
+			if(arg.equals("Won"))
+			{
+				
+				setUserWon("Won");
+			}
 		} else {
 			String reply = ((HitStrategy) o).getReply();
 			int score = ((HitStrategy) o).getScore();
@@ -219,6 +234,11 @@ public class RadarGrid implements Observer {
 			resulttext1.setText(reply);
 			resulttext4.setText("" + score);
 			ob.callCheckIfCompWon();
+			if(getUserWon().equals("Won"))
+			{
+				AlertBox.displayResult("Hurray!!", "Computer Won ");
+				
+			}
 
 		}
 
@@ -256,6 +276,12 @@ public class RadarGrid implements Observer {
 					sunkenShips = o.getSunkenShips();
 					salvaAlertCall(sunkenShips);
 					ob.callCheckIfUserWon();
+					
+					if(getUserWon().equals("Won"))
+					{
+						AlertBox.displayResult("Hurray!!", "User has Won ");
+						
+					}
 					ob.computerTurn(lastCompResult, Main.gameMode);
 				}
 			}

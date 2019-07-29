@@ -7,7 +7,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import application.Models.Computer;
 import application.Models.Player;
 
 public class PlayerTest {
@@ -136,32 +135,32 @@ public class PlayerTest {
 		assertTrue(flag);
 	}
 
+
+	
 	/**
-	 * 
-	 * To test if player hit or missed the the computer grid
-	 * 
+	 * Check comp has won or not
 	 */
 
 	@Test
-	public void userTurnTest() {
+	public void checkIfUserWonTest() {
 
-		Computer comp = new Computer();
+		Player user = new Player();
+		for (int i = 0; i < 9; i++) {
 
-		int x = 3;
-		int y = 4;
+			for (int j = 0; j < 11; j++) {
 
-		int x1 = 5;
-		int y1 = 6;
+				if (user.userGrid[i][j] == 1) {
+					// set the flag as true if there is still one present somewhere
 
-		comp.computerGrid[x][y] = 1;
+					user.userGrid[i][j] = 2;
+				}
 
-		ob.userTurn(x, y, comp.computerGrid);
+			}
+		}
 
-		assertEquals("It's a Hit!!!!!", ob.getReply());
+		user.checkIfCompWon();
 
-		ob.userTurn(x1, y1, comp.computerGrid);
-
-		assertEquals("It's a miss!!!!!", ob.getReply());
+		assertEquals("Won", user.compWon);
 
 	}
 
