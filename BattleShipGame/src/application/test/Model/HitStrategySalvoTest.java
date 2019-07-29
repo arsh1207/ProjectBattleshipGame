@@ -10,15 +10,21 @@ import application.Models.HitStrategySalvo;
 import application.Models.Player;
 
 public class HitStrategySalvoTest {
+	
 
 	public Player ob;
+
+	
 
 	@Before
 	public void setUp() {
 		ob = new Player();
+	
 
 	}
-
+	
+	
+	
 	/**
 	 * Below test check the hitting capacity of the AI in the medium mode
 	 * 
@@ -37,5 +43,8 @@ public class HitStrategySalvoTest {
 		assertEquals(ran.getReply(), "It's a miss!!!!!");
 
 	}
+
+	
+	
 
 }

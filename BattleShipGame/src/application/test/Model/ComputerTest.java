@@ -32,7 +32,7 @@ public class ComputerTest {
 	 */
 
 	@Test
-	public void deployComputerShipsTest() {
+	public void deployUserGridTest() {
 		// checks that all 5 ships are deployed or not
 		ob.deployComputerShips();
 
@@ -47,7 +47,7 @@ public class ComputerTest {
 
 	@Test
 	public void checkTest() {
-		
+		// checks that all 5 ships are deployed or not
 		String direction = "horizontal";
 
 		// ship type is Cruiser hence points three
@@ -60,11 +60,12 @@ public class ComputerTest {
 		assertTrue(res);
 	}
 
+	
 	/**
 	 * Test that the grid has been initialized correctly or not
 	 * 
 	 */
-	@Test
+	@Test 
 	public void initializeTest() {
 		boolean flag = true;
 
@@ -87,114 +88,4 @@ public class ComputerTest {
 
 		assertTrue(flag);
 	}
-
-	/**
-	 * 
-	 * To test if player missed the the computer grid
-	 * 
-	 */
-
-	@Test
-	public void userTurnTest() {
-
-		Computer comp = new Computer();
-
-		int x = 3;
-		int y = 4;
-
-		int x1 = 5;
-		int y1 = 6;
-
-		comp.computerGrid[x][y] = 1;
-
-		comp.userTurn(x, y);
-
-		assertEquals("It's a Hit!!!!!", comp.getReply());
-
-	}
-
-	/**
-	 * 
-	 * To test if player hit or missed the the computer grid
-	 * 
-	 */
-
-	@Test
-	public void userTurnTest2() {
-
-		Computer comp = new Computer();
-
-		int x = 3;
-		int y = 4;
-
-		int x1 = 5;
-		int y1 = 6;
-
-		comp.computerGrid[x][y] = 1;
-
-		comp.userTurn(x, y);
-
-		assertEquals("It's a Hit!!!!!", comp.getReply());
-
-		comp.userTurn(x1, y1);
-
-		assertEquals("It's a miss!!!!!", comp.getReply());
-
-	}
-
-	/**
-	 * Player cannot hit on the same location if once HIt
-	 */
-
-	@Test
-	public void UserTurnTest3() {
-
-		Computer comp = new Computer();
-
-		int x = 3;
-		int y = 4;
-
-		int x1 = 5;
-		int y1 = 6;
-
-		comp.computerGrid[x][y] = 2;
-
-		comp.userTurn(x, y);
-
-		comp.userTurn(x, y);
-
-		assertEquals("The location has been hit earlier", comp.getReply());
-
-	}
-
-	/**
-	 * Check user has Won or not
-	 * 
-	 */
-
-	@Test
-	public void checkIfUserWonTest() {
-
-		Computer comp = new Computer();
-		
-		comp.deployComputerShips();
-		for (int i = 0; i < 9; i++) {
-
-			for (int j = 0; j < 11; j++) {
-
-				if (comp.computerGrid[i][j] == 1) {
-					// set the flag as true if there is still one present somewhere
-
-					comp.computerGrid[i][j] = 2;
-				}
-
-			}
-		}
-
-		comp.checkIfUserWon();
-
-		assertEquals("Won", comp.getUserWon());
-
-	}
-
 }

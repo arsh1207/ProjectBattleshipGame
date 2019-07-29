@@ -122,10 +122,9 @@ public class Player extends Observable {
 
 	public void setCompWon(String compWon) {
 		this.compWon = compWon;
+		}
 
-		setChanged();
-		notifyObservers(compWon);
-	}
+		
 
 	/*
 	 * Returning user score
@@ -135,64 +134,39 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * Takes the input based on the event listener Provides the hit or miss while
-	 * hitting on the computer grid
-	 * 
-	 * @param x coordinate
-	 * @param y coordinates
-	 * @return String defining if the user hit or miss the computer grid
-	 */
-
-	/**
 	 * 
 	 * @param coordinates defines the coordinated to be deployed
 	 * @param shipType    type of the ship
 	 * @return strings defining the placement of the ship in grid
 	 */
 	public void deployUserGrid(String coordinates, String shipType) {
-
 		try {
 
 			String str[] = coordinates.split("\\s");
 			List<String> templist = new ArrayList<>();
 
-			// int x1 = convert.get(str[0]);
 			int y1 = Integer.parseInt(str[0]);
-
-			// decrease the value of Y since the coordinated start from 0 in grid
 			int x1 = Integer.parseInt(str[1]);
-			// int x2 = convert.get(str[2]);
 			int y2 = Integer.parseInt(str[2]);
-
-			// decrease the value of Y since the coordinated start from 0 in grid
 			int x2 = Integer.parseInt(str[3]);
-
 			System.out.println("values x1 y1 x2 y2  " + x1 + y1 + x2 + y2);
 
 			// ships cannot be placed outside the grid
 			if (x1 >= cols || y1 >= rows || x2 >= cols || y2 >= rows) {
-
 				deployedShips.remove(shipType);
-
 				setReply("You can't place ships outside the " + rows + " by " + cols + " grid");
-
 			}
 
 			// coordinates cannot be negative
 			if (x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0) {
-
 				deployedShips.remove(shipType);
-
 				setReply("You can't place ships outside the " + rows + " by " + cols + " grid");
-
 			}
 
 			if (x1 == x2) {
 
 				System.out.println("X coordinates are same");
 				// if two X are the same then the line is vertical
-				// increment the Y values to set the ship location
-				// count to check if all coordinated were placed successfully
 				int count = 0;
 				if (y1 > y2) {
 					int temp = y2;
@@ -200,14 +174,17 @@ public class Player extends Observable {
 					y1 = temp;
 				}
 				for (int i = y1; i <= y2; i++) {
-
 					if (userGrid[i][x1] == 1) {
-						// displayUserShips();
 						deployedShips.remove(shipType);
 						setReply("ships cannot be placed on the same location");
-						// return "ships cannot be placed on the same location";
 					}
 
+				}
+				for (int i = y1; i <= y2; i++) {
+					if (adjacentShipCheck(i, x1)) {
+						deployedShips.remove(shipType);
+						setReply("Ship cannot be placed Adjacent to each other");
+					}
 				}
 				String res = areHolesValid(y2 - y1 + 1, shipType);
 				if (res.equals("YES") && deployedShips.contains(shipType)) {
@@ -223,29 +200,17 @@ public class Player extends Observable {
 					if (((y2 + 1) - (y1 + 1)) + 1 == count) {
 						shipsMap.put(shipType, (ArrayList) templist);
 						int[] coords = { x1, y1, x2, y2 };
-						// calling the function on front end to color the
-						// coordinates of the ship as required
 						setCoords(coords);
 						setShipType(shipType);
 						setAxis("Y");
-						// shipObject.deployShipsWithColors(coords, shipType, "Y");
-						// result done signifies everything went right
-						// changedUserGrid = userGrid;
 						numOfShipsDep++;
 						setReply("Done");
-						// return "Done";
 					}
-				} /*
-					 * else { deployedShips.remove(shipType); setReply(res); // return res; }
-					 */
-
+				}
 			}
 
 			else if (y1 == y2) {
-
 				// if two Y are the same then the line is Horizontal
-
-				// count to check if all coordinated were placed successfully
 				int count = 0;
 				if (x1 > x2) {
 					int temp = x2;
@@ -253,114 +218,79 @@ public class Player extends Observable {
 					x1 = temp;
 				}
 				for (int i = x1; i <= x2; i++) {
-
 					if (userGrid[y1][i] == 1) {
 						// displayUserShips();
 						deployedShips.remove(shipType);
 						setReply("ships cannot be placed on the same location");
-						// return "ships cannot be placed on the same location";
+					}
+				}
+				for (int i = x1; i <= x2; i++) {
+					if (adjacentShipCheck(y1, i)) {
+						deployedShips.remove(shipType);
+						setReply("Ship cannot be placed Adjacent to each other");
 					}
 				}
 				String res = areHolesValid(x2 - x1 + 1, shipType);
 				if (res.equals("YES") && deployedShips.contains(shipType)) {
-					// increment the X values to set the ship location
 					for (int i = x1; i <= x2; i++) {
-
 						if ((y1 >= 0 && y1 < rows) && (x1 >= 0 && x1 < cols) && (x2 >= 0 && x2 < cols)
 								&& (userGrid[y1][i] == 0)) {
 							System.out.println("For coordinates " + y1 + " and " + i);
 							userGrid[y1][i] = 1;
 							templist.add(Integer.toString(y1) + "," + Integer.toString(i));
 							count++;
-
 						}
-
 					}
 
 					if (((x2 + 1) - (x1 + 1)) + 1 == count) {
 						shipsMap.put(shipType, (ArrayList) templist);
 						int[] coords = { x1, y1, x2, y2 };
-						// calling the function on front end to color the
-						// coordinates of the ship as required
-
 						setCoords(coords);
 						setShipType(shipType);
 						setAxis("X");
-
-						// shipObject.deployShipsWithColors(coords, shipType, "X");
-						// changedUserGrid = userGrid;
 						numOfShipsDep++;
-
 						setReply("Done");
-						// return "Done";
 					}
 
-				} /*
-					 * else { deployedShips.remove(shipType);
-					 * 
-					 * setReply(res); // return res; }
-					 */
-			}
-
-			else {// case when anything Diagonal
+				}
+			} else {
 				deployedShips.remove(shipType);
-
 				setReply("Can not place ship Diagonal");
-				// return "Can not place ship Diagonal";
-
 			}
-
-			// deployedShips.remove(shipType);
-			// signifies some other error
-
-			// setReply("Invalid input, please try again.");
-			// return "Invalid input, please try again.";
 		} catch (Exception e) {
 			deployedShips.remove(shipType);
-			//e.printStackTrace();
 			setReply("Invalid input, please try again.");
-			// return "Invalid input, please try again.";
 		} finally {
 			setChanged();
 			notifyObservers();
 		}
 	}
 
-	/**
-	 * 
-	 * checks the grid of the computer to verify if they won or not sets the static
-	 * flag true if someone wins
-	 */
-
-	public void checkIfUserWon() {
-
-		boolean flaguser = false;
-
-		// check the computer grid if all the 1 are converted to 2
-		for (int i = 0; i < rows; i++) {
-
-			for (int j = 0; j < cols; j++) {
-
-				if (userGrid[i][j] == 1) {
-					// set the flag as true if there is still one present somewhere
-					flaguser = true;
-
+	public Boolean adjacentShipCheck(int i, int j) {
+		Boolean shipPresence = false;
+		int m, n;
+		int[] ith = { 0, 1, 1, -1, 0, -1, -1, 1 };
+		int[] jth = { 1, 0, 1, 0, -1, -1, 1, -1 };
+		for (int k = 0; k < 8; k++) {
+			m = i + ith[k];
+			n = j + jth[k];
+			if (isValid(i + ith[k], j + jth[k])) {
+				if (userGrid[m][n] == 1) {
+					shipPresence = true;
+					break;
 				}
-
 			}
 		}
-
-		if (!flaguser) {// set that user has won
-
-			setCompWon("Won");
-			// AlertBox.displayResult("Hurray!!", "User has Won ");
-		} else {
-			// do nothing
-			setCompWon("Lost");
-
-		}
-
+		return shipPresence;
 	}
+
+	public boolean isValid(int i, int j) {
+		if (i < 0 || j < 0 || i >= 9 || j >= 11)
+			return false;
+		return true;
+	}
+
+	
 
 	/**
 	 * Checking that the ships are of the exact size
@@ -766,12 +696,10 @@ public class Player extends Observable {
 		if (!flagcomp) {// set that user has won
 
 			setCompWon("Won");
-			// AlertBox.displayResult("Hurray!!", "AI has Won ");
+			// AlertBox.displayResult("Hurray!!", "User has Won ");
 		} else {
-
-			setCompWon("Lost");
 			// do nothing
-
+			setCompWon("Lost");
 		}
 
 	}
@@ -820,12 +748,12 @@ public class Player extends Observable {
 	public static void checkSunkenShips() {
 		Map<String, ArrayList<String>> tempMap; 
 		for (String coords : coordinatesHit) {
-			// System.out.println("Checking coordinates "+coords);
+			System.out.println("Checking coordinates " + coords);
 			tempMap = new HashMap<>();
 			tempMap.putAll(shipsMap);
 			for (Map.Entry<String, ArrayList<String>> entry : shipsMap.entrySet()) {
-				// System.out.println("Checking "+entry.getKey());
-				// System.out.println(entry);
+				System.out.println("Checking " + entry.getKey());
+				System.out.println(entry);
 				if (!shipsMap.get(entry.getKey()).isEmpty()) {
 					// if any ship has been placed on the assigned coordinate
 					if (shipsMap.get(entry.getKey()).contains(coords)) {
@@ -836,8 +764,8 @@ public class Player extends Observable {
 						if (shipsMap.get(entry.getKey()).isEmpty()) {
 							setSunkenShips(entry.getKey());
 							System.out.println(entry.getKey() + " destroyed");
-							tempMap.remove(entry.getKey());							System.out.println(entry.getKey() + " removed");
-						
+							tempMap.remove(entry.getKey());
+							System.out.println(entry.getKey() + " removed");
 						}
 					}
 
