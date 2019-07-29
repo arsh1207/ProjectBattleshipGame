@@ -15,6 +15,7 @@ import application.test.Model.ModelTestSuite;
  */
 
 @RunWith(Suite.class)
+
 @SuiteClasses({ ControllerTestSuite.class, ModelTestSuite.class })
 public class MainTestSuite {
 

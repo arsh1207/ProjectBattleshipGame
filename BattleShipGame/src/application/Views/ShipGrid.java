@@ -10,6 +10,7 @@ import application.Models.HitStrategySalvo;
 import application.Models.Player;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
@@ -32,16 +33,22 @@ public class ShipGrid implements Observer {
 	static String initialCoordinates, finalCoordinates;
 	static String gameMode = "Medium";
 
-	static Boolean lastCompResult = false;
+	public static Boolean lastCompResult = false;
 	private GridUser ob;
+	Label resulttext1, resulttext4;
 
 	private Player player;
 	// private HitStrategy strategy;
 
-	public ShipGrid(Player player, GridUser ob) {
+	public ShipGrid(Player player, GridUser ob, Label resulttext1, Label resulttext4) {
 		this.player = player;
 		// player.addObserver(this);
 		this.ob = ob;
+
+		this.resulttext1 = resulttext1;
+		this.resulttext4 = resulttext4;
+		//this.strategy = strategy;
+		//strategy.addObserver(this);
 		// this.strategy = strategy;
 		// strategy.addObserver(this);
 	}
@@ -154,44 +161,67 @@ public class ShipGrid implements Observer {
 		if (o instanceof Player) {
 			// TODO Auto-generated method stub
 
-			if (arg.equals("Won")) {
-				
-				setCompWon("Won");
-				
-			}
-			else
-			{
-			System.out.println("called");
-			System.out.println(arg);
-			String value = ((Player) o).getReply();
-			System.out.println(value);
+			/*
+			 * if (arg.equals("Won")) {
+			 * 
+			 * setCompWon("Won");
+			 * 
+			 * } else {
+			 */
+				System.out.println("called");
+				System.out.println(arg);
+				String value = ((Player) o).getReply();
+				System.out.println(value);
 
-			int coord[] = ((Player) o).getCoords();
-			String shipType = ((Player) o).getShipType();
-			String axis = ((Player) o).getAxis();
-			deployShipsWithColors(coord, shipType, axis);
+				int coord[] = ((Player) o).getCoords();
+				String shipType = ((Player) o).getShipType();
+				String axis = ((Player) o).getAxis();
+				deployShipsWithColors(coord, shipType, axis);
 
-			if (!(value.equals("Done")) && !value.isEmpty()) {
-				userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
-				AlertBox.displayError(Main.shipType, value);
-			}
-			}
+				if (!(value.equals("Done")) && !value.isEmpty()) {
+					userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+					AlertBox.displayError(Main.shipType, value);
+				}
+			//}
 		} else if (o instanceof HitStrategy) {
 			String reply = ((HitStrategy) o).getReply();
 			int coord[] = ((HitStrategy) o).getCoords();
+			//int score = ((HitStrategy) o).getScore();
+			if (reply.contains("Hit")) {
+				lastCompResult = true;
+			} else {
+				lastCompResult = false;
+			}
+			
 			if (reply.contains("Hit")) {
 				setUserShipCoordinates(coord[0], coord[1], "Hit");
 			} else {
 				setUserShipCoordinates(coord[0], coord[1], "Miss");
 			}
-		} else {
+			
+			/*
+			 * resulttext1.setText(reply); resulttext4.setText("" + score);
+			 * ob.callCheckIfCompWon();
+			 */
+			
+		}else {
 			String reply = ((HitStrategySalvo) o).getReply();
+			int score = ((HitStrategySalvo) o).getScore();
+			System.out.println("user turn: "+reply);
+			System.out.println("user turn: "+score);
+
 			int coord[] = ((HitStrategySalvo) o).getCoords();
 			if (reply.contains("Hit")) {
+				lastCompResult = true;
 				setUserShipCoordinates(coord[0], coord[1], "Hit");
 			} else {
+				lastCompResult = false;
 				setUserShipCoordinates(coord[0], coord[1], "Miss");
 			}
+
+			resulttext1.setText(reply);
+			resulttext4.setText("" + score);
+			ob.callCheckIfCompWon();
 		}
 
 	}
@@ -280,8 +310,7 @@ public class ShipGrid implements Observer {
 			userButton[x][y].setStyle("-fx-background-color: #FFFFFF; ");
 			userButton[x][y].setOnMouseEntered(null);
 			userButton[x][y].setOnMouseExited(null);
-		}
-		else if (res.equals("Hit"))
+		} else if (res.equals("Hit"))
 			userButton[x][y].setStyle("-fx-background-color: #ff1100; ");
 
 	}

@@ -2,8 +2,6 @@ package main;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Observable;
-import java.util.Observer;
 
 import application.Controllers.GridUser;
 import application.Models.Computer;
@@ -15,6 +13,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -24,6 +23,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -46,9 +46,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-public class Main extends Application implements Observer {
+public class Main extends Application {
 
 	Player player;
 	ShipGrid sg;
@@ -62,14 +63,13 @@ public class Main extends Application implements Observer {
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;
-	Label resulttext1, resulttext2, resulttext3, resulttext4;
+	static Label resulttext1, resulttext2, resulttext3, resulttext4;
 	// public static String gameType = "Salvo";
 	public static String gameType = "None";
 	public static String shipType = "";
 	public static String gameMode = "Medium";
-
 	public static Button tossBtn;
-
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);
@@ -81,19 +81,17 @@ public class Main extends Application implements Observer {
 			Stage stage = primaryStage;
 			stage.setTitle(" Battle Ship Game");
 			launchStartupWindow(stage);
-			Main main = new Main();
 			player = new Player();
 			Computer computer = new Computer();
 			HitStrategy strategy = new HitStrategy();
 			HitStrategySalvo strategySalvo = new HitStrategySalvo();
+			resulttext1 = new Label();
+			resulttext4 = new Label();
 			ob = new GridUser(player, computer, strategy, strategySalvo);
-			sg = new ShipGrid(player, ob);
+			sg = new ShipGrid(player, ob, resulttext1, resulttext4);
 			player.addObserver(sg);
 			strategy.addObserver(sg);
 			strategySalvo.addObserver(sg);
-			player.addObserver(main);
-			//strategy.addObserver(main);
-
 			SplitPane split_pane = new SplitPane();
 			SplitPane split_pane2 = new SplitPane();
 			// HBox h_box = new HBox();
@@ -116,17 +114,14 @@ public class Main extends Application implements Observer {
 
 			// MenuBar menuBar = obj.battleMenu(v_box1, stage);
 			MenuBar menuBar = battleMenu(v_box1, stage);
-
 			g_pane1.setVgap(10);
 			g_pane1.setHgap(10);
-
 			g_pane2.setVgap(10);
 			g_pane2.setHgap(10);
-
 			Label l1 = new Label();
-			seeResultUser("User ");
 			v_box3.getChildren().add(l1);
-			seeResultComp("Computer ");
+			seeResultComp("User ");
+			seeResultUser("Computer ");
 			Score("Player SCORE");
 			ScoreComp("Computer SCORE");
 
@@ -138,19 +133,18 @@ public class Main extends Application implements Observer {
 			setShipPlacementActions();
 			Button userRandomShips = new Button("Feelin' Lazy?");
 			VBox v_box4 = new VBox();
-			v_box1.getChildren().addAll(g_pane1, g_pane2, userRandomShips);
+			v_box1.getChildren().addAll(g_pane1, userRandomShips, g_pane2);
 			v_box1.setSpacing(20.0);
 			// v_box2.setSpacing(10.0);
 			userRandomShips.setOnAction((ActionEvent event) -> {
 				if (Player.numOfShipsDep == 0)
+			
 					ob.deployUserShips();
 			});
 
 			// v_box2.setStyle("-fx-background-color: #000000;");
 			v_box2.getChildren().addAll(v_box3);
-
 			split_pane.setDividerPositions(0.7);
-
 			split_pane.getItems().add(v_box1);
 			split_pane.getItems().add(v_box2);
 
@@ -211,9 +205,10 @@ public class Main extends Application implements Observer {
 			v_box1.getStylesheets().add("application/Views/application.css");
 			v_box2.getStylesheets().add("application/Views/application.css");
 
-			// v_box1.prefWidthProperty().bind(sp.widthProperty());
+			//v_box1.prefWidthProperty().bind(sp.widthProperty());
 			split_pane.prefHeightProperty().bind(stage.heightProperty());
 			stage.show();
+
 		}
 
 		catch (Exception e) {
@@ -223,28 +218,7 @@ public class Main extends Application implements Observer {
 
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		if (o instanceof Player) {
-			// TODO Auto-generated method stub
-			System.out.println("observer called");
-			String value = ((Player) o).getReply();
-			System.out.println(value);
-
-			int coord[] = ((Player) o).getCoords();
-			String shipType = ((Player) o).getShipType();
-			String axis = ((Player) o).getAxis();
-			ShipGrid.deployShipsWithColors(coord, shipType, axis);
-
-			if (!(value.equals("Done")) && !value.isEmpty()) {
-				// ShipGrid.userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color:
-				// black;");
-				AlertBox.displayError(shipType, value);
-			}
-		}
-
-	}
-
+	
 	public void setShipPlacementActions() {
 		for (Node node : g_pane2.getChildren()) {
 
@@ -758,7 +732,7 @@ public class Main extends Application implements Observer {
 		place_ship.getItems().add(Cruiser);
 		place_ship.getItems().add(Submarine);
 		place_ship.getItems().add(Destroyer);
-
+		
 		menu2.getItems().add(place_ship);
 
 		Carrier.setOnAction(e -> {
@@ -782,6 +756,7 @@ public class Main extends Application implements Observer {
 			shipType = "Destroyer";
 
 		});
+		
 
 		return menuBar;
 	}
@@ -845,6 +820,7 @@ public class Main extends Application implements Observer {
 		root1.add(btn1, 0, 1);
 		root1.add(btn2, 0, 2);
 		stg.setScene(scene2);
+		
 	}
 
 	/**
@@ -856,7 +832,6 @@ public class Main extends Application implements Observer {
 		Label resultLabel = new Label(title + "Turn: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		resulttext1 = new Label();
 		resulttext1.setStyle("-fx-background-color: white;");
 		v_box3.getChildren().addAll(resultLabel, resulttext1);
 
@@ -900,7 +875,6 @@ public class Main extends Application implements Observer {
 		Label resultLabel = new Label(title + ": ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		resulttext4 = new Label();
 		resulttext4.setStyle("-fx-background-color: white;");
 		h_box2.getChildren().addAll(resultLabel, resulttext4);
 

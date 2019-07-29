@@ -23,6 +23,7 @@ import java.util.Observer;
 import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
+import application.Models.HitStrategySalvo;
 import application.Models.Player;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
@@ -35,14 +36,13 @@ public class RadarGrid implements Observer {
 	int tempButtonCount;
 	public Button[][] radarButton;
 	public String[][] selectedButtons;
-	//Computer computer;
+	// Computer computer;
 	int coordX = 0;
 	int coordY = 0;
 	Label resulttext2, resulttext1, resulttext3, resulttext4;
 	GridPane g_pane1;
 	GridUser ob;
-	String userWon="";
-	
+	String userWon = "";
 
 	public String getUserWon() {
 		return userWon;
@@ -53,10 +53,9 @@ public class RadarGrid implements Observer {
 	}
 
 	public static Boolean lastCompResult = false;
-	//private HitStrategy strategy;
+	// private HitStrategy strategy;
 
-	public RadarGrid(Label resulttext2, Label resulttext1, Label resulttext3, Label resulttext4,
-			GridUser ob) {
+	public RadarGrid(Label resulttext2, Label resulttext1, Label resulttext3, Label resulttext4, GridUser ob) {
 
 		this.resulttext2 = resulttext2;
 		this.resulttext1 = resulttext1;
@@ -64,10 +63,9 @@ public class RadarGrid implements Observer {
 		this.resulttext4 = resulttext4;
 		this.ob = ob;
 		this.selectedButtons = new String[5][2];
-		
-		
+
 	}
-	
+
 	public void addTossAction() {
 		Main.tossBtn.setOnAction((ActionEvent event) -> {
 			if (Player.numOfShipsDep == 5) {
@@ -92,17 +90,18 @@ public class RadarGrid implements Observer {
 				int r = (int) Math.round(Math.random());
 				if ((r == 1 && tossResult.equalsIgnoreCase("Head"))
 						|| (r == 0 && tossResult.equalsIgnoreCase("Tail"))) {
-					ob.computerTurn(lastCompResult, Main.gameMode);
+					 if (Main.gameType.equals("Salvo")) { Main.salvoAlertCall(); }
 					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Battleship Game");
+					alert.setTitle("Battleship - Toss Result");
 					alert.setHeaderText("It's computer turn first.");
-					//alert.setContentText("You can start playing!");
 					alert.showAndWait();
-				}
-				else {
+					ob.computerTurn(lastCompResult, Main.gameMode);
+					// alert.setContentText("You can start playing!");
+				} else {
+					 if (Main.gameType.equals("Salvo")) { Main.salvoAlertCall(); }
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
-					alert.setHeaderText("It's a "+tossResult);
+					alert.setHeaderText("It's a " + tossResult);
 					alert.setContentText("It's your turn first!");
 					alert.showAndWait();
 				}
@@ -163,13 +162,12 @@ public class RadarGrid implements Observer {
 				b.setMinSize(2 * r, 2 * r);
 				b.setMaxSize(2 * r, 2 * r);
 				b.setOnAction((ActionEvent event) -> {
-					//to initially change the targets to white color
+					// to initially change the targets to white color
 					b.setStyle("-fx-background-color: #FFFFFF; ");
-					if(Main.gameType.equals("Salvo")) {
+					if (Main.gameType.equals("Salvo")) {
 						String xy[] = b.getId().split(":");
-						salvaFunc(xy);	
-					}
-					else {
+						salvaFunc(xy);
+					} else {
 						String xy[] = b.getId().split(":");
 						coordX = Integer.parseInt(xy[0]);
 						coordY = Integer.parseInt(xy[1]);
@@ -207,22 +205,43 @@ public class RadarGrid implements Observer {
 			// TODO Auto-generated method stub
 
 			if (arg.equals("HITORMISS")) {
-				
+
 				String res = ((Computer) o).getReply();
 				int score1 = ((Computer) o).getScoreComp();
+				resulttext2.setText("");
 				resulttext3.setText("" + score1);
 				afterCompReply(res, (Computer) o);
-				
 			}
-			
-			if(arg.equals("Won"))
-			{
-				
+		} else if (o instanceof HitStrategy) {
+
+			if (arg.equals("Won")) {
+
 				setUserWon("Won");
 			}
-		} else {
+
 			String reply = ((HitStrategy) o).getReply();
 			int score = ((HitStrategy) o).getScore();
+
+			int coord[] = ((HitStrategy) o).getCoords();
+			if (reply.contains("Hit")) {
+				lastCompResult = true;
+			} else {
+				lastCompResult = false;
+			}
+		
+			resulttext1.setText(reply);
+			resulttext4.setText("" + score);
+			ob.callCheckIfCompWon();
+
+			if (getUserWon().equals("Won")) {
+				AlertBox.displayResult("OOPS:( :(", "Computer Won ");
+
+			}
+
+		} else if (o instanceof HitStrategySalvo) {
+			String reply = ((HitStrategySalvo) o).getReply();
+			int score = ((HitStrategySalvo) o).getScore();
+			System.out.println("111" + reply);
 
 			int coord[] = ((HitStrategy) o).getCoords();
 			if (reply.contains("Hit")) {
@@ -234,12 +253,10 @@ public class RadarGrid implements Observer {
 			resulttext1.setText(reply);
 			resulttext4.setText("" + score);
 			ob.callCheckIfCompWon();
-			if(getUserWon().equals("Won"))
-			{
-				AlertBox.displayResult("Hurray!!", "Computer Won ");
-				
-			}
+			if (getUserWon().equals("Won")) {
+				AlertBox.displayResult("OOPS:( :(", "Computer Won ");
 
+			}
 		}
 
 	}
@@ -267,52 +284,50 @@ public class RadarGrid implements Observer {
 				radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
 			}
 			resulttext2.setText(res);
-			
-			if(Main.gameType.equals("Salvo")) {
-				if(buttonCount == 0) {
-					//call the method for getting sunken ships here through controller
+
+			if (Main.gameType.equals("Salvo")) {
+				if (buttonCount == 0) {
+					// call the method for getting sunken ships here through controller
 					ob.callSunkenShips(o);
-					//call the method for getting sunken ships from computer model here
+					// call the method for getting sunken ships from computer model here
 					sunkenShips = o.getSunkenShips();
 					salvaAlertCall(sunkenShips);
 					ob.callCheckIfUserWon();
-					
-					if(getUserWon().equals("Won"))
-					{
-						AlertBox.displayResult("Hurray!!", "User has Won ");
-						
-					}
+
+//					if(getUserWon().equals("Won"))
+//					{
+//						AlertBox.displayResult("Hurray!!", "User has Won ");
+//						
+//					}
 					ob.computerTurn(lastCompResult, Main.gameMode);
 				}
-			}
-			else {
+			} else {
 				ob.callCheckIfUserWon();
 				ob.computerTurn(lastCompResult, Main.gameMode);
 			}
 
-		
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Method to keep storing the salvos of the user in every round
+	 * 
 	 * @param xy coordinates
 	 */
 	public void salvaFunc(String[] xy) {
-		System.out.println("Number of buttons"+buttonCount);
+		System.out.println("Number of buttons" + buttonCount);
 		int shipsremaining = Main.TOTAL_SHIPS - Player.sunkenShips.size();
-		if(buttonCount < shipsremaining) {
+		if (buttonCount < shipsremaining) {
 			selectedButtons[buttonCount][0] = xy[0];
 			selectedButtons[buttonCount][1] = xy[1];
 			buttonCount++;
-			if(buttonCount == Main.TOTAL_SHIPS - Player.sunkenShips.size())
+			if (buttonCount == Main.TOTAL_SHIPS - Player.sunkenShips.size())
 				salvaFunc(null);
-		}
-		else {
-			for(buttonCount = (Main.TOTAL_SHIPS - Player.sunkenShips.size()) - 1;buttonCount>=0; buttonCount--) {
-				System.out.println("Number of buttons"+buttonCount);
+		} else {
+			for (buttonCount = (Main.TOTAL_SHIPS - Player.sunkenShips.size()) - 1; buttonCount >= 0; buttonCount--) {
+				System.out.println("Number of buttons" + buttonCount);
 				coordX = Integer.parseInt(selectedButtons[buttonCount][0]);
 				coordY = Integer.parseInt(selectedButtons[buttonCount][1]);
 				ob.callUserTurn(coordX, coordY);
@@ -320,24 +335,24 @@ public class RadarGrid implements Observer {
 			buttonCount = 0;
 		}
 	}
-	
+
 	/**
 	 * Method to display the enemy ships that have sunk in the latest round
+	 * 
 	 * @param sunkenShips list of sunken ships
 	 */
 	public static void salvaAlertCall(ArrayList<String> sunkenShips) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Salva Mode");
-		if(sunkenShips.isEmpty()) {
+		if (sunkenShips.isEmpty()) {
 			alert.setHeaderText("Number of Comp ships Hit: 0");
 			alert.setContentText("No ships sunk this time");
-		}
-		else {
+		} else {
 			String ships = new String();
-			alert.setHeaderText("Number of Comp ships Hit: "+sunkenShips.size());
+			alert.setHeaderText("Number of Comp ships Hit: " + sunkenShips.size());
 			ships = "Ships destroyed:\n";
-			for(int i = 0; i < sunkenShips.size(); i++) {
-				ships = ships + sunkenShips.get(i)+"\n";
+			for (int i = 0; i < sunkenShips.size(); i++) {
+				ships = ships + sunkenShips.get(i) + "\n";
 			}
 			alert.setContentText(ships);
 		}

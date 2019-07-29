@@ -17,8 +17,8 @@ public class HitStrategy extends Observable {
 	int hitX, hitY;
 	int counter = 0;
 	int minMax = 0;
-	private int scoring = 0;
-	private int scoringComp = 0;
+	public static int scoring = 0;
+	public static int scoringComp = 0;
 	private String reply = "";
 	private int[] coords = {};
 	public static int buttonCount = 0;
@@ -111,7 +111,7 @@ public class HitStrategy extends Observable {
 
 		} else if (Player.userGrid[x][y] == 0) {
 			Player.userGrid[x][y] = 2;
-			setScore(-2);
+			setScore(-1);
 			setReply("It's a miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2) {
 			setReply("The location has been hit earlier");
@@ -241,11 +241,10 @@ public class HitStrategy extends Observable {
 				
 			}//if time between consecutive hit is less than 3 seconds ,then bonus score
 			setScore(10);
-			
 			setReply("It's a Hit!!!!!");
 		} else if (Player.userGrid[x][y] == 0) {
 			Player.userGrid[x][y] = 2;
-			setScore(-2);
+			setScore(-1);
 			setReply("It's a miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2) {
 			setReply("The location has been hit earlier");
@@ -500,7 +499,7 @@ public class HitStrategy extends Observable {
 			setScore(10);
 		} else if (Player.userGrid[x][y] == 0) {
 			Player.userGrid[x][y] = 2;
-			setScore(-2);
+			setScore(-1);
 			setReply("It's a miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2) {
 			setReply("The location has been hit earlier");
