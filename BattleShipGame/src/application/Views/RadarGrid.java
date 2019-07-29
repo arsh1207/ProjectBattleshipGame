@@ -202,7 +202,7 @@ public class RadarGrid implements Observer {
 				
 				String res = ((Computer) o).getReply();
 				int score1 = ((Computer) o).getScoreComp();
-				//resulttext2.setText(res);
+				resulttext2.setText("");
 				resulttext3.setText("" + score1);
 				afterCompReply(res, (Computer) o);
 				
@@ -263,7 +263,7 @@ public class RadarGrid implements Observer {
 
 				radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
 			}
-			resulttext2.setText(res);
+			resulttext2.setText("Lodu");
 			
 			if(Main.gameType.equals("Salvo")) {
 				if(buttonCount == 0) {

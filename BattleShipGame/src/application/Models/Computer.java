@@ -2,7 +2,6 @@ package application.Models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
@@ -20,6 +19,8 @@ public class Computer extends Observable {
 	//to check if all ships have been placed or not 
 	int counter = 0;
 	public Integer[][] computerGrid = new Integer[rows][cols];
+	
+
 	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 	static ArrayList<String> tempList = new ArrayList<String>();
 	static ArrayList<String> sunkenShips = new ArrayList<String>();
@@ -28,6 +29,10 @@ public class Computer extends Observable {
 	private String reply = "";
 
 	// public Integer[][] changedComputerGrid = new Integer[rows][cols];
+	
+	public Integer[][] getComputerGrid() {
+		return computerGrid;
+	}
 
 	public String getReply() {
 		return reply;
@@ -52,9 +57,16 @@ public class Computer extends Observable {
 	}
 
 	public void setCounter(int counter) {
+		
+		this.counter=counter;
 
 	}
 
+
+	public int  getCounter() {
+		return this.counter;
+
+	}
 	public ArrayList<String> getSunkenShips() {
 
 		return sunkenShips;
@@ -291,6 +303,8 @@ public class Computer extends Observable {
 					}
 					placed = true;
 					counter++;
+					
+					setCounter(counter);
 				} else {
 					destroyerX = rand.nextInt(9);
 					destroyerY = rand.nextInt(11);
@@ -300,7 +314,8 @@ public class Computer extends Observable {
 			for (Map.Entry<Integer, Integer> entry : Destroyer.entrySet()) {
 
 				// ask about this
-				computerGrid[entry.getKey()][entry.getValue()] = 1;
+				System.out.println("key: "+entry.getKey()+" value: "+entry.getValue());
+				computerGrid[entry.getValue()][entry.getKey()] = 1;
 				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}

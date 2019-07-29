@@ -95,7 +95,7 @@ public class Main extends Application implements Observer {
 			strategy.addObserver(sg);
 			strategySalvo.addObserver(sg);
 			player.addObserver(main);
-			// strategy.addObserver(main);
+			//strategy.addObserver(main);
 
 			SplitPane split_pane = new SplitPane();
 			SplitPane split_pane2 = new SplitPane();
@@ -146,6 +146,7 @@ public class Main extends Application implements Observer {
 			// v_box2.setSpacing(10.0);
 			userRandomShips.setOnAction((ActionEvent event) -> {
 				if (Player.numOfShipsDep == 0)
+			
 					ob.deployUserShips();
 			});
 
@@ -157,7 +158,7 @@ public class Main extends Application implements Observer {
 			split_pane.getItems().add(v_box1);
 			split_pane.getItems().add(v_box2);
 
-			Button startBtn = new Button("Start Playing");
+			Button startBtn = new Button("DonStart Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
 				ob.deployUserShips();
@@ -863,6 +864,7 @@ public class Main extends Application implements Observer {
 		resultLabel.setTextFill(Color.web("#c40831"));
 		resulttext1 = new Label();
 		resulttext1.setStyle("-fx-background-color: white;");
+		resulttext1.setText("Bhosdi");
 		v_box3.getChildren().addAll(resultLabel, resulttext1);
 
 	}
@@ -876,7 +878,7 @@ public class Main extends Application implements Observer {
 		Label resultLabel = new Label(title + "Turn: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		resulttext2 = new Label();
+		resulttext2 = new Label("Bhag");
 		resulttext2.setStyle("-fx-background-color: white;");
 		v_box3.getChildren().addAll(resultLabel, resulttext2);
 	}

@@ -1,9 +1,9 @@
 package application.Controllers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import application.Models.*;
+import application.Models.Computer;
+import application.Models.HitStrategy;
+import application.Models.HitStrategySalvo;
+import application.Models.Player;
 import main.Main;
 
 /**
@@ -20,6 +20,15 @@ public class GridUser {
 	Player player;
 	HitStrategy strategy;
 	HitStrategySalvo strategySalvo;
+	String callType = "";
+
+	public String getCallType() {
+		return callType;
+	}
+
+	public void setCallType(String callType) {
+		this.callType = callType;
+	}
 
 	/**
 	 * Constructor used for initializing the required objects
@@ -39,10 +48,15 @@ public class GridUser {
 	 */
 	public void computerTurn(Boolean hitResult, String gameMode) {
 		if (Main.gameType.equals("Salvo")) {
-
+			
+			setCallType("Salvo");
 			strategySalvo.mediumMode(hitResult);
 
 		} else {
+
+			// set call type for junit
+			setCallType("Normal");
+
 			if (gameMode.equals("Easy"))
 				strategy.randomHit();
 			else if (gameMode.equals("Medium"))

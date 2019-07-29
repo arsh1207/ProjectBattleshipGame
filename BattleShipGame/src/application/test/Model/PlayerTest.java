@@ -1,11 +1,13 @@
 package application.test.Model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import application.Models.Computer;
 import application.Models.Player;
 
 public class PlayerTest {
@@ -105,5 +107,64 @@ public class PlayerTest {
 
 		assertEquals("Done", ob.getReply());
 	}
+
+	/**
+	 * Test that the grid has been initialized correctly or not
+	 * 
+	 */
+	@Test
+	public void initializeTest() {
+		boolean flag = true;
+
+		int rows = 9;
+		int cols = 11;
+
+		Integer userGrid[][] = ob.getUserGrid();
+
+		for (int i = 0; i < rows; i++) {
+
+			for (int j = 0; j < cols; j++) {
+
+				if (!(userGrid[i][j] == 0)) {
+
+					flag = false;
+				}
+
+			}
+		}
+
+		assertTrue(flag);
+	}
+
+	/**
+	 * 
+	 * To test if player hit or missed the the computer grid
+	 * 
+	 */
+
+	@Test
+	public void userTurnTest() {
+
+		Computer comp = new Computer();
+
+		int x = 3;
+		int y = 4;
+
+		int x1 = 5;
+		int y1 = 6;
+
+		comp.computerGrid[x][y] = 1;
+
+		ob.userTurn(x, y, comp.computerGrid);
+
+		assertEquals("It's a Hit!!!!!", ob.getReply());
+
+		ob.userTurn(x1, y1, comp.computerGrid);
+
+		assertEquals("It's a miss!!!!!", ob.getReply());
+
+	}
+
+
 
 }

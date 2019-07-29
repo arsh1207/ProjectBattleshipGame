@@ -6,7 +6,6 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import application.test.Controllers.ControllerTestSuite;
 import application.test.Model.ModelTestSuite;
-import application.test.Views.ViewTestSuite;
 
 /**
  * This is the main Test suite that is used to run other Test suite
@@ -17,7 +16,7 @@ import application.test.Views.ViewTestSuite;
 
 @RunWith(Suite.class)
 
-@SuiteClasses({ ControllerTestSuite.class, ModelTestSuite.class, ViewTestSuite.class })
+@SuiteClasses({ ControllerTestSuite.class, ModelTestSuite.class })
 public class MainTestSuite {
 
 }
