@@ -8,6 +8,11 @@ import java.util.Random;
 
 import main.Main;
 
+/**
+ * Class for the functionality of the salvo mode
+ * @author Sagar Bhatia
+ *
+ */
 public class HitStrategySalvo extends Observable {
 	
 	Integer[][] randomGrid = new Integer[9][11];
@@ -68,55 +73,11 @@ public class HitStrategySalvo extends Observable {
 		return scoring;
 	}
 	
-	public void randomHit() {
-		
-		int x = ran.nextInt(9);
-		int y = ran.nextInt(11);
-
-		boolean newHit = false;
-		while (!newHit) {
-			if (Player.userGrid[x][y] == 2) {
-				x = ran.nextInt(9);
-				y = ran.nextInt(11);
-			} else
-				newHit = true;
-		}
-		int hitCoord[] = { x, y };
-		setCoords(hitCoord);
-
-		if (Player.userGrid[x][y] == 1) {
-			// change the grid value from 1 to 2 to signify hit
-			Player.userGrid[x][y] = 2;
-			if(!time1) {
-				timea=java.lang.System.currentTimeMillis();
-				time1=!time1;
-			}else if(!time2) {
-				timeb=java.lang.System.currentTimeMillis();
-					time2=!time2;
-			}else {
-				double t=timeb-timea;
-				if(t<3000) {
-					setScore(20);
-				}
-				time1=false;
-				time2=false;
-				timea=0;
-				timeb=0;
-				
-			}//if time between consecutive hit is less than 3 seconds ,then bonus score
-			setScore(10);
-			setReply("It's a Hit!!!!!");
-			
-		} else if (Player.userGrid[x][y] == 0) {
-			Player.userGrid[x][y] = 2;
-			setScore(-1);
-			setReply("It's a Miss!!!!!");
-		} else if (Player.userGrid[x][y] == 2) {
-			setReply("The location has been hit earlier");
-
-		}
-	}
-
+	
+	/**
+	 * method to implement the functionality of the Salvo 
+	 * @param hitResult
+	 */
 	public void mediumMode(Boolean hitResult) {
 		
 		System.out.println("Hit strategy salvo called!");
@@ -225,11 +186,9 @@ public class HitStrategySalvo extends Observable {
 	
 			hitX = x;
 			hitY = y;
-			// System.out.println(x +" ; "+ y);
 			//I need different coordinates to get selected to over here
 			selectedcoordsx.add(x);
 			selectedcoordsy.add(y);
-		//	coordsList.add(hitCoord);
 			buttonCount++;
 		}
 		
@@ -238,9 +197,6 @@ public class HitStrategySalvo extends Observable {
 		//from this part set will be called n number of times to set
 		//buttons based on whether comp targets were a hit or a miss
 		while(buttonCount >= 0) {
-			//hitCoord = coordsList.get(buttonCount);
-			//x = hitCoord[0];
-			//y = hitCoord[1];
 			x = selectedcoordsx.get(buttonCount);
 			y = selectedcoordsy.get(buttonCount);
 			hitCoord[0] = x;
@@ -286,261 +242,9 @@ public class HitStrategySalvo extends Observable {
 
 	}
 
-	public void hardMode(Boolean hitResult) {
-		int x = 0, y = 0;
-		int mostProbable = probabilityGrid[x][y];
-
-		if (minMax == 0) {
-			for (int i = 0; i < 9; i++) {
-				for (int j = 0; j < 11; j++) {
-					if (probabilityGrid[i][j] > mostProbable) {
-						mostProbable = probabilityGrid[i][j];
-						x = i;
-						y = j;
-					}
-				}
-			}
-			minMax = 1;
-		} else {
-
-			for (int i = 0; i < 9; i++) {
-				for (int j = 0; j < 11; j++) {
-					if (probabilityGrid[i][j] < mostProbable && probabilityGrid[i][j] > 0) {
-						mostProbable = probabilityGrid[i][j];
-						x = i;
-						y = j;
-
-					}
-				}
-			}
-			minMax = 0;
-		}
-
-		if (!hitResult && direction.isEmpty()) {
-			boolean newHit = false;
-			while (!newHit) {
-				if (Player.userGrid[x][y] == 2) {
-					if (minMax == 0) {
-						for (int i = 0; i < 9; i++) {
-							for (int j = 0; j < 11; j++) {
-								if (probabilityGrid[i][j] > mostProbable) {
-									mostProbable = probabilityGrid[i][j];
-									x = i;
-									y = j;
-								}
-							}
-						}
-						minMax = 1;
-					} else {
-
-						for (int i = 0; i < 9; i++) {
-							for (int j = 0; j < 11; j++) {
-								if (probabilityGrid[i][j] < mostProbable && probabilityGrid[i][j] > 0) {
-									mostProbable = probabilityGrid[i][j];
-									x = i;
-									y = j;
-
-								}
-							}
-						}
-						minMax = 0;
-					}
-
-				} else
-					newHit = true;
-			}
-		} else if (direction.isEmpty()) {
-			hitFound.add(hitX + ";" + hitY);
-			counter++;
-			if ((hitX + 1) < 9) {
-				x = hitX + 1;
-				y = hitY;
-				direction = "HorizontalFront";
-			} else {
-				x = hitX - 1;
-				y = hitY;
-				direction = "HorizontalBack";
-			}
-		} else {
-			if (direction.equals("HorizontalFront")) {
-				int tempX = Integer.parseInt(hitFound.get(0).split(";")[0]);
-				int tempY = Integer.parseInt(hitFound.get(0).split(";")[1]);
-				if (hitResult && (hitX + 1 < 9)) {
-					counter++;
-					x = hitX + 1;
-					y = hitY;
-				} else if (tempX > 0) {
-					x = tempX - 1;
-					y = tempY;
-					direction = "HorizontalBack";
-				} else if ((Integer.parseInt(hitFound.get(0).split(";")[1]) + 1 < 11)) {
-					x = Integer.parseInt(hitFound.get(0).split(";")[0]);
-					y = Integer.parseInt(hitFound.get(0).split(";")[1]) + 1;
-					direction = "VerticalFront";
-				} else {
-					x = Integer.parseInt(hitFound.get(0).split(";")[0]);
-					y = Integer.parseInt(hitFound.get(0).split(";")[1]) - 1;
-					direction = "VerticalBack";
-				}
-			} else if (direction.equals("HorizontalBack")) {
-				if (hitResult && (hitX > 0)) {
-					counter++;
-					x = hitX - 1;
-					y = hitY;
-				} else if (Integer.parseInt(hitFound.get(0).split(";")[1]) + 1 < 11 && counter < 2) {
-					x = Integer.parseInt(hitFound.get(0).split(";")[0]);
-					y = Integer.parseInt(hitFound.get(0).split(";")[1]) + 1;
-					direction = "VerticalFront";
-				} else if (counter < 2) {
-					x = Integer.parseInt(hitFound.get(0).split(";")[0]);
-					y = Integer.parseInt(hitFound.get(0).split(";")[1]) - 1;
-					direction = "VerticalBack";
-				} else {
-					if (minMax == 0) {
-						for (int i = 0; i < 9; i++) {
-							for (int j = 0; j < 11; j++) {
-								if (probabilityGrid[i][j] > mostProbable) {
-									mostProbable = probabilityGrid[i][j];
-									x = i;
-									y = j;
-								}
-							}
-						}
-						minMax = 1;
-					} else {
-
-						for (int i = 0; i < 9; i++) {
-							for (int j = 0; j < 11; j++) {
-								if (probabilityGrid[i][j] < mostProbable && probabilityGrid[i][j] > 0) {
-									mostProbable = probabilityGrid[i][j];
-									x = i;
-									y = j;
-
-								}
-							}
-						}
-						minMax = 0;
-					}
-					direction = "";
-					hitFound.clear();
-					counter = 0;
-				}
-			} else if (direction.equals("VerticalFront") && counter < 2) {
-				if (hitResult && (hitY + 1 < 11)) {
-					x = hitX;
-					y = hitY + 1;
-				} else if (Integer.parseInt(hitFound.get(0).split(";")[1]) > 0) {
-					x = Integer.parseInt(hitFound.get(0).split(";")[0]);
-					y = Integer.parseInt(hitFound.get(0).split(";")[1]) - 1;
-					direction = "VerticalBack";
-				} else {
-					if (minMax == 0) {
-						for (int i = 0; i < 9; i++) {
-							for (int j = 0; j < 11; j++) {
-								if (probabilityGrid[i][j] > mostProbable) {
-									mostProbable = probabilityGrid[i][j];
-									x = i;
-									y = j;
-								}
-							}
-						}
-						minMax = 1;
-					} else {
-
-						for (int i = 0; i < 9; i++) {
-							for (int j = 0; j < 11; j++) {
-								if (probabilityGrid[i][j] < mostProbable && probabilityGrid[i][j] > 0) {
-									mostProbable = probabilityGrid[i][j];
-									x = i;
-									y = j;
-
-								}
-							}
-						}
-						minMax = 0;
-					}
-					direction = "";
-					hitFound.clear();
-					counter = 0;
-				}
-			} else {
-				if (hitResult && (hitY > 0) && counter < 2) {
-					x = hitX;
-					y = hitY - 1;
-				} else {
-					if (minMax == 0) {
-						for (int i = 0; i < 9; i++) {
-							for (int j = 0; j < 11; j++) {
-								if (probabilityGrid[i][j] > mostProbable) {
-									mostProbable = probabilityGrid[i][j];
-									x = i;
-									y = j;
-								}
-							}
-						}
-						minMax = 1;
-					} else {
-
-						for (int i = 0; i < 9; i++) {
-							for (int j = 0; j < 11; j++) {
-								if (probabilityGrid[i][j] < mostProbable && probabilityGrid[i][j] > 0) {
-									mostProbable = probabilityGrid[i][j];
-									x = i;
-									y = j;
-
-								}
-							}
-						}
-						minMax = 0;
-					}
-					direction = "";
-					hitFound.clear();
-					counter = 0;
-				}
-			}
-		}
-
-		System.out.println(x + " ; " + y + " -> " + probabilityGrid[x][y]);
-		probabilityGrid[x][y] = -1;
-		hitX = x;
-		hitY = y;
-
-		int hitCoord[] = { x, y };
-		setCoords(hitCoord);
-		
-		if (Player.userGrid[x][y] == 1) {
-			// change the grid value from 1 to 2 to signify hit
-			Player.userGrid[x][y] = 2;
-			if(!time1) {
-				timea=java.lang.System.currentTimeMillis();
-				time1=!time1;
-			}else if(!time2) {
-				timeb=java.lang.System.currentTimeMillis();
-					time2=!time2;
-			}else {
-				double t=timeb-timea;
-				if(t<3000) {
-					setScore(20);
-				}
-				time1=false;
-				time2=false;
-				timea=0;
-				timeb=0;
-				
-			}//if time between consecutive hit is less than 3 seconds ,then bonus score
-			setScore(10);
-			setReply("It's a Hit!!!!!");
-		} else if (Player.userGrid[x][y] == 0) {
-			Player.userGrid[x][y] = 2;
-			setScore(-1);
-			setReply("It's a Miss!!!!!");
-		} else if (Player.userGrid[x][y] == 2) {
-			setReply("The location has been hit earlier");
-
-		}
-
-	}
-
+	/**
+	 * method to find the probability distribution of the grid
+	 */
 	public void probabiltDistribution() {
 		for (int k = 0; k < 1000; k++) {
 			for (int i = 0; i < 9; i++) {
@@ -556,7 +260,10 @@ public class HitStrategySalvo extends Observable {
 			}
 		}
 	}
-
+	
+	/**
+	 * method to deploy the computer ships
+	 */
 	public void deployComputerShips() {
 
 		try {
@@ -588,8 +295,7 @@ public class HitStrategySalvo extends Observable {
 
 			for (Map.Entry<Integer, Integer> entry : Carrier.entrySet()) {
 				randomGrid[entry.getValue()][entry.getKey()] = 1;
-				// computerGrid[entry.getKey()][entry.getValue()] = 1;
-
+		
 			}
 
 			int battleShipX = rand.nextInt(9);
@@ -620,8 +326,7 @@ public class HitStrategySalvo extends Observable {
 			for (Map.Entry<Integer, Integer> entry : BattleShip.entrySet()) {
 
 				randomGrid[entry.getKey()][entry.getValue()] = 1;
-				// computerGrid[entry.getValue()][entry.getKey()] = 1;
-
+		
 			}
 
 			int cruiserX = rand.nextInt(9);
@@ -651,8 +356,7 @@ public class HitStrategySalvo extends Observable {
 			for (Map.Entry<Integer, Integer> entry : Cruiser.entrySet()) {
 
 				randomGrid[entry.getKey()][entry.getValue()] = 1;
-				// computerGrid[entry.getValue()][entry.getKey()] = 1;
-
+		
 			}
 
 			int subX = rand.nextInt(9);
@@ -681,8 +385,7 @@ public class HitStrategySalvo extends Observable {
 			for (Map.Entry<Integer, Integer> entry : Submarine.entrySet()) {
 
 				randomGrid[entry.getKey()][entry.getValue()] = 1;
-				// computerGrid[entry.getValue()][entry.getKey()] = 1;
-
+		
 			}
 
 			int destroyerX = rand.nextInt(9);
@@ -722,7 +425,15 @@ public class HitStrategySalvo extends Observable {
 		}
 
 	}
-
+	
+	/**
+	 * method to check whether the points can be placed or not
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 * @param direction horizontal/vertical
+	 * @param points neighboring points
+	 * @return
+	 */
 	public Boolean check(int x, int y, String direction, int points) {
 		Boolean canPlace = true;
 		if (direction.equals("horizontal")) {
@@ -758,6 +469,14 @@ public class HitStrategySalvo extends Observable {
 
 	}
 	
+	/**
+	 * method to check the validity of points
+	 * @param selectedcoordsx selected x-coordinate
+	 * @param selectedcoordsy selected y-coordinate
+	 * @param x placed x-coordinate
+	 * @param y placed y-coordinate
+	 * @return
+	 */
 	boolean areCoordinatesValid(ArrayList<Integer> selectedcoordsx, ArrayList<Integer> selectedcoordsy, int x , int y) {
 		if(selectedcoordsx.isEmpty() && selectedcoordsy.isEmpty()) {
 			return true;
@@ -768,11 +487,20 @@ public class HitStrategySalvo extends Observable {
 		
 		return false;
 	}
+	
+	/**
+	 * method to get random X-coordinate
+	 * @return
+	 */
 	public int randomX() {
 
 		return ran.nextInt(9);
 	}
-
+	
+	/**
+	 * method to get random Y-coordinate
+	 * @return
+	 */
 	public int randomY() {
 
 		return ran.nextInt(11);

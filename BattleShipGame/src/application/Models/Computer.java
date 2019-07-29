@@ -8,6 +8,11 @@ import java.util.Random;
 
 import application.Views.AlertBox;
 
+/**
+ * Class for saving the states of Computer grid
+ * @author Sagar Bhatia
+ *
+ */
 public class Computer extends Observable {
 
 	final int rows = 9;
@@ -467,9 +472,9 @@ public class Computer extends Observable {
 		}
 
 		if (!flaguser) {
-			AlertBox.displayResult("Hurray!!", "User has Won ");
+			setUserWon("Won");
 		} else {
-			
+			setUserWon("Lost");
 		
 		}
 
@@ -487,10 +492,8 @@ public class Computer extends Observable {
 
 			for (int j = 0; j < cols; j++) {
 
-				System.out.print(computerGrid[i][j] + " ");
 
 			}
-			System.out.println();
 		}
 
 	}

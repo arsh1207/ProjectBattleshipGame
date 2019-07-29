@@ -31,7 +31,11 @@ public class GridUser {
 	}
 
 	/**
-	 * Constructor used for initializing the required objects
+	 * Constructor to initialize the required object
+	 * @param player Player model object
+	 * @param computer Computer model object
+	 * @param strategy HitStrategy model object
+	 * @param strategySalvo HitStrategySalvo object 
 	 */
 	public GridUser(Player player, Computer computer, HitStrategy strategy, HitStrategySalvo strategySalvo) {
 		this.computer = computer;
@@ -75,11 +79,17 @@ public class GridUser {
 	public void callCheckIfUserWon() {
 		computer.checkIfUserWon();
 	}
-
+	
+	/**
+	 * to call the method in the model to deploy the computer ships
+	 */
 	public void deployCompShips() {
 		computer.deployComputerShips();
 	}
-
+	
+	/**
+	 * to call the feeling lazy functionality in the model
+	 */
 	public void deployUserShips() {
 		player.deployUserRandomShips();
 	}
@@ -99,9 +109,9 @@ public class GridUser {
 	 * This method will user turn in the model to check whether the coordinates are
 	 * hit or not
 	 * 
-	 * @param computer
-	 * @param coordX
-	 * @param coordY
+	 * @param computer Computer model object
+	 * @param coordX x-coordinate
+	 * @param coordY y-coordinate
 	 */
 	public void callUserTurn(int coordX, int coordY) {
 		computer.userTurn(coordX, coordY);
@@ -111,16 +121,25 @@ public class GridUser {
 	/**
 	 * This method will tell the computer model to deploy its ships in the backend
 	 * 
-	 * @param computer
+	 * @param computer Computer model object
 	 */
 	public void callDeployComputerShips(Computer computer) {
 		computer.deployComputerShips();
 	}
-
+	
+	/**
+	 * method to set the user grid in the model as per the coordinates from the view
+	 * @param coordinates coordinates on the grid
+	 * @param shipType type of the ship
+	 */
 	public void callDeployUserGrid(String coordinates, String shipType) {
 		player.deployUserGrid(coordinates, shipType);
 	}
-
+	
+	/**
+	 * method to call the method to check the sunken ships
+	 * @param computer computer object
+	 */
 	public void callSunkenShips(Computer computer) {
 		computer.checkSunkenShips();
 	}
