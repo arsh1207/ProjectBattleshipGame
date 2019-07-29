@@ -35,9 +35,7 @@ public class HitStrategy extends Observable {
 		probabiltDistribution();
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 11; j++) {
-				System.out.print(probabilityGrid[i][j] + " ");
 			}
-			System.out.println();
 		}
 	}
 
@@ -66,7 +64,10 @@ public class HitStrategy extends Observable {
 	public int getScore() {
 		return scoring;
 	}
-
+	
+	/**
+	 * method to implement the easy functionality of the game
+	 */
 	public void randomHit() {
 		// Random ran = new Random();
 		int x = randomX();
@@ -118,9 +119,12 @@ public class HitStrategy extends Observable {
 
 		}
 	}
-
+	
+	/**
+	 * method to implement the medium functionality of the game
+	 * @param hitResult previous hit or miss
+	 */
 	public void mediumMode(Boolean hitResult) {
-		// Random ran = new Random();
 		int x = ran.nextInt(9);
 		int y = ran.nextInt(11);
 
@@ -217,7 +221,6 @@ public class HitStrategy extends Observable {
 
 		hitX = x;
 		hitY = y;
-		// System.out.println(x +" ; "+ y);
 		int hitCoord[] = { x, y };
 		setCoords(hitCoord);
 		if (Player.userGrid[x][y] == 1) {
@@ -252,7 +255,11 @@ public class HitStrategy extends Observable {
 		}
 
 	}
-
+	
+	/**
+	 * method to implement the functionality of the hard mode
+	 * @param hitResult
+	 */
 	public void hardMode(Boolean hitResult) {
 		int x = 0, y = 0;
 		int mostProbable = probabilityGrid[x][y];
@@ -507,7 +514,11 @@ public class HitStrategy extends Observable {
 		}
 
 	}
-
+	
+	/**
+	 * method to check the energy/probability for a particular coordinate to be
+	 * ship coordinate 
+	 */
 	public void probabiltDistribution() {
 		for (int k = 0; k < 1000; k++) {
 			for (int i = 0; i < 9; i++) {
@@ -523,7 +534,11 @@ public class HitStrategy extends Observable {
 			}
 		}
 	}
-
+	
+	
+	/**
+	 * method to deploy computer ships
+	 */
 	public void deployComputerShips() {
 
 		try {
@@ -555,8 +570,6 @@ public class HitStrategy extends Observable {
 
 			for (Map.Entry<Integer, Integer> entry : Carrier.entrySet()) {
 				randomGrid[entry.getValue()][entry.getKey()] = 1;
-				// computerGrid[entry.getKey()][entry.getValue()] = 1;
-
 			}
 
 			int battleShipX = rand.nextInt(9);
@@ -618,8 +631,7 @@ public class HitStrategy extends Observable {
 			for (Map.Entry<Integer, Integer> entry : Cruiser.entrySet()) {
 
 				randomGrid[entry.getKey()][entry.getValue()] = 1;
-				// computerGrid[entry.getValue()][entry.getKey()] = 1;
-
+		
 			}
 
 			int subX = rand.nextInt(9);
@@ -648,8 +660,7 @@ public class HitStrategy extends Observable {
 			for (Map.Entry<Integer, Integer> entry : Submarine.entrySet()) {
 
 				randomGrid[entry.getKey()][entry.getValue()] = 1;
-				// computerGrid[entry.getValue()][entry.getKey()] = 1;
-
+		
 			}
 
 			int destroyerX = rand.nextInt(9);
@@ -689,7 +700,15 @@ public class HitStrategy extends Observable {
 		}
 
 	}
-
+	
+	/**
+	 * method to check the validity of points
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 * @param direction horizontal or vertical direction
+	 * @param points neighboring points 
+	 * @return
+	 */
 	public Boolean check(int x, int y, String direction, int points) {
 		Boolean canPlace = true;
 		if (direction.equals("horizontal")) {
@@ -724,12 +743,20 @@ public class HitStrategy extends Observable {
 		return canPlace;
 
 	}
-
+	
+	/**
+	 * generates random x-coordinate
+	 * @return
+	 */
 	public int randomX() {
 
 		return ran.nextInt(9);
 	}
-
+	
+	/**
+	 * generates random y-coordinate
+	 * @return
+	 */
 	public int randomY() {
 
 		return ran.nextInt(11);

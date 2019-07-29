@@ -29,8 +29,7 @@ public class Computer extends Observable {
 	public static int scoringComp = 0;
 	private String reply = "";
 
-	// public Integer[][] changedComputerGrid = new Integer[rows][cols];
-
+	
 	public Integer[][] getComputerGrid() {
 		return computerGrid;
 	}
@@ -130,35 +129,25 @@ public class Computer extends Observable {
 			}
 
 			setScoreComp(10);
-			System.out.println("Hit");
 			coordinatesHit.add(coordx + "," + coordy);
 			setReply("It's a Hit!!!!!");
 
-			// return "It's a Hit!!!!!";
-
-			// incrementing computer score for a successful hit
-
+		
 		} else if (computerGrid[x][y] == 0) {
 			setScoreComp(-1);
 			setReply("It's a miss!!!!!");
-			// return "It's a miss!!!!!";
-
-			// loosing points for a miss
-
+		
 		} else if (computerGrid[x][y] == 2) {
 
 			setReply("The location has been hit earlier");
-			// return "The location has been hit earlier";
-
+		
 		}
 
 		else {
 
 			setReply("Some other error");
 		}
-		// some other case or error
-		// return "Some other error";
-
+	
 	}
 
 	/**
@@ -202,8 +191,7 @@ public class Computer extends Observable {
 
 			for (Map.Entry<Integer, Integer> entry : Carrier.entrySet()) {
 				computerGrid[entry.getValue()][entry.getKey()] = 1;
-				// computerGrid[entry.getKey()][entry.getValue()] = 1;
-
+	
 			}
 
 			int battleShipX = rand.nextInt(9);
@@ -273,8 +261,7 @@ public class Computer extends Observable {
 			for (Map.Entry<Integer, Integer> entry : Cruiser.entrySet()) {
 
 				computerGrid[entry.getKey()][entry.getValue()] = 1;
-				// computerGrid[entry.getValue()][entry.getKey()] = 1;
-
+	
 			}
 
 			int subX = rand.nextInt(9);
@@ -343,16 +330,12 @@ public class Computer extends Observable {
 
 			for (Map.Entry<Integer, Integer> entry : Destroyer.entrySet()) {
 
-				// ask about this
 				System.out.println("key: " + entry.getKey() + " value: " + entry.getValue());
 				computerGrid[entry.getValue()][entry.getKey()] = 1;
-				// computerGrid[entry.getValue()][entry.getKey()] = 1;
-
+	
 			}
 
-			// set the computerGrid to be changed grid
-			// changedComputerGrid = computerGrid;
-
+			
 			printGrid();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -406,7 +389,14 @@ public class Computer extends Observable {
 		return canPlace;
 
 	}
-
+	
+	
+	/**
+	 * method to check the adjacency of ships
+	 * @param i x-coordinate
+	 * @param j y-coordinate
+	 * @return
+	 */
 	public Boolean adjacentShipCheck(int i, int j) {
 		Boolean shipPresence = false;
 		int m, n;
@@ -424,7 +414,13 @@ public class Computer extends Observable {
 		}
 		return shipPresence;
 	}
-
+	
+	/**
+	 * method to check whether the coordinates are within the grid or not
+	 * @param i
+	 * @param j
+	 * @return
+	 */
 	public boolean isValid(int i, int j) {
 		if (i < 0 || j < 0 || i >= 9 || j >= 11)
 			return false;
@@ -447,7 +443,10 @@ public class Computer extends Observable {
 		}
 
 	}
-
+	
+	/**
+	 * method to check if the user won
+	 */
 	public void checkIfUserWon() {
 		
 		boolean flaguser = false;
@@ -467,20 +466,11 @@ public class Computer extends Observable {
 
 		}
 
-		/*
-		 * int pscore=Computer.scoringComp; int cscore=HitStrategy.scoring; boolean
-		 * scoreReverse=false; if(cscore<pscore) { scoreReverse=true; }
-		 */
 		if (!flaguser) {
-			//setUserWon("Won");
-			
-			//this has been changed
 			AlertBox.displayResult("Hurray!!", "User has Won ");
 		} else {
 			
-			//setUserWon("Lost");
-			// do nothing
-
+		
 		}
 
 	}
@@ -508,7 +498,7 @@ public class Computer extends Observable {
 	/**
 	 * The method puts the values in ships and coordinates hashmap
 	 * 
-	 * @param shipType
+	 * @param shipType type of ship
 	 * @param cY       coordinate X
 	 * @param cX       coordinate Y
 	 */
@@ -567,12 +557,19 @@ public class Computer extends Observable {
 		}
 
 	}
-
+	
+	/**
+	 * methods to generate random x-coordinate
+	 * @return int x-coordinate
+	 */
 	public int randomX() {
 
 		return rand.nextInt(9);
 	}
-
+	
+	/**method to generate random y-coordinate
+	 * @return int y-coordinate
+	 */
 	public int randomY() {
 
 		return rand.nextInt(11);

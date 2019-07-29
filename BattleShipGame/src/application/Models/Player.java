@@ -160,7 +160,6 @@ public class Player extends Observable {
 
 			if (x1 == x2) {
 
-				System.out.println("X coordinates are same");
 				// if two X are the same then the line is vertical
 				int count = 0;
 				if (y1 > y2) {
@@ -230,7 +229,6 @@ public class Player extends Observable {
 					for (int i = x1; i <= x2; i++) {
 						if ((y1 >= 0 && y1 < rows) && (x1 >= 0 && x1 < cols) && (x2 >= 0 && x2 < cols)
 								&& (userGrid[y1][i] == 0)) {
-							System.out.println("For coordinates " + y1 + " and " + i);
 							userGrid[y1][i] = 1;
 							templist.add(Integer.toString(y1) + "," + Integer.toString(i));
 							count++;
@@ -260,7 +258,14 @@ public class Player extends Observable {
 			notifyObservers();
 		}
 	}
-
+	
+	
+	/**
+	 * Method to check whether the ships are placed adjacent to each other or not
+	 * @param i
+	 * @param j
+	 * @return
+	 */
 	public Boolean adjacentShipCheck(int i, int j) {
 		Boolean shipPresence = false;
 		int m, n;
@@ -278,7 +283,13 @@ public class Player extends Observable {
 		}
 		return shipPresence;
 	}
-
+	
+	/**
+	 * methods to check whether the points are not out of the grid
+	 * @param i
+	 * @param j
+	 * @return
+	 */
 	public boolean isValid(int i, int j) {
 		if (i < 0 || j < 0 || i >= 9 || j >= 11)
 			return false;
@@ -357,10 +368,12 @@ public class Player extends Observable {
 		else
 			return false;
 	}
-
+	
+	/**
+	 * Method to set the functionality of feeling lazy
+	 */
 	public void deployUserRandomShips() {
 		try {
-			System.out.println("deploy random user ships");
 			Random rand = new Random();
 			int carrierX = rand.nextInt(9);
 			int carrierY = rand.nextInt(11);
@@ -393,18 +406,15 @@ public class Player extends Observable {
 				userGrid[entry.getValue()][entry.getKey()] = 1;
 				templist.add(Integer.toString(entry.getValue()) + "," + Integer.toString(entry.getKey()));
 				shipsMap.put("Carrier", (ArrayList) templist);
-				// computerGrid[entry.getKey()][entry.getValue()] = 1;
-
+	
 			}
 
 			if (shipPlacementFlag) {
 				int[] coords = { carrierY, carrierX, carrierY + 4, (carrierX) };
 				setCoords(coords);
-				// shipObject.deployShipsWithColors(coords, "Carrier", "X");
 			} else {
 				int[] coords = { carrierY - 4, carrierX, carrierY, (carrierX) };
 				setCoords(coords);
-				// shipObject.deployShipsWithColors(coords, "Carrier", "X");
 			}
 
 			setShipType("Carrier");
@@ -444,7 +454,6 @@ public class Player extends Observable {
 				userGrid[entry.getKey()][entry.getValue()] = 1;
 				templist.add(Integer.toString(entry.getKey()) + "," + Integer.toString(entry.getValue()));
 				shipsMap.put("Battleship", (ArrayList) templist);
-				// computerGrid[entry.getValue()][entry.getKey()] = 1;
 
 			}
 			if (shipPlacementFlag) {
@@ -493,15 +502,13 @@ public class Player extends Observable {
 				userGrid[entry.getKey()][entry.getValue()] = 1;
 				templist.add(Integer.toString(entry.getKey()) + "," + Integer.toString(entry.getValue()));
 				shipsMap.put("Cruiser", (ArrayList) templist);
-				// computerGrid[entry.getValue()][entry.getKey()] = 1;
-
+		
 			}
 
 			if (shipPlacementFlag) {
 				int[] coords = { cruiserY, cruiserX, (cruiserY), cruiserX + 2 };
 				setCoords(coords);
 			} else {
-				// int[] coords = { cruiserX, cruiserY, (cruiserX - 3), cruiserY };
 				int[] coords = { cruiserY, cruiserX - 2, (cruiserY), cruiserX };
 				setCoords(coords);
 			}
@@ -541,8 +548,7 @@ public class Player extends Observable {
 				userGrid[entry.getKey()][entry.getValue()] = 1;
 				templist.add(Integer.toString(entry.getKey()) + "," + Integer.toString(entry.getValue()));
 				shipsMap.put("Submarine", (ArrayList) templist);
-				// computerGrid[entry.getValue()][entry.getKey()] = 1;
-
+		
 			}
 			if (shipPlacementFlag) {
 				int[] coords = { subY, subX, (subY), subX + 2 };
@@ -616,7 +622,15 @@ public class Player extends Observable {
 
 		}
 	}
-
+	
+	/**
+	 * method to check the adjacency in user ships
+	 * @param x x-coordinate
+	 * @param y y-coordinate
+	 * @param direction
+	 * @param points
+	 * @return
+	 */
 	public Boolean checkUserShip(int x, int y, String direction, int points) {
 		Boolean canPlace = true;
 		if (direction.equals("horizontal")) {
@@ -676,29 +690,26 @@ public class Player extends Observable {
 			boolean scoreReverse = false;
 			if (cscore > pscore) {
 				scoreReverse = true;
-				// setCompWon("Won");
-				AlertBox.displayResult("Hurray!!", "Computer Won ");
+				setCompWon("Won");
+				//AlertBox.displayResult("Hurray!!", "Computer Won ");
 			} else { // do nothing
-				// setCompWon("Lost");
+				 setCompWon("Lost");
 			}
 		}
 	}
-	// }
+	
 
 	/**
 	 * Method to display the computer grid
 	 */
-
 	public void printGrid(Integer[][] Grid) {
 
 		for (int i = 0; i < rows; i++) {
 
 			for (int j = 0; j < cols; j++) {
 
-				System.out.print(Grid[i][j] + " ");
-
+	
 			}
-			System.out.println();
 		}
 
 	}
@@ -751,6 +762,7 @@ public class Player extends Observable {
 			shipsMap = new HashMap<>();
 			shipsMap.putAll(tempMap);
 		}
+		
 		ShipGrid.salvaAlertCall(sunkenShips);
 
 	}

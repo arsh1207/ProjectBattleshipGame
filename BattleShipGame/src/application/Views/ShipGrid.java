@@ -205,6 +205,7 @@ public class ShipGrid implements Observer {
 			 */
 			
 		}else {
+			if(!player.getCompWon().equals("Won")) {
 			String reply = ((HitStrategySalvo) o).getReply();
 			int score = ((HitStrategySalvo) o).getScore();
 			System.out.println("user turn: "+reply);
@@ -221,7 +222,14 @@ public class ShipGrid implements Observer {
 
 			resulttext1.setText(reply);
 			resulttext4.setText("" + score);
+			ArrayList<String>sunkenShips = player.getSunkenShips();
 			ob.callCheckIfCompWon();
+			if (player.getCompWon().equals("Won")) {
+				System.out.println("Comp won");
+				AlertBox.displayResult("OOPS:( :(", "Computer Won ");
+
+			}
+			}
 		}
 
 	}

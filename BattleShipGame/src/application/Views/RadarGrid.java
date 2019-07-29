@@ -252,11 +252,11 @@ public class RadarGrid implements Observer {
 
 			resulttext1.setText(reply);
 			resulttext4.setText("" + score);
-			ob.callCheckIfCompWon();
-			if (getUserWon().equals("Won")) {
-				AlertBox.displayResult("OOPS:( :(", "Computer Won ");
+			//ob.callCheckIfCompWon();
+			//if (getUserWon().equals("Won")) {
+				//AlertBox.displayResult("OOPS:( :(", "Computer Won ");
 
-			}
+			//}
 		}
 
 	}
@@ -294,11 +294,11 @@ public class RadarGrid implements Observer {
 					salvaAlertCall(sunkenShips);
 					ob.callCheckIfUserWon();
 
-//					if(getUserWon().equals("Won"))
-//					{
-//						AlertBox.displayResult("Hurray!!", "User has Won ");
-//						
-//					}
+					if(getUserWon().equals("Won"))
+					{
+						AlertBox.displayResult("Hurray!!", "User has Won ");
+						
+					}
 					ob.computerTurn(lastCompResult, Main.gameMode);
 				}
 			} else {
