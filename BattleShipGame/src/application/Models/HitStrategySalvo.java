@@ -109,7 +109,7 @@ public class HitStrategySalvo extends Observable {
 			
 		} else if (Player.userGrid[x][y] == 0) {
 			Player.userGrid[x][y] = 2;
-			setScore(-2);
+			setScore(-1);
 			setReply("It's a miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2) {
 			setReply("The location has been hit earlier");
@@ -271,7 +271,7 @@ public class HitStrategySalvo extends Observable {
 				setReply("It's a Hit!!!!!");
 			} else if (Player.userGrid[x][y] == 0) {
 				Player.userGrid[x][y] = 2;
-				setScore(-2);
+				setScore(-1);
 				setReply("It's a Miss!!!!!");
 			} else if (Player.userGrid[x][y] == 2) {
 				setReply("The location has been hit earlier");
@@ -532,7 +532,7 @@ public class HitStrategySalvo extends Observable {
 			setReply("It's a Hit!!!!!");
 		} else if (Player.userGrid[x][y] == 0) {
 			Player.userGrid[x][y] = 2;
-			setScore(-2);
+			setScore(-1);
 			setReply("It's a Miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2) {
 			setReply("The location has been hit earlier");
