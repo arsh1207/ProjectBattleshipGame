@@ -80,7 +80,7 @@ public class Computer extends Observable {
 	}
 
 	public void setUserWon(String userWon) {
-		UserWon = userWon;
+		this.UserWon = userWon;
 
 		setChanged();
 		notifyObservers(userWon);
@@ -458,18 +458,15 @@ public class Computer extends Observable {
 			for (int j = 0; j < cols; j++) {
 
 				if (computerGrid[i][j] == 1) {
-
+					flaguser = true;
+					break;
 				}
-				flaguser = true;
+				
 
 			}
 
 		}
 
-		/**
-		 * If user destroys all ships but computer has more score declares computer as
-		 * winner
-		 */
 		/*
 		 * int pscore=Computer.scoringComp; int cscore=HitStrategy.scoring; boolean
 		 * scoreReverse=false; if(cscore<pscore) { scoreReverse=true; }

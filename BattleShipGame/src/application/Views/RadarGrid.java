@@ -207,14 +207,14 @@ public class RadarGrid implements Observer {
 			System.out.println("update called");
 			// TODO Auto-generated method stub
 
-		//	if (arg.equals("HITORMISS")) {
+			if (arg.equals("HITORMISS")) {
 				
 				String res = ((Computer) o).getReply();
 				int score1 = ((Computer) o).getScoreComp();
 				resulttext2.setText("");
 				resulttext3.setText("" + score1);
 				afterCompReply(res, (Computer) o);
-				
+			}		
 		} else if(o instanceof HitStrategy) {
 			
 			if(arg.equals("Won"))
@@ -308,7 +308,7 @@ public class RadarGrid implements Observer {
 
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	

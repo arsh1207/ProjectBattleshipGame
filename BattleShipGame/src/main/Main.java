@@ -149,7 +149,7 @@ public class Main extends Application {
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
-				ob.deployUserShips();
+				
 				if (Player.numOfShipsDep == 5) {
 					/*
 					 * Alert alert = new Alert(AlertType.INFORMATION);
