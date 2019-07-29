@@ -241,7 +241,6 @@ public class HitStrategy extends Observable {
 				
 			}//if time between consecutive hit is less than 3 seconds ,then bonus score
 			setScore(10);
-			
 			setReply("It's a Hit!!!!!");
 		} else if (Player.userGrid[x][y] == 0) {
 			Player.userGrid[x][y] = 2;

@@ -127,7 +127,7 @@ public class Main extends Application {
 
 			RadarGrid radarGridObserver = new RadarGrid(resulttext2, resulttext1, resulttext3, resulttext4, ob);
 			computer.addObserver(radarGridObserver);
-			//strategy.addObserver(radarGridObserver);
+			strategy.addObserver(radarGridObserver);
 			radarGridObserver.setUserRadarGrid(g_pane1, resulttext2);
 			sg.setUserShipGrid(g_pane2);
 			setShipPlacementActions();

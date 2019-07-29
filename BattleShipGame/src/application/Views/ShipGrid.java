@@ -33,7 +33,7 @@ public class ShipGrid implements Observer {
 	static String initialCoordinates, finalCoordinates;
 	static String gameMode = "Medium";
 
-	static Boolean lastCompResult = false;
+	public static Boolean lastCompResult = false;
 	private GridUser ob;
 	Label resulttext1, resulttext4;
 
@@ -186,11 +186,24 @@ public class ShipGrid implements Observer {
 		} else if (o instanceof HitStrategy) {
 			String reply = ((HitStrategy) o).getReply();
 			int coord[] = ((HitStrategy) o).getCoords();
+			//int score = ((HitStrategy) o).getScore();
+			if (reply.contains("Hit")) {
+				lastCompResult = true;
+			} else {
+				lastCompResult = false;
+			}
+			
 			if (reply.contains("Hit")) {
 				setUserShipCoordinates(coord[0], coord[1], "Hit");
 			} else {
 				setUserShipCoordinates(coord[0], coord[1], "Miss");
 			}
+			
+			/*
+			 * resulttext1.setText(reply); resulttext4.setText("" + score);
+			 * ob.callCheckIfCompWon();
+			 */
+			
 		}else {
 			String reply = ((HitStrategySalvo) o).getReply();
 			int score = ((HitStrategySalvo) o).getScore();
