@@ -695,12 +695,12 @@ public class HitStrategy extends Observable {
 		if (direction.equals("horizontal")) {
 			if ((y + points) < 11) {
 				for (int j = 0; j < points; j++) {
-					if (randomGrid[x][y + j] != 0)
+					if (randomGrid[x][y + j] != 0 || adjacentShipCheck(x, y + j))
 						canPlace = false;
 				}
 			} else {
 				for (int j = 0; j < points; j++) {
-					if (randomGrid[x][y - j] != 0)
+					if (randomGrid[x][y - j] != 0 || adjacentShipCheck(x, y - j))
 						canPlace = false;
 				}
 			}
@@ -709,12 +709,12 @@ public class HitStrategy extends Observable {
 
 			if ((x + points) < 9) {
 				for (int j = 0; j < points; j++) {
-					if (randomGrid[x + j][y] != 0)
+					if (randomGrid[x + j][y] != 0 || adjacentShipCheck(x + j, y))
 						canPlace = false;
 				}
 			} else {
 				for (int j = 0; j < points; j++) {
-					if (randomGrid[x - j][y] != 0)
+					if (randomGrid[x - j][y] != 0 || adjacentShipCheck(x - j, y))
 						canPlace = false;
 				}
 			}
@@ -724,6 +724,31 @@ public class HitStrategy extends Observable {
 		return canPlace;
 
 	}
+	
+	public Boolean adjacentShipCheck(int i, int j) {
+		Boolean shipPresence = false;
+		int m, n;
+		int[] ith = { 0, 1, 1, -1, 0, -1, -1, 1 };
+		int[] jth = { 1, 0, 1, 0, -1, -1, 1, -1 };
+		for (int k = 0; k < 8; k++) {
+			m = i + ith[k];
+			n = j + jth[k];
+			if (isValid(i + ith[k], j + jth[k])) {
+				if (randomGrid[m][n] == 1) {
+					shipPresence = true;
+					break;
+				}
+			}
+		}
+		return shipPresence;
+	}
+
+	public boolean isValid(int i, int j) {
+		if (i < 0 || j < 0 || i >= 9 || j >= 11)
+			return false;
+		return true;
+	}
+	
 
 	public int randomX() {
 
