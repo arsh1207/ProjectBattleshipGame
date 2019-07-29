@@ -28,6 +28,7 @@ public class ShipGrid implements Observer {
 	static int buttonCount = 0;
 	int xInitialCo;
 	int yInitialCo;
+	String compWon = "";
 
 	static String initialCoordinates, finalCoordinates;
 	static String gameMode = "Medium";
@@ -37,16 +38,27 @@ public class ShipGrid implements Observer {
 	Label resulttext1, resulttext4;
 
 	private Player player;
-	//private HitStrategy strategy;
+	// private HitStrategy strategy;
 
 	public ShipGrid(Player player, GridUser ob, Label resulttext1, Label resulttext4) {
 		this.player = player;
-	//	player.addObserver(this);
+		// player.addObserver(this);
 		this.ob = ob;
+
 		this.resulttext1 = resulttext1;
 		this.resulttext4 = resulttext4;
 		//this.strategy = strategy;
 		//strategy.addObserver(this);
+		// this.strategy = strategy;
+		// strategy.addObserver(this);
+	}
+
+	public String getCompWon() {
+		return compWon;
+	}
+
+	public void setCompWon(String compWon) {
+		this.compWon = compWon;
 	}
 
 	/**
@@ -148,6 +160,14 @@ public class ShipGrid implements Observer {
 	public void update(Observable o, Object arg) {
 		if (o instanceof Player) {
 			// TODO Auto-generated method stub
+
+			if (arg.equals("Won")) {
+				
+				setCompWon("Won");
+				
+			}
+			else
+			{
 			System.out.println("called");
 			System.out.println(arg);
 			String value = ((Player) o).getReply();
@@ -162,13 +182,13 @@ public class ShipGrid implements Observer {
 				userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
 				AlertBox.displayError(Main.shipType, value);
 			}
-		} else if(o instanceof HitStrategy) {
-			String reply =  ((HitStrategy) o).getReply();
-			int coord[] =  ((HitStrategy) o).getCoords();
-			if(reply.contains("Hit")) {
-				setUserShipCoordinates(coord[0], coord[1], "Hit");
 			}
-			else {
+		} else if (o instanceof HitStrategy) {
+			String reply = ((HitStrategy) o).getReply();
+			int coord[] = ((HitStrategy) o).getCoords();
+			if (reply.contains("Hit")) {
+				setUserShipCoordinates(coord[0], coord[1], "Hit");
+			} else {
 				setUserShipCoordinates(coord[0], coord[1], "Miss");
 			}
 		}else {
@@ -180,7 +200,6 @@ public class ShipGrid implements Observer {
 			int coord[] = ((HitStrategy) o).getCoords();
 			if (reply.contains("Hit")) {
 				lastCompResult = true;
-				setUserShipCoordinates(coord[0], coord[1], "Hit");
 			} else {
 				lastCompResult = false;
 				setUserShipCoordinates(coord[0], coord[1], "Miss");
@@ -190,7 +209,7 @@ public class ShipGrid implements Observer {
 			resulttext4.setText("" + score);
 			ob.callCheckIfCompWon();
 		}
-		
+
 	}
 
 	/**
@@ -267,7 +286,7 @@ public class ShipGrid implements Observer {
 			userButton[coords[1]][i].setOnDragExited(null);
 			userButton[coords[1]][i].setOnDragEntered(null);
 			userButton[coords[1]][i].setText("placed");
-			
+
 		}
 	}
 
@@ -282,24 +301,24 @@ public class ShipGrid implements Observer {
 			userButton[x][y].setStyle("-fx-background-color: #ff1100; ");
 
 	}
-	
+
 	/**
 	 * Method to display the enemy ships that have sunk in the latest round
+	 * 
 	 * @param sunkenShips list of sunken ships
 	 */
 	public static void salvaAlertCall(ArrayList<String> sunkenShips) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Salvo Mode");
-		if(sunkenShips.isEmpty()) {
+		if (sunkenShips.isEmpty()) {
 			alert.setHeaderText("Number of User ships Hit: 0");
 			alert.setContentText("No ships sunk this time");
-		}
-		else {
+		} else {
 			String ships = new String();
-			alert.setHeaderText("Number of User ships Hit: "+sunkenShips.size());
+			alert.setHeaderText("Number of User ships Hit: " + sunkenShips.size());
 			ships = "Ships destroyed:\n";
-			for(int i = 0; i < sunkenShips.size(); i++) {
-				ships = ships + sunkenShips.get(i)+"\n";
+			for (int i = 0; i < sunkenShips.size(); i++) {
+				ships = ships + sunkenShips.get(i) + "\n";
 			}
 			alert.setContentText(ships);
 		}

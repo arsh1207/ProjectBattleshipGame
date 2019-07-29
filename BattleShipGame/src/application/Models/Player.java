@@ -30,6 +30,8 @@ public class Player extends Observable {
 
 	public String reply = "";
 
+	public String compWon = "";
+
 	public boolean Hit = false;
 	public boolean Miss = false;
 
@@ -114,41 +116,15 @@ public class Player extends Observable {
 
 	}
 
-	/**
-	 * Takes the input based on the event listener Provides the hit or miss while
-	 * hitting on the computer grid
-	 * 
-	 * @param x coordinate
-	 * @param y coordinates
-	 * @return String defining if the user hit or miss the computer grid
-	 */
+	public String getCompWon() {
+		return compWon;
+	}
 
-	public void userTurn(int x, int y, Integer[][] computerGrid) {
+	public void setCompWon(String compWon) {
+		this.compWon = compWon;
 
-		// get the X and y coordinate from the input
-		System.out.println("reached here" + x + "; " + y);
-		if (computerGrid[x][y] == 1) { // change the grid value from 1 to 2 to signify hit
-
-			computerGrid[x][y] = 2;
-
-			setReply("It's a Hit!!!!!");
-			userScore += 10;
-			// incrementing user score for a successful hit
-
-			// return "It's a Hit!!!!!"; } else if (computerGrid[x][y] == 0) {
-
-			setReply("It's a miss!!!!!"); // return "It's a miss!!!!!";
-
-			userScore -= 2; // loosing points for a miss
-
-		} else if (computerGrid[x][y] == 2) {
-
-			setReply("The location has been hit earlier");
-
-		}
-
-		// some other case or error // return "Some other error";
-
+		setChanged();
+		notifyObservers(compWon);
 	}
 
 	/*
@@ -376,9 +352,11 @@ public class Player extends Observable {
 
 		if (!flaguser) {// set that user has won
 
-			AlertBox.displayResult("Hurray!!", "User has Won ");
+			setCompWon("Won");
+			// AlertBox.displayResult("Hurray!!", "User has Won ");
 		} else {
 			// do nothing
+			setCompWon("Lost");
 
 		}
 
@@ -787,8 +765,11 @@ public class Player extends Observable {
 
 		if (!flagcomp) {// set that user has won
 
-			AlertBox.displayResult("Hurray!!", "AI has Won ");
+			setCompWon("Won");
+			// AlertBox.displayResult("Hurray!!", "AI has Won ");
 		} else {
+
+			setCompWon("Lost");
 			// do nothing
 
 		}
@@ -839,12 +820,12 @@ public class Player extends Observable {
 	public static void checkSunkenShips() {
 		Map<String, ArrayList<String>> tempMap; 
 		for (String coords : coordinatesHit) {
-			System.out.println("Checking coordinates "+coords);
+			// System.out.println("Checking coordinates "+coords);
 			tempMap = new HashMap<>();
 			tempMap.putAll(shipsMap);
 			for (Map.Entry<String, ArrayList<String>> entry : shipsMap.entrySet()) {
-				System.out.println("Checking "+entry.getKey());
-				System.out.println(entry);
+				// System.out.println("Checking "+entry.getKey());
+				// System.out.println(entry);
 				if (!shipsMap.get(entry.getKey()).isEmpty()) {
 					// if any ship has been placed on the assigned coordinate
 					if (shipsMap.get(entry.getKey()).contains(coords)) {
@@ -854,9 +835,9 @@ public class Player extends Observable {
 						// and remove the ships from the shipsMap
 						if (shipsMap.get(entry.getKey()).isEmpty()) {
 							setSunkenShips(entry.getKey());
-							System.out.println(entry.getKey()+" destroyed");
-							tempMap.remove(entry.getKey());
-							System.out.println(entry.getKey()+" removed");
+							System.out.println(entry.getKey() + " destroyed");
+							tempMap.remove(entry.getKey());							System.out.println(entry.getKey() + " removed");
+						
 						}
 					}
 
@@ -866,7 +847,7 @@ public class Player extends Observable {
 			shipsMap = new HashMap<>();
 			shipsMap.putAll(tempMap);
 		}
-		System.out.println("user sunken ships are: " +sunkenShips);
+		System.out.println("user sunken ships are: " + sunkenShips);
 		ShipGrid.salvaAlertCall(sunkenShips);
 
 	}
