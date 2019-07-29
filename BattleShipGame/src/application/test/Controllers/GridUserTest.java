@@ -51,7 +51,7 @@ public class GridUserTest {
 
 		Main.gameType = "Salvo";
 
-		Mockito.doNothing().when(salvo).randomHit();
+		Mockito.doNothing().when(salvo).mediumMode(Mockito.anyBoolean());
 		// doNothing().when(myList).add(isA(Integer.class), isA(String.class));
 		gridUser.computerTurn(hitResult, gameMode);
 
