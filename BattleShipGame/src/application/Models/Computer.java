@@ -114,8 +114,25 @@ public class Computer extends Observable {
 			// change the grid value from 1 to 2 to signify hit
 
 			computerGrid[x][y] = 2;
+			if(!time1) {
+				timea=java.lang.System.currentTimeMillis();
+				time1=!time1;
+			}else if(!time2) {
+				timeb=java.lang.System.currentTimeMillis();
+					time2=!time2;
+			}else {
+				double t=timeb-timea;
+				if(t<3000) {
+					setScoreComp(20);
+				}
+				time1=false;
+				time2=false;
+				timea=0;
+				timeb=0;
+				
+			}
 
-			setScoreComp(5);
+			setScoreComp(10);
 			System.out.println("Hit");
 			coordinatesHit.add(coordx + "," + coordy);
 			setReply("It's a Hit!!!!!");
@@ -125,7 +142,7 @@ public class Computer extends Observable {
 			// incrementing computer score for a successful hit
 
 		} else if (computerGrid[x][y] == 0) {
-			setScoreComp(-2);
+			setScoreComp(-1);
 			setReply("It's a miss!!!!!");
 			// return "It's a miss!!!!!";
 
@@ -452,6 +469,16 @@ public class Computer extends Observable {
 				}
 
 			}
+		}
+		/**
+		 * If user destroys all ships but computer has more score
+		 * declares computer as winner
+		 */
+		int pscore=Computer.scoringComp;
+		int cscore=HitStrategy.scoring;
+		boolean scoreReverse=false;
+		if(cscore<pscore) {
+			scoreReverse=true;
 		}
 
 		if (!flaguser) {// set that user has won
