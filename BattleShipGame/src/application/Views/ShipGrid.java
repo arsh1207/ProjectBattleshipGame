@@ -186,7 +186,7 @@ public class ShipGrid implements Observer {
 				setUserShipCoordinates(coord[0], coord[1], "Miss");
 			}
 
-			resulttext1.setText("Gandu");
+			resulttext1.setText(reply);
 			resulttext4.setText("" + score);
 			ob.callCheckIfCompWon();
 		}

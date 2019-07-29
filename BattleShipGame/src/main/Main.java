@@ -158,7 +158,7 @@ public class Main extends Application implements Observer {
 			split_pane.getItems().add(v_box1);
 			split_pane.getItems().add(v_box2);
 
-			Button startBtn = new Button("DonStart Playing");
+			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
 				ob.deployUserShips();
@@ -864,7 +864,6 @@ public class Main extends Application implements Observer {
 		resultLabel.setTextFill(Color.web("#c40831"));
 		resulttext1 = new Label();
 		resulttext1.setStyle("-fx-background-color: white;");
-		resulttext1.setText("Bhosdi");
 		v_box3.getChildren().addAll(resultLabel, resulttext1);
 
 	}
@@ -878,7 +877,6 @@ public class Main extends Application implements Observer {
 		Label resultLabel = new Label(title + "Turn: ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		resulttext2 = new Label("Bhag");
 		resulttext2.setStyle("-fx-background-color: white;");
 		v_box3.getChildren().addAll(resultLabel, resulttext2);
 	}

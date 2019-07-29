@@ -263,7 +263,7 @@ public class RadarGrid implements Observer {
 
 				radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
 			}
-			resulttext2.setText("Lodu");
+			resulttext2.setText(res);
 			
 			if(Main.gameType.equals("Salvo")) {
 				if(buttonCount == 0) {
