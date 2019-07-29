@@ -679,6 +679,15 @@ public class Player extends Observable {
 
 			}
 		}
+		/**
+		 * If user destroys all ships but computer has more score
+		 * declares computer as winner
+		 */
+		int pscore=Computer.scoringComp;
+		int cscore=HitStrategy.scoring;
+		boolean scoreReverse=false;
+		if(cscore<pscore) {
+			scoreReverse=true;
 
 		if (!flagcomp) {// set that user has won
 
