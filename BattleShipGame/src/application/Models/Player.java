@@ -13,7 +13,7 @@ import application.Views.ShipGrid;
 public class Player extends Observable {
 
 	//
-	public static int userScore;
+	public int userScore;
 	public List<String> deployedShips = new ArrayList<>();
 	public HashMap<String, Integer> convert = new HashMap<>();
 	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
@@ -124,8 +124,12 @@ public class Player extends Observable {
 		this.compWon = compWon;
 	}
 
-	public int GetScore() {
+	public int getScore() {
 		return userScore;
+	}
+
+	public void setScore(int score) {
+		this.userScore = score;
 	}
 
 	/**
@@ -175,10 +179,12 @@ public class Player extends Observable {
 					}
 
 				}
-				for (int i = y1; i <= y2; i++) {
-					if (adjacentShipCheck(i, x1)) {
-						deployedShips.remove(shipType);
-						setReply("Ship cannot be placed Adjacent to each other");
+				if (deployedShips.contains(shipType)) {
+					for (int i = y1; i <= y2; i++) {
+						if (adjacentShipCheck(i, x1)) {
+							deployedShips.remove(shipType);
+							setReply("Ship cannot be placed Adjacent to each other");
+						}
 					}
 				}
 				String res = areHolesValid(y2 - y1 + 1, shipType);
@@ -219,10 +225,12 @@ public class Player extends Observable {
 						setReply("ships cannot be placed on the same location");
 					}
 				}
-				for (int i = x1; i <= x2; i++) {
-					if (adjacentShipCheck(y1, i)) {
-						deployedShips.remove(shipType);
-						setReply("Ship cannot be placed Adjacent to each other");
+				if (deployedShips.contains(shipType)) {
+					for (int i = x1; i <= x2; i++) {
+						if (adjacentShipCheck(y1, i)) {
+							deployedShips.remove(shipType);
+							setReply("Ship cannot be placed Adjacent to each other");
+						}
 					}
 				}
 				String res = areHolesValid(x2 - x1 + 1, shipType);
@@ -668,7 +676,7 @@ public class Player extends Observable {
 				}
 			}
 		}
-		
+
 		if (!flagcomp) {
 			// set that user has won
 			int pscore = Computer.scoringComp;

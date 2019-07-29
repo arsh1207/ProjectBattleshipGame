@@ -37,7 +37,7 @@ public class ComputerTest {
 		
 		ob.setScoreComp(10);
 		
-		assertEquals(10, getScoreComp());
+		assertEquals(10, ob.getScoreComp());
 		
 		
 	}

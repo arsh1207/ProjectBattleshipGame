@@ -36,7 +36,7 @@ public class HitStrategyTest {
 		
 		ob.setScore(10);
 		
-		assertEquals(10, ob.GetScore());
+		assertEquals(10, ob.getScore());
 	}
 
 	/**
