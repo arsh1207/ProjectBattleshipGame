@@ -23,20 +23,6 @@ public class HitStrategySalvoTest {
 
 	}
 	
-	/**
-	 * 
-	 * Below Test case check if the score is incremented after a Hit in Salvo mode or not
-	 * 
-	 */
-	
-	@Test
-	public void getScoreTest() {
-		//Sets the score increment should be 10 after a hit
-		ob.setScore(10);
-		
-		assertEquals(10, ob.getScore());
-	}
-	
 	
 	
 	/**
