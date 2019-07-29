@@ -126,9 +126,7 @@ public class Player extends Observable {
 
 		
 
-	/*
-	 * Returning user score
-	 */
+	
 	public int GetScore() {
 		return userScore;
 	}
@@ -617,16 +615,6 @@ public class Player extends Observable {
 
 			numOfShipsDep = 5;
 
-			/*
-			 * System.out.println("user grid"); for (int i = 0; i < rows; i++) {
-			 * 
-			 * for (int j = 0; j < cols; j++) {
-			 * 
-			 * System.out.print(userGrid[i][j] + " ");
-			 * 
-			 * } System.out.println(); }
-			 */
-
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -638,26 +626,25 @@ public class Player extends Observable {
 		if (direction.equals("horizontal")) {
 			if ((y + points) < 11) {
 				for (int j = 0; j < points; j++) {
-					if (userGrid[x][y + j] != 0)
+					if (userGrid[x][y + j] != 0 || adjacentShipCheck(x, y+j))
 						canPlace = false;
 				}
 			} else {
 				for (int j = 0; j < points; j++) {
-					if (userGrid[x][y - j] != 0)
+					if (userGrid[x][y - j] != 0 || adjacentShipCheck(x, y - j))
 						canPlace = false;
 				}
 			}
-
 		} else {
 
 			if ((x + points) < 9) {
 				for (int j = 0; j < points; j++) {
-					if (userGrid[x + j][y] != 0)
+					if (userGrid[x + j][y] != 0 || adjacentShipCheck(x+j, y))
 						canPlace = false;
 				}
 			} else {
 				for (int j = 0; j < points; j++) {
-					if (userGrid[x - j][y] != 0)
+					if (userGrid[x - j][y] != 0 || adjacentShipCheck(x - j, y))
 						canPlace = false;
 				}
 			}

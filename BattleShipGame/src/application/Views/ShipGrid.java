@@ -154,28 +154,28 @@ public class ShipGrid implements Observer {
 		if (o instanceof Player) {
 			// TODO Auto-generated method stub
 
-			if (arg.equals("Won")) {
-				
-				setCompWon("Won");
-				
-			}
-			else
-			{
-			System.out.println("called");
-			System.out.println(arg);
-			String value = ((Player) o).getReply();
-			System.out.println(value);
+			/*
+			 * if (arg.equals("Won")) {
+			 * 
+			 * setCompWon("Won");
+			 * 
+			 * } else {
+			 */
+				System.out.println("called");
+				System.out.println(arg);
+				String value = ((Player) o).getReply();
+				System.out.println(value);
 
-			int coord[] = ((Player) o).getCoords();
-			String shipType = ((Player) o).getShipType();
-			String axis = ((Player) o).getAxis();
-			deployShipsWithColors(coord, shipType, axis);
+				int coord[] = ((Player) o).getCoords();
+				String shipType = ((Player) o).getShipType();
+				String axis = ((Player) o).getAxis();
+				deployShipsWithColors(coord, shipType, axis);
 
-			if (!(value.equals("Done")) && !value.isEmpty()) {
-				userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
-				AlertBox.displayError(Main.shipType, value);
-			}
-			}
+				if (!(value.equals("Done")) && !value.isEmpty()) {
+					userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+					AlertBox.displayError(Main.shipType, value);
+				}
+			//}
 		} else if (o instanceof HitStrategy) {
 			String reply = ((HitStrategy) o).getReply();
 			int coord[] = ((HitStrategy) o).getCoords();
@@ -280,8 +280,7 @@ public class ShipGrid implements Observer {
 			userButton[x][y].setStyle("-fx-background-color: #FFFFFF; ");
 			userButton[x][y].setOnMouseEntered(null);
 			userButton[x][y].setOnMouseExited(null);
-		}
-		else if (res.equals("Hit"))
+		} else if (res.equals("Hit"))
 			userButton[x][y].setStyle("-fx-background-color: #ff1100; ");
 
 	}
