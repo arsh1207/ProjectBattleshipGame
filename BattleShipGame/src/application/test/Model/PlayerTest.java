@@ -218,7 +218,31 @@ public class PlayerTest {
 		
 	}
 
-		  
+	
+	/**
+	 * To check if all the ships have been deployed 
+	 * 
+	 * 
+	 */
+		@Test  
+	
+	public void areAllShipsDeployedTest()
+	{
+			
+		
+			ob.deployedShips.add("Cruiser");
+			ob.deployedShips.add("Destroyer");
+			ob.deployedShips.add("Submarine");
+			ob.deployedShips.add("Carrier");
+			ob.deployedShips.add("Battleship");
+			
+			assertEquals(5,ob.deployedShips.size());
+			
+		
+		
+	}
+	
+	
 		 
 
 }
