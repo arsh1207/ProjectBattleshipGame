@@ -40,12 +40,7 @@ public class HitStrategySalvo extends Observable {
 			}
 		}
 		probabiltDistribution();
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 11; j++) {
-				System.out.print(probabilityGrid[i][j] + " ");
-			}
-			System.out.println();
-		}
+	
 	}
 
 	public int[] getCoords() {
@@ -80,16 +75,16 @@ public class HitStrategySalvo extends Observable {
 	 */
 	public void mediumMode(Boolean hitResult) {
 		
-		System.out.println("Hit strategy salvo called!");
+	
 		int[] hitCoord = new int[2];
 		ArrayList<Integer> selectedcoordsx = new ArrayList<>();
 		ArrayList<Integer> selectedcoordsy = new ArrayList<>();
 		buttonCount = 0;
-		System.out.println("Number of computer ships sunk "+Computer.sunkenShips.size());
+	
 		int x, y;
 		int shipsremaining = Main.TOTAL_SHIPS - Computer.sunkenShips.size();
 		while(buttonCount < shipsremaining) {
-			System.out.println(buttonCount);
+		
 			Random ran = new Random();
 			x = ran.nextInt(9);
 			y = ran.nextInt(11);
@@ -201,7 +196,6 @@ public class HitStrategySalvo extends Observable {
 			y = selectedcoordsy.get(buttonCount);
 			hitCoord[0] = x;
 			hitCoord[1] = y;
-			System.out.println("Checking coordinates "+x+" and "+y);
 			setCoords(hitCoord);
 			if (Player.userGrid[x][y] == 1) {
 				// change the grid value from 1 to 2 to signify hit

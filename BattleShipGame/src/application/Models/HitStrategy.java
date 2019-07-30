@@ -479,7 +479,6 @@ public class HitStrategy extends Observable {
 			}
 		}
 
-		System.out.println(x + " ; " + y + " -> " + probabilityGrid[x][y]);
 		probabilityGrid[x][y] = -1;
 		hitX = x;
 		hitY = y;

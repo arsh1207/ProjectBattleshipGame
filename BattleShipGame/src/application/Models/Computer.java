@@ -104,7 +104,6 @@ public class Computer extends Observable {
 	public void userTurn(int x, int y) {
 
 		// get the X and y coordinate from the input
-		System.out.println("reached here" + x + "; " + y);
 		String coordx = Integer.toString(x);
 		String coordy = Integer.toString(y);
 		if (computerGrid[x][y] == 1) {
@@ -329,16 +328,13 @@ public class Computer extends Observable {
 			}
 
 			for (Map.Entry<Integer, Integer> entry : Destroyer.entrySet()) {
-
-				System.out.println("key: " + entry.getKey() + " value: " + entry.getValue());
 				computerGrid[entry.getValue()][entry.getKey()] = 1;
 	
 			}
-
 			
 			printGrid();
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 
 		}
 
@@ -481,7 +477,6 @@ public class Computer extends Observable {
 
 	public void printGrid() {
 
-		System.out.println("inside the printGrid");
 
 		for (int i = 0; i < rows; i++) {
 

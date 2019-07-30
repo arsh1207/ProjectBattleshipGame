@@ -198,7 +198,6 @@ public class ShipGrid implements Observer {
 				ArrayList<String> sunkenShips = player.getSunkenShips();
 				ob.callCheckIfCompWon();
 				if (player.getCompWon().equals("Won")) {
-					System.out.println("Comp won");
 					AlertBox.displayResult("OOPS:( :(", "Computer Won ");
 
 				}

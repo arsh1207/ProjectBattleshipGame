@@ -617,7 +617,6 @@ public class Main extends Application {
 			imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
 				public void handle(MouseEvent event) {
 					Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
-					System.out.println("drag detected");
 					ClipboardContent content = new ClipboardContent();
 
 					if (event.getButton() == MouseButton.PRIMARY) {
@@ -632,7 +631,6 @@ public class Main extends Application {
 				}
 			});
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}
 	}

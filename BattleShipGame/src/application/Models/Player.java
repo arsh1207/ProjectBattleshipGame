@@ -152,7 +152,6 @@ public class Player extends Observable {
 			int x1 = Integer.parseInt(str[1]);
 			int y2 = Integer.parseInt(str[2]);
 			int x2 = Integer.parseInt(str[3]);
-			System.out.println("values x1 y1 x2 y2  " + x1 + y1 + x2 + y2);
 
 			// ships cannot be placed outside the grid
 			if (x1 >= cols || y1 >= rows || x2 >= cols || y2 >= rows) {
