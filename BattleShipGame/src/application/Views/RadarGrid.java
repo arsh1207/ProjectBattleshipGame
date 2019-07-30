@@ -294,6 +294,9 @@ public class RadarGrid implements Observer {
 				}
 			} else {
 				ob.callCheckIfUserWon();
+				if(((Computer) o).getUserWon().equals("Won")) {
+					AlertBox.displayResult("Hurray!", "User has won ");
+				}
 				ob.computerTurn(lastCompResult, Main.gameMode);
 			}
 

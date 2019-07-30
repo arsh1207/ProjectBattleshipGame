@@ -24,22 +24,21 @@ public class ComputerTest {
 		ob = null;
 
 	}
-	
+
 	/**
 	 * 
 	 * Test Case to verify if the score is increased after a hit or not
 	 * 
 	 */
-	
+
 	@Test
 	public void getScoreCompTest() {
-		//sets the score to update by 10 if a ship is hit
-		
+		// sets the score to update by 10 if a ship is hit
+
 		ob.setScoreComp(10);
-		
+
 		assertEquals(10, ob.getScoreComp());
-		
-		
+
 	}
 
 	/**
@@ -76,13 +75,34 @@ public class ComputerTest {
 
 		assertTrue(res);
 	}
-
 	
+	
+	/**
+	 * 
+	 * Test case to verify the Check method for ship placement is working
+	 * 
+	 */
+
+	@Test
+	public void checkTest2() {
+		// checks that all 5 ships are deployed or not
+		String direction = "Vertical";
+
+		// ship type is Cruiser hence points three
+		int points = 3;
+		int x = 5;
+		int y = 5;
+
+		boolean res = ob.check(x, y, direction, points);
+
+		assertTrue(res);
+	}
+
 	/**
 	 * Test that the grid has been initialized correctly or not
 	 * 
 	 */
-	@Test 
+	@Test
 	public void initializeTest() {
 		boolean flag = true;
 
@@ -108,10 +128,10 @@ public class ComputerTest {
 
 	/**
 	 * 
-	 * Test that user has Won 
+	 * Test that user has Won
 	 * 
 	 */
-	@Test 
+	@Test
 	public void checkIfUserWonTest() {
 		boolean flag = true;
 
@@ -132,10 +152,41 @@ public class ComputerTest {
 			}
 		}
 
+		ob.checkIfUserWon();
+
 		assertTrue(flag);
 	}
 
+	/**
+	 * 
+	 * Checking the User 
+	 * 
+	 * 
+	 */
 
+	public void userTurnTest2() {
 
+		ob.setScoreComp(-1);
+
+		assertEquals(-1, ob.getScoreComp());
+
+	}
+
+	/**
+	 * 
+	 * Checking the setScoreComp for negative score method 
+	 * 
+	 * 
+	 */
+	@Test
+
+	public void userTurnTest1() {
+
+		ob.setScoreComp(-1);
+
+		//Check the value is 9
+		assertEquals(9, ob.getScoreComp());
+
+	}
 
 }

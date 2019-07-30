@@ -8,7 +8,7 @@ import java.util.Random;
 
 /**
  * Class to implement the easy, medium and hard functionality
- * @author Sagar Bhatia
+ * @author arsal
  *
  */
 public class HitStrategy extends Observable {

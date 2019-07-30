@@ -89,8 +89,6 @@ public class PlayerTest {
 		assertEquals("ships cannot be placed on the same location", ob.getReply());
 	}
 
-
-
 	/**
 	 * 
 	 * Test case to check so that ships can be placed right
@@ -109,8 +107,7 @@ public class PlayerTest {
 
 		assertEquals("Done", ob.getReply());
 	}
-	
-	
+
 	/**
 	 * 
 	 * 
@@ -165,13 +162,13 @@ public class PlayerTest {
 
 		assertTrue(flag);
 	}
-	
+
 	/**
 	 * 
-	 * Test that user has Won 
+	 * Test that user has Won
 	 * 
 	 */
-	@Test 
+	@Test
 	public void checkIfUserWonTest() {
 		boolean flag = true;
 
@@ -192,57 +189,86 @@ public class PlayerTest {
 			}
 		}
 
+		ob.checkIfCompWon();
+
 		assertTrue(flag);
 	}
-	
-	
-	
-	
-	
-	
-	
+
 	/**
 	 * 
 	 * Test Case to verify if the score is increased after a hit or not
 	 * 
 	 */
-	
+
 	@Test
 	public void getScoreCompTest() {
-		//sets the score to update by 10 if a ship is hit
-		
+		// sets the score to update by 10 if a ship is hit
+
 		ob.setScore(10);
-		
+
 		assertEquals(10, ob.getScore());
-		
-		
+
 	}
 
-	
 	/**
-	 * To check if all the ships have been deployed 
+	 * To check if all the ships have been deployed
 	 * 
 	 * 
 	 */
-		@Test  
-	
-	public void areAllShipsDeployedTest()
-	{
-			
+	@Test
+
+	public void areAllShipsDeployedTest() {
+
+		ob.deployedShips.add("Cruiser");
+		ob.deployedShips.add("Destroyer");
+		ob.deployedShips.add("Submarine");
+		ob.deployedShips.add("Carrier");
+		ob.deployedShips.add("Battleship");
+
+		assertEquals(5, ob.deployedShips.size());
+
+	}
+
+	/**
+	 * 
+	 * 
+	 * While startup sunkenShips ships should be 0
+	 */
+	@Test
+	public void sukkenShips() {
+
+		assertEquals(0, ob.getSunkenShips().size());
 		
-			ob.deployedShips.add("Cruiser");
-			ob.deployedShips.add("Destroyer");
-			ob.deployedShips.add("Submarine");
-			ob.deployedShips.add("Carrier");
-			ob.deployedShips.add("Battleship");
-			
-			assertEquals(5,ob.deployedShips.size());
-			
-		
-		
+
+	}
+
+	/**
+	 * 
+	 * 
+	 * While startup sunkenShips ships check if size 1
+	 */
+	@Test
+	public void sukkenShips2() {
+
+		ob.getSunkenShips().add("Cruiser");
+
+		assertEquals(1, ob.getSunkenShips().size());
+
 	}
 	
-	
-		 
+	/**
+	 * 
+	 * 
+	 * While startup sunkenShips ships check if size 3
+	 */
+	@Test
+	public void sukkenShips3() {
+
+		ob.getSunkenShips().add("Cruiser");
+		ob.getSunkenShips().add("Battleship");
+
+		assertEquals(3, ob.getSunkenShips().size());
+
+	}
 
 }

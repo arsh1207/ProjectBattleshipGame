@@ -76,7 +76,7 @@ public class HitStrategySalvo extends Observable {
 	
 	/**
 	 * method to implement the functionality of the Salvo 
-	 * @param hitResult
+	 * @param hitResult stores the last result
 	 */
 	public void mediumMode(Boolean hitResult) {
 		
@@ -432,7 +432,7 @@ public class HitStrategySalvo extends Observable {
 	 * @param y y-coordinate
 	 * @param direction horizontal/vertical
 	 * @param points neighboring points
-	 * @return
+	 * @return Boolean to check if the ship can be placed
 	 */
 	public Boolean check(int x, int y, String direction, int points) {
 		Boolean canPlace = true;
@@ -490,7 +490,7 @@ public class HitStrategySalvo extends Observable {
 	
 	/**
 	 * method to get random X-coordinate
-	 * @return
+	 * @return int for x axis
 	 */
 	public int randomX() {
 
@@ -499,7 +499,7 @@ public class HitStrategySalvo extends Observable {
 	
 	/**
 	 * method to get random Y-coordinate
-	 * @return
+	 * @return int for y axis
 	 */
 	public int randomY() {
 
