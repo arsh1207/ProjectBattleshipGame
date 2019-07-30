@@ -6,6 +6,11 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
+/**
+ * Class to implement the easy, medium and hard functionality
+ * @author Sagar Bhatia
+ *
+ */
 public class HitStrategy extends Observable {
 	final int rows = 9;
 	final int cols = 11;

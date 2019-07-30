@@ -105,4 +105,37 @@ public class ComputerTest {
 
 		assertTrue(flag);
 	}
+
+	/**
+	 * 
+	 * Test that user has Won 
+	 * 
+	 */
+	@Test 
+	public void checkIfUserWonTest() {
+		boolean flag = true;
+
+		int rows = 9;
+		int cols = 11;
+
+		Integer compGrid[][] = ob.getComputerGrid();
+
+		for (int i = 0; i < rows; i++) {
+
+			for (int j = 0; j < cols; j++) {
+
+				if (!(compGrid[i][j] == 0)) {
+
+					flag = false;
+				}
+
+			}
+		}
+
+		assertTrue(flag);
+	}
+
+
+
+
 }

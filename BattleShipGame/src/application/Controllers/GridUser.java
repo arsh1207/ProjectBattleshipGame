@@ -31,6 +31,13 @@ public class GridUser {
 	}
 
 	
+	/**
+	 * Constructor to initialize the required object
+	 * @param player Player model object
+	 * @param computer Computer model object
+	 * @param strategy HitStrategy model object
+	 * @param strategySalvo HitStrategySalvo object 
+	 */
 	public GridUser(Player player, Computer computer, HitStrategy strategy, HitStrategySalvo strategySalvo) {
 		this.computer = computer;
 		this.player = player;
@@ -110,6 +117,7 @@ public class GridUser {
 	 * This method will tell the computer model to deploy its ships in the backend
 	 * 
 	 * @param computer contains computer object refernce
+	 * @param computer Computer model object
 	 */
 	public void callDeployComputerShips(Computer computer) {
 		computer.deployComputerShips();

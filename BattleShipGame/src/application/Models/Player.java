@@ -10,6 +10,11 @@ import java.util.Random;
 import application.Views.AlertBox;
 import application.Views.ShipGrid;
 
+/**
+ * Class to set the states for the functionality of user grid
+ * @author Sagar Bhatia
+ *
+ */
 public class Player extends Observable {
 
 	//

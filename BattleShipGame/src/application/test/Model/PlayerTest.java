@@ -165,33 +165,84 @@ public class PlayerTest {
 
 		assertTrue(flag);
 	}
-
+	
 	/**
 	 * 
-	 * To test if player hit or missed the the computer grid
+	 * Test that user has Won 
 	 * 
-	 *//*
-		 * 
-		 * @Test public void userTurnTest() {
-		 * 
-		 * Computer comp = new Computer();
-		 * 
-		 * int x = 3; int y = 4;
-		 * 
-		 * int x1 = 5; int y1 = 6;
-		 * 
-		 * comp.computerGrid[x][y] = 1;
-		 * 
-		 * ob.userTurn(x, y);
-		 * 
-		 * assertEquals("It's a Hit!!!!!", ob.getReply());
-		 * 
-		 * ob.userTurn(x1, y1);
-		 * 
-		 * assertEquals("It's a miss!!!!!", ob.getReply());
-		 * 
-		 * }
-		 * 
-		 */
+	 */
+	@Test 
+	public void checkIfUserWonTest() {
+		boolean flag = true;
+
+		int rows = 9;
+		int cols = 11;
+
+		Integer userGrid[][] = ob.getUserGrid();
+
+		for (int i = 0; i < rows; i++) {
+
+			for (int j = 0; j < cols; j++) {
+
+				if (!(userGrid[i][j] == 0)) {
+
+					flag = false;
+				}
+
+			}
+		}
+
+		assertTrue(flag);
+	}
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 
+	 * Test Case to verify if the score is increased after a hit or not
+	 * 
+	 */
+	
+	@Test
+	public void getScoreCompTest() {
+		//sets the score to update by 10 if a ship is hit
+		
+		ob.setScore(10);
+		
+		assertEquals(10, ob.getScore());
+		
+		
+	}
+
+	
+	/**
+	 * To check if all the ships have been deployed 
+	 * 
+	 * 
+	 */
+		@Test  
+	
+	public void areAllShipsDeployedTest()
+	{
+			
+		
+			ob.deployedShips.add("Cruiser");
+			ob.deployedShips.add("Destroyer");
+			ob.deployedShips.add("Submarine");
+			ob.deployedShips.add("Carrier");
+			ob.deployedShips.add("Battleship");
+			
+			assertEquals(5,ob.deployedShips.size());
+			
+		
+		
+	}
+	
+	
+		 
 
 }
