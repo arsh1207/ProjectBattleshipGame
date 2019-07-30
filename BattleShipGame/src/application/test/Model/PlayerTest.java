@@ -168,6 +168,41 @@ public class PlayerTest {
 	
 	/**
 	 * 
+	 * Test that user has Won 
+	 * 
+	 */
+	@Test 
+	public void checkIfUserWonTest() {
+		boolean flag = true;
+
+		int rows = 9;
+		int cols = 11;
+
+		Integer userGrid[][] = ob.getUserGrid();
+
+		for (int i = 0; i < rows; i++) {
+
+			for (int j = 0; j < cols; j++) {
+
+				if (!(userGrid[i][j] == 0)) {
+
+					flag = false;
+				}
+
+			}
+		}
+
+		assertTrue(flag);
+	}
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 
 	 * Test Case to verify if the score is increased after a hit or not
 	 * 
 	 */
