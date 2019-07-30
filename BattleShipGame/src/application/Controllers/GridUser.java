@@ -30,9 +30,7 @@ public class GridUser {
 		this.callType = callType;
 	}
 
-	/**
-	 * Constructor used for initializing the required objects
-	 */
+	
 	public GridUser(Player player, Computer computer, HitStrategy strategy, HitStrategySalvo strategySalvo) {
 		this.computer = computer;
 		this.player = player;
@@ -44,7 +42,8 @@ public class GridUser {
 	/**
 	 * Provides if its a hit or miss while hitting on the computer grid
 	 * 
-	 * @return String defining the computer turn results
+	 * @param hitResult String defining the computer turn results
+	 * @param gameMode Tells the game mode
 	 */
 	public void computerTurn(Boolean hitResult, String gameMode) {
 		if (Main.gameType.equals("Salvo")) {
@@ -99,9 +98,8 @@ public class GridUser {
 	 * This method will user turn in the model to check whether the coordinates are
 	 * hit or not
 	 * 
-	 * @param computer
-	 * @param coordX
-	 * @param coordY
+	 * @param coordX cordinate x axis
+	 * @param coordY cordinate y axis
 	 */
 	public void callUserTurn(int coordX, int coordY) {
 		computer.userTurn(coordX, coordY);
@@ -111,7 +109,7 @@ public class GridUser {
 	/**
 	 * This method will tell the computer model to deploy its ships in the backend
 	 * 
-	 * @param computer
+	 * @param computer contains computer object refernce
 	 */
 	public void callDeployComputerShips(Computer computer) {
 		computer.deployComputerShips();

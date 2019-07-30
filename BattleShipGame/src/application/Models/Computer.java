@@ -81,8 +81,6 @@ public class Computer extends Observable {
 	public void setUserWon(String userWon) {
 		this.UserWon = userWon;
 		
-		//setChanged();
-		//notifyObservers(userWon);
 	}
 
 	public Computer() {
@@ -97,9 +95,7 @@ public class Computer extends Observable {
 	 * 
 	 * @param x coordinate
 	 * @param y coordinates
-	 * @return String defining if the user hit or miss the computer grid
 	 */
-
 	public void userTurn(int x, int y) {
 
 		// get the X and y coordinate from the input
@@ -108,7 +104,6 @@ public class Computer extends Observable {
 		String coordy = Integer.toString(y);
 		if (computerGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
-
 			computerGrid[x][y] = 2;
 			if (!time1) {
 				timea = java.lang.System.currentTimeMillis();
@@ -395,7 +390,7 @@ public class Computer extends Observable {
 	 * method to check the adjacency of ships
 	 * @param i x-coordinate
 	 * @param j y-coordinate
-	 * @return
+	 * @return Boolean shipPresence tells is the ship is present or not
 	 */
 	public Boolean adjacentShipCheck(int i, int j) {
 		Boolean shipPresence = false;
@@ -417,9 +412,9 @@ public class Computer extends Observable {
 	
 	/**
 	 * method to check whether the coordinates are within the grid or not
-	 * @param i
-	 * @param j
-	 * @return
+	 * @param i x-axis coord
+	 * @param j y-axis coord
+	 * @return Boolean type to tell if the the point is valid or not
 	 */
 	public boolean isValid(int i, int j) {
 		if (i < 0 || j < 0 || i >= 9 || j >= 11)
@@ -501,6 +496,7 @@ public class Computer extends Observable {
 	 * @param shipType type of ship
 	 * @param cY       coordinate X
 	 * @param cX       coordinate Y
+	 * @param direction tells the direction of the ship vertical or horizontal
 	 */
 	public void putIntoShipsMap(String shipType, int cY, int cX, String direction) {
 		String coordy = new String();
@@ -514,14 +510,11 @@ public class Computer extends Observable {
 		}
 		tempList.add(coordy + "," + coordx);
 		shipsMap.put(shipType, tempList);
-
 	}
 
 	/**
 	 * This function checks whether any ships have sunk or not
 	 * 
-	 * @param coordX X-coordinate
-	 * @param coordY Y-coordinate
 	 */
 	public void checkSunkenShips() {
 

@@ -28,6 +28,10 @@ import application.Models.Player;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 
+/**
+ * This class is a view for computer grid and renders Computer.java model class 
+ *
+ */
 public class RadarGrid implements Observer {
 
 	int rowButtonCount;
@@ -36,7 +40,6 @@ public class RadarGrid implements Observer {
 	int tempButtonCount;
 	public Button[][] radarButton;
 	public String[][] selectedButtons;
-	// Computer computer;
 	int coordX = 0;
 	int coordY = 0;
 	Label resulttext2, resulttext1, resulttext3, resulttext4;
@@ -53,8 +56,16 @@ public class RadarGrid implements Observer {
 	}
 
 	public static Boolean lastCompResult = false;
-	// private HitStrategy strategy;
 
+	/**
+	 * It is the parameterized class constructor
+	 * 
+	 * @param resulttext2 It is a label for setting computer result on scene
+	 * @param resulttext1 It is a label for setting User result on scene
+	 * @param resulttext3 It is a label for setting User Score on scene
+	 * @param resulttext4 It is a label for setting computer score on scene
+	 * @param ob          It is controller object
+	 */
 	public RadarGrid(Label resulttext2, Label resulttext1, Label resulttext3, Label resulttext4, GridUser ob) {
 
 		this.resulttext2 = resulttext2;
@@ -66,19 +77,15 @@ public class RadarGrid implements Observer {
 
 	}
 
+	/**
+	 * This method adds action listener to the button toss. It calculates the winner
+	 * of the toss as per user choice and allows the user to play.
+	 * 
+	 */
 	public void addTossAction() {
 		Main.tossBtn.setOnAction((ActionEvent event) -> {
 			if (Player.numOfShipsDep == 5) {
-				/*
-				 * Alert alert = new Alert(AlertType.INFORMATION);
-				 * alert.setTitle("Battleship Game");
-				 * alert.setHeaderText("The battle ships are placed correctly.");
-				 * alert.setContentText("You can start playing!"); alert.showAndWait();
-				 */
-				// Salve mode alert box
-				/*
-				 * if (gameType.equals("Salvo")) { salvoAlertCall(); }
-				 */
+
 				for (int i = 0; i < 9; i++) {
 					for (int j = 0; j < 11; j++) {
 						radarButton[i][j].setDisable(false);
@@ -86,19 +93,21 @@ public class RadarGrid implements Observer {
 				}
 				ob.deployCompShips();
 				String tossResult = InputBox.display("Please choose Head or Tail");
-				// double rAsFloat = 1 * (2 + Math.random( ) );
 				int r = (int) Math.round(Math.random());
 				if ((r == 1 && tossResult.equalsIgnoreCase("Head"))
 						|| (r == 0 && tossResult.equalsIgnoreCase("Tail"))) {
-					 if (Main.gameType.equals("Salvo")) { Main.salvoAlertCall(); }
+					if (Main.gameType.equals("Salvo")) {
+						Main.salvoAlertCall();
+					}
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship - Toss Result");
 					alert.setHeaderText("It's computer turn first.");
 					alert.showAndWait();
 					ob.computerTurn(lastCompResult, Main.gameMode);
-					// alert.setContentText("You can start playing!");
 				} else {
-					 if (Main.gameType.equals("Salvo")) { Main.salvoAlertCall(); }
+					if (Main.gameType.equals("Salvo")) {
+						Main.salvoAlertCall();
+					}
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
 					alert.setHeaderText("It's a " + tossResult);
@@ -118,6 +127,9 @@ public class RadarGrid implements Observer {
 
 	/**
 	 * Deploys the radar grid on the screen
+	 * 
+	 * @param g_pane      This store the reference for radar grid pane.
+	 * @param resulttext2 It is a label for setting computer result on scene
 	 */
 	public void setUserRadarGrid(GridPane g_pane, Label resulttext2) {
 		g_pane1 = g_pane;
@@ -142,13 +154,10 @@ public class RadarGrid implements Observer {
 				radarButton[rowButtonCount][columnButtonCount] = new Button();
 			}
 		}
-
 		buttonRowIndex = 0;
-
 		// placing the buttons or holes on the grid
 		for (rowButtonCount = 9; rowButtonCount >= 1; rowButtonCount -= 1) {
 			columnButtonCount = 1;
-			// columnButtonCount = 0; columnButtonCount < 11; columnButtonCount += 1
 			for (Button b : radarButton[buttonRowIndex]) {
 				b.setStyle("-fx-background-color: #000000; ");
 				b.setId((buttonRowIndex) + ":" + (columnButtonCount - 1));
@@ -157,7 +166,6 @@ public class RadarGrid implements Observer {
 				b.setMinSize(2 * r, 2 * r);
 				b.setMaxSize(2 * r, 2 * r);
 				b.setOnAction((ActionEvent event) -> {
-					// to initially change the targets to white color
 					b.setStyle("-fx-background-color: #FFFFFF; ");
 					if (Main.gameType.equals("Salvo")) {
 						String xy[] = b.getId().split(":");
@@ -168,7 +176,6 @@ public class RadarGrid implements Observer {
 						coordY = Integer.parseInt(xy[1]);
 						ob.callUserTurn(coordX, coordY);
 					}
-
 				});
 				g_pane.add(b, columnButtonCount, rowButtonCount);
 				columnButtonCount++;
@@ -177,9 +184,7 @@ public class RadarGrid implements Observer {
 				buttonRowIndex++;
 			}
 		}
-
 		rowButtonCount = 10;
-		// placing the letters on the grid
 		for (columnButtonCount = 1; columnButtonCount < 12; columnButtonCount += 1) {
 			char ch = (char) ('A' + columnButtonCount - 1);
 			Text text1 = new Text(Character.toString(ch));
@@ -187,17 +192,26 @@ public class RadarGrid implements Observer {
 		}
 	}
 
+	/**
+	 * This class makes the radar grid visible on appropriate calling.
+	 * 
+	 * @param i Contains the x axis for the radar button
+	 * @param j Contains the y axis for the radar button
+	 */
 	public void disableButtons(int i, int j) {
-
 		radarButton[i][j].setDisable(false);
-
 	}
 
+	/**
+	 * This method is overridden from base class and implements the logic when a
+	 * notify is called at the observable classes
+	 * 
+	 * @param o   contains object reference from observable class
+	 * @param arg contains any argument that is sent from the observable class
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		if (o instanceof Computer) {
-			// TODO Auto-generated method stub
-
 			if (arg.equals("HITORMISS")) {
 
 				String res = ((Computer) o).getReply();
@@ -207,53 +221,44 @@ public class RadarGrid implements Observer {
 				afterCompReply(res, (Computer) o);
 			}
 		} else if (o instanceof HitStrategy) {
-
 			if (arg.equals("Won")) {
-
 				setUserWon("Won");
 			}
-
 			String reply = ((HitStrategy) o).getReply();
 			int score = ((HitStrategy) o).getScore();
-
 			int coord[] = ((HitStrategy) o).getCoords();
 			if (reply.contains("Hit")) {
 				lastCompResult = true;
 			} else {
 				lastCompResult = false;
 			}
-		
 			resulttext1.setText(reply);
 			resulttext4.setText("" + score);
 			ob.callCheckIfCompWon();
 
 			if (getUserWon().equals("Won")) {
 				AlertBox.displayResult("OOPS:( :(", "Computer Won ");
-
 			}
-
 		} else if (o instanceof HitStrategySalvo) {
 			String reply = ((HitStrategySalvo) o).getReply();
 			int score = ((HitStrategySalvo) o).getScore();
-
 			int coord[] = ((HitStrategy) o).getCoords();
 			if (reply.contains("Hit")) {
 				lastCompResult = true;
 			} else {
 				lastCompResult = false;
 			}
-
 			resulttext1.setText(reply);
 			resulttext4.setText("" + score);
-			//ob.callCheckIfCompWon();
-			//if (getUserWon().equals("Won")) {
-				//AlertBox.displayResult("OOPS:( :(", "Computer Won ");
-
-			//}
 		}
-
 	}
-
+	/**
+	 * This class make the changes on the grid as per the response from the model class and calls controller to 
+	 * check if user won and tell computer to take its turn.
+	 * 
+	 * @param res This parameter contains the response received after state change
+	 * @param o This param contains object reference of the notifying class 
+	 */
 	public void afterCompReply(String res, Computer o) {
 		try {
 			ArrayList<String> sunkenShips = new ArrayList<>();
@@ -261,23 +266,19 @@ public class RadarGrid implements Observer {
 			ImageView imageView = new ImageView(image);
 			imageView.setFitHeight(25);
 			imageView.setFitWidth(25);
-
 			FadeTransition ft = new FadeTransition(Duration.millis(3000), imageView);
 			ft.setFromValue(1.0);
 			ft.setToValue(0.0);
 			ft.play();
 			AudioClip audioClip = new AudioClip(Paths.get("Sounds/blast.wav").toUri().toString());
-
 			if (res.equals("It's a Hit!!!!!")) {
 				radarButton[coordX][coordY].setStyle("-fx-background-color: #FF0000; ");
 				g_pane1.add(imageView, (coordY + 1), (9 - coordX));
 				audioClip.play(100);
 			} else if (res.equals("It's a miss!!!!!")) {
-
 				radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
 			}
 			resulttext2.setText(res);
-
 			if (Main.gameType.equals("Salvo")) {
 				if (buttonCount == 0) {
 					// call the method for getting sunken ships here through controller
@@ -286,11 +287,8 @@ public class RadarGrid implements Observer {
 					sunkenShips = o.getSunkenShips();
 					salvaAlertCall(sunkenShips);
 					ob.callCheckIfUserWon();
-
-					if(getUserWon().equals("Won"))
-					{
+					if (getUserWon().equals("Won")) {
 						AlertBox.displayResult("Hurray!!", "User has Won ");
-						
 					}
 					ob.computerTurn(lastCompResult, Main.gameMode);
 				}
@@ -300,7 +298,7 @@ public class RadarGrid implements Observer {
 			}
 
 		} catch (Exception e) {
-			// e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 

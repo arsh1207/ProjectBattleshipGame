@@ -3,7 +3,6 @@ package application.Views;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-
 import application.Controllers.GridUser;
 import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
@@ -20,6 +19,10 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import main.Main;
 
+/**
+ * This is view for User grid and contains its ship placed rendered by the
+ * Player.java class.
+ */
 public class ShipGrid implements Observer {
 	static int rowButtonCount;
 	static int columnButtonCount;
@@ -29,28 +32,26 @@ public class ShipGrid implements Observer {
 	int xInitialCo;
 	int yInitialCo;
 	String compWon = "";
-
 	static String initialCoordinates, finalCoordinates;
 	static String gameMode = "Medium";
-
 	public static Boolean lastCompResult = false;
 	private GridUser ob;
 	Label resulttext1, resulttext4;
-
 	private Player player;
-	// private HitStrategy strategy;
 
+	/**
+	 * It is the constructor for this class
+	 * 
+	 * @param player      Its a reference for player object
+	 * @param ob          Its a reference for Grid user object
+	 * @param resulttext1 Its a reference for label for setting user result
+	 * @param resulttext4 Its a reference for label for setting user score
+	 */
 	public ShipGrid(Player player, GridUser ob, Label resulttext1, Label resulttext4) {
 		this.player = player;
-		// player.addObserver(this);
 		this.ob = ob;
-
 		this.resulttext1 = resulttext1;
 		this.resulttext4 = resulttext4;
-		//this.strategy = strategy;
-		//strategy.addObserver(this);
-		// this.strategy = strategy;
-		// strategy.addObserver(this);
 	}
 
 	public String getCompWon() {
@@ -63,9 +64,10 @@ public class ShipGrid implements Observer {
 
 	/**
 	 * Deploys user grid on the screen
+	 * 
+	 * @param g_pane2 This is reference to grid pane containing user ships
 	 */
 	public void setUserShipGrid(GridPane g_pane2) {
-
 		double r = 12;
 		userButton = new Button[9][11];
 		Text t = new Text("User Grid");
@@ -78,7 +80,6 @@ public class ShipGrid implements Observer {
 			Text text1 = new Text(Integer.toString(ch - rowButtonCount));
 			g_pane2.add(text1, columnButtonCount, rowButtonCount);
 		}
-
 		// initializing the radar grid buttons of 9*11 size
 		// so that they can be accessed via ID
 		for (rowButtonCount = 0; rowButtonCount < 9; rowButtonCount++) {
@@ -86,30 +87,24 @@ public class ShipGrid implements Observer {
 				userButton[rowButtonCount][columnButtonCount] = new Button();
 			}
 		}
-
 		int buttonRowIndex = 0;
-
 		// placing the buttons or holes on the grid
 		for (rowButtonCount = 9; rowButtonCount >= 1; rowButtonCount -= 1) {
 			columnButtonCount = 1;
 			for (Button b : userButton[buttonRowIndex]) {
 				b.setStyle("-fx-background-color: #000000; ");
 				b.setId((buttonRowIndex) + " " + (columnButtonCount - 1));
-
 				b.setShape(new Circle(r));
 				b.setMinSize(2 * r, 2 * r);
 				b.setMaxSize(2 * r, 2 * r);
 				b.setOnMouseClicked(event -> {
-
 					noButtonsClicked++;
 					if (noButtonsClicked == 1) {
 						initialCoordinates = b.getId();
 						b.setStyle("-fx-background-color: red;");
-						// b.setOnMouseEntered(null);
 						b.setOnMouseExited(null);
 					} else if (noButtonsClicked == 2) {
 						finalCoordinates = b.getId();
-						// System.out.println(initialCoordinates + " " + finalCoordinates);
 						noButtonsClicked = 0;
 						String xy[] = initialCoordinates.split(" ");
 						xInitialCo = Integer.parseInt(xy[0]);
@@ -118,13 +113,10 @@ public class ShipGrid implements Observer {
 							userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
 							AlertBox.displayError("Error", "Please first select a ship type from menu options.");
 						} else {
-
 							if (!player.areAllShipsDeployed()) {
 								if (!player.isShipDeployed(Main.shipType)) {
 									String res = initialCoordinates + " " + finalCoordinates;
-
 									ob.callDeployUserGrid(res, Main.shipType);
-
 								} else {
 									userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
 									AlertBox.displayError(Main.shipType, "Already Deployed!");
@@ -153,85 +145,65 @@ public class ShipGrid implements Observer {
 			Text text1 = new Text(Character.toString(ch));
 			g_pane2.add(text1, columnButtonCount, rowButtonCount);
 		}
-
 	}
 
+	/**
+	 * This is overridden method of base class that contains the logic which needs
+	 * to be run after getting notified by observables.
+	 * 
+	 * @param o   Contains object reference for notifying class.
+	 * @param arg contains argument set by the notifying class if any.
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		if (o instanceof Player) {
-			// TODO Auto-generated method stub
-
-			/*
-			 * if (arg.equals("Won")) {
-			 * 
-			 * setCompWon("Won");
-			 * 
-			 * } else {
-			 */
-				System.out.println("called");
-				System.out.println(arg);
-				String value = ((Player) o).getReply();
-				System.out.println(value);
-
-				int coord[] = ((Player) o).getCoords();
-				String shipType = ((Player) o).getShipType();
-				String axis = ((Player) o).getAxis();
-				deployShipsWithColors(coord, shipType, axis);
-
-				if (!(value.equals("Done")) && !value.isEmpty()) {
-					userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
-					AlertBox.displayError(Main.shipType, value);
-				}
-			//}
+			String value = ((Player) o).getReply();
+			int coord[] = ((Player) o).getCoords();
+			String shipType = ((Player) o).getShipType();
+			String axis = ((Player) o).getAxis();
+			deployShipsWithColors(coord, shipType, axis);
+			if (!(value.equals("Done")) && !value.isEmpty()) {
+				userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+				AlertBox.displayError(Main.shipType, value);
+			}
 		} else if (o instanceof HitStrategy) {
 			String reply = ((HitStrategy) o).getReply();
 			int coord[] = ((HitStrategy) o).getCoords();
-			//int score = ((HitStrategy) o).getScore();
 			if (reply.contains("Hit")) {
 				lastCompResult = true;
 			} else {
 				lastCompResult = false;
 			}
-			
+
 			if (reply.contains("Hit")) {
 				setUserShipCoordinates(coord[0], coord[1], "Hit");
 			} else {
 				setUserShipCoordinates(coord[0], coord[1], "Miss");
 			}
-			
-			/*
-			 * resulttext1.setText(reply); resulttext4.setText("" + score);
-			 * ob.callCheckIfCompWon();
-			 */
-			
-		}else {
-			if(!player.getCompWon().equals("Won")) {
-			String reply = ((HitStrategySalvo) o).getReply();
-			int score = ((HitStrategySalvo) o).getScore();
-			System.out.println("user turn: "+reply);
-			System.out.println("user turn: "+score);
 
-			int coord[] = ((HitStrategySalvo) o).getCoords();
-			if (reply.contains("Hit")) {
-				lastCompResult = true;
-				setUserShipCoordinates(coord[0], coord[1], "Hit");
-			} else {
-				lastCompResult = false;
-				setUserShipCoordinates(coord[0], coord[1], "Miss");
-			}
+		} else {
+			if (!player.getCompWon().equals("Won")) {
+				String reply = ((HitStrategySalvo) o).getReply();
+				int score = ((HitStrategySalvo) o).getScore();
+				int coord[] = ((HitStrategySalvo) o).getCoords();
+				if (reply.contains("Hit")) {
+					lastCompResult = true;
+					setUserShipCoordinates(coord[0], coord[1], "Hit");
+				} else {
+					lastCompResult = false;
+					setUserShipCoordinates(coord[0], coord[1], "Miss");
+				}
+				resulttext1.setText(reply);
+				resulttext4.setText("" + score);
+				ArrayList<String> sunkenShips = player.getSunkenShips();
+				ob.callCheckIfCompWon();
+				if (player.getCompWon().equals("Won")) {
+					System.out.println("Comp won");
+					AlertBox.displayResult("OOPS:( :(", "Computer Won ");
 
-			resulttext1.setText(reply);
-			resulttext4.setText("" + score);
-			ArrayList<String>sunkenShips = player.getSunkenShips();
-			ob.callCheckIfCompWon();
-			if (player.getCompWon().equals("Won")) {
-				System.out.println("Comp won");
-				AlertBox.displayResult("OOPS:( :(", "Computer Won ");
-
-			}
+				}
 			}
 		}
-
 	}
 
 	/**
@@ -312,8 +284,14 @@ public class ShipGrid implements Observer {
 		}
 	}
 
+	/**
+	 * This function will set the button color as per the response
+	 * 
+	 * @param x x-axis coordinate
+	 * @param y y-axis coordinate
+	 * @param res response from user
+	 */
 	public static void setUserShipCoordinates(int x, int y, String res) {
-
 		if (res.equals("Miss")) {
 			userButton[x][y].setStyle("-fx-background-color: #FFFFFF; ");
 			userButton[x][y].setOnMouseEntered(null);

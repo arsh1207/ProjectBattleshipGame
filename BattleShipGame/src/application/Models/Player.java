@@ -136,7 +136,6 @@ public class Player extends Observable {
 	 * 
 	 * @param coordinates defines the coordinated to be deployed
 	 * @param shipType    type of the ship
-	 * @return strings defining the placement of the ship in grid
 	 */
 	public void deployUserGrid(String coordinates, String shipType) {
 		try {
@@ -270,9 +269,9 @@ public class Player extends Observable {
 	
 	/**
 	 * Method to check whether the ships are placed adjacent to each other or not
-	 * @param i
-	 * @param j
-	 * @return
+	 * @param i x-axis
+	 * @param j y-axis
+	 * @return  Boolean tell if a ship is adjacent or not
 	 */
 	public Boolean adjacentShipCheck(int i, int j) {
 		Boolean shipPresence = false;
@@ -294,9 +293,9 @@ public class Player extends Observable {
 	
 	/**
 	 * methods to check whether the points are not out of the grid
-	 * @param i
-	 * @param j
-	 * @return
+	 * @param i x - axis
+	 * @param j y - axis
+	 * @return Boolean if the point is valid or not
 	 */
 	public boolean isValid(int i, int j) {
 		if (i < 0 || j < 0 || i >= 9 || j >= 11)
@@ -635,9 +634,9 @@ public class Player extends Observable {
 	 * method to check the adjacency in user ships
 	 * @param x x-coordinate
 	 * @param y y-coordinate
-	 * @param direction
-	 * @param points
-	 * @return
+	 * @param direction tell the direction horizontal or vertical
+	 * @param points size of ship points
+ 	 * @return Boolean returns if it can place or not
 	 */
 	public Boolean checkUserShip(int x, int y, String direction, int points) {
 		Boolean canPlace = true;
@@ -709,13 +708,14 @@ public class Player extends Observable {
 
 	/**
 	 * Method to display the computer grid
+	 * 
+	 * @param Grid contains the reference to the grid
 	 */
 	public void printGrid(Integer[][] Grid) {
 
 		for (int i = 0; i < rows; i++) {
 
 			for (int j = 0; j < cols; j++) {
-
 	
 			}
 		}
@@ -741,9 +741,6 @@ public class Player extends Observable {
 
 	/**
 	 * This function checks whether any ships have sunk or not
-	 * 
-	 * @param coordX X-coordinate
-	 * @param coordY Y-coordinate
 	 */
 	public static void checkSunkenShips() {
 		Map<String, ArrayList<String>> tempMap;

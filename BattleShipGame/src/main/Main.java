@@ -2,7 +2,6 @@ package main;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
 import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
@@ -13,7 +12,6 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -23,7 +21,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -46,9 +43,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+/**
+ * It is the driver class for the application
+ *
+ */
 public class Main extends Application {
 
 	Player player;
@@ -64,17 +64,25 @@ public class Main extends Application {
 	int columnButtonCount;
 	int buttonRowIndex;
 	static Label resulttext1, resulttext2, resulttext3, resulttext4;
-	// public static String gameType = "Salvo";
 	public static String gameType = "None";
 	public static String shipType = "";
 	public static String gameMode = "Medium";
 	public static Button tossBtn;
 	
+	/**
+	 * It is the main method
+	 * 
+	 * @param args This is System arguments
+	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		launch(args);
 	}
 
+	/**
+	 * This method is overridden from base class that will be called once the launch is triggered.
+	 * 
+	 * @param primaryStage reference to primary stage
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -94,11 +102,8 @@ public class Main extends Application {
 			strategySalvo.addObserver(sg);
 			SplitPane split_pane = new SplitPane();
 			SplitPane split_pane2 = new SplitPane();
-			// HBox h_box = new HBox();
-
 			g_pane1 = new GridPane();
 			g_pane2 = new GridPane();
-
 			v_box3 = new VBox();
 			v_box1 = new VBox();
 			v_box2 = new VBox();
@@ -106,13 +111,10 @@ public class Main extends Application {
 			h_box2 = new HBox();
 			v_box1.setId("glass-grey");
 			v_box2.setId("glass-grey");
-
 			String[] shipNames = { "Carrier", "Battleship", "Cruiser", "Submarine", "Destroyer" };
 			for (String name : shipNames) {
 				setShipImages(v_box2, name);
 			}
-
-			// MenuBar menuBar = obj.battleMenu(v_box1, stage);
 			MenuBar menuBar = battleMenu(v_box1, stage);
 			g_pane1.setVgap(10);
 			g_pane1.setHgap(10);
@@ -135,14 +137,12 @@ public class Main extends Application {
 			VBox v_box4 = new VBox();
 			v_box1.getChildren().addAll(g_pane1, userRandomShips, g_pane2);
 			v_box1.setSpacing(20.0);
-			// v_box2.setSpacing(10.0);
 			userRandomShips.setOnAction((ActionEvent event) -> {
 				if (Player.numOfShipsDep == 0)
 			
 					ob.deployUserShips();
 			});
 
-			// v_box2.setStyle("-fx-background-color: #000000;");
 			v_box2.getChildren().addAll(v_box3);
 			split_pane.setDividerPositions(0.7);
 			split_pane.getItems().add(v_box1);
@@ -151,37 +151,25 @@ public class Main extends Application {
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
-				if (Player.numOfShipsDep == 5) {
-					/*
-					 * Alert alert = new Alert(AlertType.INFORMATION);
-					 * alert.setTitle("Battleship Game");
-					 * alert.setHeaderText("The battle ships are placed correctly.");
-					 * alert.setContentText("You can start playing!"); alert.showAndWait();
-					 */
-					// Salve mode alert box
-					
-					  if (gameType.equals("Salvo")) { salvoAlertCall(); }
-					 
+				if (Player.numOfShipsDep == 5) {										
+					  if (gameType.equals("Salvo")) { salvoAlertCall(); }					 
 					for (int i = 0; i < 9; i++) {
 						for (int j = 0; j < 11; j++) {
 							radarGridObserver.radarButton[i][j].setDisable(false);
 						}
 					}
-					ob.deployCompShips();
-					
+					ob.deployCompShips();					
 				} else {
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
 					alert.setHeaderText("The battle ships are not placed correctly.");
 					alert.setContentText("Please place them before starting.");
 					alert.showAndWait();
-
 				}
 			});
 
 			tossBtn = new Button("Toss");
 			radarGridObserver.addTossAction();
-
 			for (Node node : g_pane2.getChildren()) {
 				node.setOnMouseEntered((MouseEvent t) -> {
 					node.setStyle("-fx-background-color: blue;");
@@ -193,40 +181,30 @@ public class Main extends Application {
 
 			}
 			split_pane2.getItems().addAll(h_box1, h_box2);
-			/*
-			 * h_box.getChildren().addAll(h_box1, h_box2); h_box.setSpacing(100);
-			 */
-
 			v_box3.getChildren().addAll(startBtn, tossBtn);
 			v_box4.getChildren().addAll(menuBar, split_pane2, split_pane);
 			v_box1.fillWidthProperty();
 			scene1 = new Scene(v_box4, 850, 850);
-
 			v_box1.getStylesheets().add("application/Views/application.css");
 			v_box2.getStylesheets().add("application/Views/application.css");
-
-			//v_box1.prefWidthProperty().bind(sp.widthProperty());
 			split_pane.prefHeightProperty().bind(stage.heightProperty());
 			stage.show();
-
 		}
-
 		catch (Exception e) {
 			System.out.println(e.getMessage());
-			e.printStackTrace();
 		}
 
 	}
 
-	
+	/**
+	 * This function will set different action listeners over the button drag actions
+	 */
 	public void setShipPlacementActions() {
 		for (Node node : g_pane2.getChildren()) {
 
 			node.setOnDragEntered(new EventHandler<DragEvent>() {
 				@Override
 				public void handle(DragEvent event) {
-					// Dragboard db = event.getDragboard();
-					// node.setStyle("-fx-background-color: blue;");
 					int iniX = Integer.parseInt(node.getId().split(" ")[0]);
 					int iniY = Integer.parseInt(node.getId().split(" ")[1]);
 					if (event.getDragboard().getString().split(";")[0].equals("Primary")) {
@@ -344,8 +322,6 @@ public class Main extends Application {
 					if (event.getDragboard().getString().split(";")[0].equals("Primary")) {
 						if (event.getDragboard().getString().split(";")[1].equals("Carrier")) {
 							if (iniY - 2 >= 0 && iniY + 2 < 11) {
-
-								// System.out.println("here :"+ShipGrid.userButton[iniX][iniY].getText());
 								if (!ShipGrid.userButton[iniX][iniY].getText().contains("placed"))
 									ShipGrid.userButton[iniX][iniY].setStyle("-fx-background-color: black;");
 								if (!ShipGrid.userButton[iniX][iniY - 1].getText().contains("placed"))
@@ -356,7 +332,6 @@ public class Main extends Application {
 									ShipGrid.userButton[iniX][iniY + 1].setStyle("-fx-background-color: black;");
 								if (!ShipGrid.userButton[iniX][iniY + 2].getText().contains("placed"))
 									ShipGrid.userButton[iniX][iniY + 2].setStyle("-fx-background-color: black;");
-
 							}
 						} else if (event.getDragboard().getString().split(";")[1].equals("Battleship")) {
 							if (iniY - 1 >= 0 && iniY + 2 < 11) {
@@ -474,12 +449,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Carrier")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Carrier");
-									} else {
-										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									} else {									
 										AlertBox.displayError("Carrier", "Already Deployed!");
 									}
-								} else {
-									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+								} else {									
 									AlertBox.displayError("Carrier", "All Ships Deployed!");
 								}
 							}
@@ -491,12 +464,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Battleship")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Battleship");
-									} else {
-										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									} else {									
 										AlertBox.displayError("Battleship", "Already Deployed!");
 									}
-								} else {
-									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+								} else {							
 									AlertBox.displayError("Battleship", "All Ships Deployed!");
 								}
 							}
@@ -508,12 +479,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Cruiser")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Cruiser");
-									} else {
-										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									} else {										
 										AlertBox.displayError("Cruiser", "Already Deployed!");
 									}
-								} else {
-									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+								} else {									
 									AlertBox.displayError("Cruiser", "All Ships Deployed!");
 								}
 							}
@@ -525,12 +494,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Submarine")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Submarine");
-									} else {
-										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									} else {										
 										AlertBox.displayError("Submarine", "Already Deployed!");
 									}
-								} else {
-									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+								} else {									
 									AlertBox.displayError("Submarine", "All Ships Deployed!");
 								}
 							}
@@ -542,12 +509,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Destroyer")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Destroyer");
-									} else {
-										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									} else {									
 										AlertBox.displayError("Destroyer", "Already Deployed!");
 									}
-								} else {
-									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+								} else {									
 									AlertBox.displayError("Destroyer", "All Ships Deployed!");
 								}
 							}
@@ -561,12 +526,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Carrier")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Carrier");
-									} else {
-										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									} else {										
 										AlertBox.displayError("Carrier", "Already Deployed!");
 									}
-								} else {
-									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+								} else {									
 									AlertBox.displayError("Carrier", "All Ships Deployed!");
 								}
 							}
@@ -578,12 +541,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Battleship")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Battleship");
-									} else {
-										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									} else {										
 										AlertBox.displayError("Battleship", "Already Deployed!");
 									}
-								} else {
-									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+								} else {									
 									AlertBox.displayError("Battleship", "All Ships Deployed!");
 								}
 							}
@@ -596,11 +557,9 @@ public class Main extends Application {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Cruiser");
 									} else {
-										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
 										AlertBox.displayError("Cruiser", "Already Deployed!");
 									}
-								} else {
-									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+								} else {								
 									AlertBox.displayError("Cruiser", "All Ships Deployed!");
 								}
 							}
@@ -612,12 +571,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Submarine")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Submarine");
-									} else {
-										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									} else {										
 										AlertBox.displayError("Submarine", "Already Deployed!");
 									}
-								} else {
-									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+								} else {								
 									AlertBox.displayError("Submarine", "All Ships Deployed!");
 								}
 							}
@@ -629,12 +586,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Destroyer")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Destroyer");
-									} else {
-										// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+									} else {									
 										AlertBox.displayError("Destroyer", "Already Deployed!");
 									}
-								} else {
-									// userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+								} else {									
 									AlertBox.displayError("Destroyer", "All Ships Deployed!");
 								}
 							}
@@ -653,7 +608,6 @@ public class Main extends Application {
 			imageView.setFitWidth(100);
 			imageView.setPreserveRatio(true);
 			imageView.fitWidthProperty().bind(v_box2.widthProperty());
-
 			Image image2 = new Image(new FileInputStream("images/ships/" + shipName + "90.png"));
 			Label shipNameLabel = new Label(shipName);
 			shipNameLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
@@ -668,16 +622,13 @@ public class Main extends Application {
 
 					if (event.getButton() == MouseButton.PRIMARY) {
 						content.putString("Primary;" + shipName);
-						content.putImage(imageView.getImage());
-						// content.putImage(image);
+						content.putImage(imageView.getImage());					
 					} else if (event.getButton() == MouseButton.SECONDARY) {
 						content.putString("Secondary;" + shipName);
 						content.putImage(image2);
 					}
-
 					db.setContent(content);
 					event.consume();
-
 				}
 			});
 		} catch (FileNotFoundException e) {
@@ -685,26 +636,29 @@ public class Main extends Application {
 			System.out.println(e.getMessage());
 		}
 	}
-
+	
+	/**
+	 *  This method sets the menu bar on the scene
+	 *  
+	 * @param v_box1 reference to vertical box for holding the menubar
+	 * @param stage stage reference
+	 * @return MenuBar that is created
+	 */
 	public MenuBar battleMenu(VBox v_box1, Stage stage) {
 		Menu menu1 = new Menu("Game");
 		Menu menu2 = new Menu("BattleShip");
 		MenuBar menuBar = new MenuBar();
 		menuBar.getMenus().add(menu1);
 		menuBar.getMenus().add(menu2);
-
 		MenuItem menu1Item1 = new MenuItem("Start new game");
 		MenuItem menu1Item2 = new MenuItem("Exit");
-
 		menu1Item1.setOnAction(e -> {
 			stage.close();
 			try {
 				start(new Stage());
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			// ob.reInitialize();
 		});
 
 		menu1Item2.setOnAction(e -> {
@@ -732,32 +686,24 @@ public class Main extends Application {
 		place_ship.getItems().add(Cruiser);
 		place_ship.getItems().add(Submarine);
 		place_ship.getItems().add(Destroyer);
-		
 		menu2.getItems().add(place_ship);
-
 		Carrier.setOnAction(e -> {
 			shipType = "Carrier";
 
 		});
 		Battleship.setOnAction(e -> {
-
 			shipType = "Battleship";
-
 		});
 		Cruiser.setOnAction(e -> {
-
 			shipType = "Cruiser";
 		});
 		Submarine.setOnAction(e -> {
 			shipType = "Submarine";
-
 		});
 		Destroyer.setOnAction(e -> {
 			shipType = "Destroyer";
-
 		});
 		
-
 		return menuBar;
 	}
 
@@ -773,21 +719,15 @@ public class Main extends Application {
 		scene2 = new Scene(root1, 800, 600);
 		root1.setVgap(10);
 		root1.setHgap(10);
-
 		Image image = new Image(new FileInputStream("images/battleship.png"));
-
 		BackgroundImage backgroundimage = new BackgroundImage(image, BackgroundRepeat.ROUND, BackgroundRepeat.ROUND,
 				BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-
 		Background background = new Background(backgroundimage);
-
 		root1.setBackground(background);
-
 		MenuItem mI1 = new MenuItem("Salvo");
 		MenuItem mI2 = new MenuItem("Classic");
 		MenuButton menuButton = new MenuButton("Please select game type.");
 		menuButton.getItems().addAll(mI1, mI2);
-
 		mI1.setOnAction(event -> {
 			gameType = "Salvo";
 			menuButton.setText(gameType);
@@ -854,15 +794,14 @@ public class Main extends Application {
 	/**
 	 * Places the Score of the user on the screen
 	 * 
+	 * @param title To display name of caller (User or CPU).
 	 */
 	public void Score(String title) {
 		Label resultLabel = new Label(title + ": ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
 		resulttext3 = new Label();
-
 		resulttext3.setStyle("-fx-background-color: white;");
-		// v_box3.getChildren().addAll(resultLabel, resulttext3);
 		h_box1.getChildren().addAll(resultLabel, resulttext3);
 
 	}
@@ -870,6 +809,7 @@ public class Main extends Application {
 	/**
 	 * Places the Score of the Computer on the screen
 	 * 
+	 * @param title To display name of caller (User or CPU).
 	 */
 	public void ScoreComp(String title) {
 		Label resultLabel = new Label(title + ": ");
@@ -883,7 +823,6 @@ public class Main extends Application {
 	/**
 	 * Method to call the alert box for salvo variation in the starting
 	 * 
-	 * @param alert
 	 */
 	public static void salvoAlertCall() {
 		Alert alert = new Alert(AlertType.INFORMATION);

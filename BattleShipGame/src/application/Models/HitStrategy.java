@@ -258,7 +258,8 @@ public class HitStrategy extends Observable {
 	
 	/**
 	 * method to implement the functionality of the hard mode
-	 * @param hitResult
+	 * 
+	 * @param hitResult tell the result the for the last hit 
 	 */
 	public void hardMode(Boolean hitResult) {
 		int x = 0, y = 0;
@@ -283,7 +284,6 @@ public class HitStrategy extends Observable {
 						mostProbable = probabilityGrid[i][j];
 						x = i;
 						y = j;
-
 					}
 				}
 			}
@@ -707,7 +707,7 @@ public class HitStrategy extends Observable {
 	 * @param y y-coordinate
 	 * @param direction horizontal or vertical direction
 	 * @param points neighboring points 
-	 * @return
+	 * @return Boolean to tell if the ship can be placed or not
 	 */
 	public Boolean check(int x, int y, String direction, int points) {
 		Boolean canPlace = true;
@@ -748,7 +748,7 @@ public class HitStrategy extends Observable {
 	 * method to check the adjacency of ships
 	 * @param i x-coord
 	 * @param j y-coord 
-	 * @return
+	 * @return Boolean to tell if adjacent ship is present or not
 	 */
 	public Boolean adjacentShipCheck(int i, int j) {
 		Boolean shipPresence = false;
@@ -772,7 +772,7 @@ public class HitStrategy extends Observable {
 	 * method to check whether the points are not outside the grid
 	 * @param i x-coord
 	 * @param j y-coord
-	 * @return
+	 * @return Boolean to tell is the point is valid or not
 	 */
 	public boolean isValid(int i, int j) {
 		if (i < 0 || j < 0 || i >= 9 || j >= 11)
@@ -783,16 +783,15 @@ public class HitStrategy extends Observable {
 
 	/**
 	 * generates random x-coordinate
-	 * @return
+	 * @return int the random x value
 	 */
 	public int randomX() {
-
 		return ran.nextInt(9);
 	}
 	
 	/**
 	 * generates random y-coordinate
-	 * @return
+	 * @return int random y value
 	 */
 	public int randomY() {
 
