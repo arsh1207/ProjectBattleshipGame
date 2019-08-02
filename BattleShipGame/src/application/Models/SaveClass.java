@@ -101,11 +101,11 @@ public class SaveClass extends Observable {
 	 * @param userName	user's name
 	 */
 	public void saveGame(Player player, Computer computer, 
-			HitStrategy strategy, String gameMode, String gameType) {
+			Object strategy, String gameMode, String gameType) {
 	
 		System.out.println("writing data in file "+this.uName);
 		try {
-			
+
 			//gets the total saved files in the folder;
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
 		    Date date = new Date();
@@ -131,7 +131,7 @@ public class SaveClass extends Observable {
 	 * @param player Player object
 	 * @param computer Computer object
 	 */
-	void saveData(PrintWriter out, Player player, Computer computer, HitStrategy strategy) {
+	void saveData(PrintWriter out, Player player, Computer computer, Object strategy) {
 		
 		out.println("CompGrid:");
 		int[][] saveCompGrid = new int[Computer.computerGrid.length][Computer.computerGrid[0].length];
@@ -143,7 +143,10 @@ public class SaveClass extends Observable {
 	         }
 	         out.println("");
 		}
-		out.println("Computer Score: "+ strategy.getScore());
+		if(strategy instanceof HitStrategy)
+			out.println("Computer Score: "+ ((HitStrategy)strategy).getScore());
+		else
+			out.println("Computer Score: "+ ((HitStrategySalvo)strategy).getScore());
 		out.println("Computer Sunken ships: "+computer.getSunkenShips());
 		out.println("Computer ships status: "+computer.shipsMap);
 		out.println("ShipGrid:");

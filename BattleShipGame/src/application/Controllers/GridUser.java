@@ -148,7 +148,10 @@ public class GridUser {
 	
 
 	public void saveGame(String gameMode, String gameType) {
-		saveClass.saveGame(player, computer, strategy, gameMode, gameType);
+		if(gameType.equals("Salvo"))
+			saveClass.saveGame(player, computer, strategySalvo, gameMode, gameType);
+		else
+			saveClass.saveGame(player, computer, strategy, gameMode, gameType);
 	}
 	
 }
