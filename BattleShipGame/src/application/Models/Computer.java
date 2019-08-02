@@ -15,15 +15,15 @@ import application.Views.AlertBox;
  */
 public class Computer extends Observable {
 
-	final int rows = 9;
-	final int cols = 11;
+	final static int rows = 9;
+	final static  int cols = 11;
 	boolean time1 = false, time2 = false;
 	double timea = 0;
 	double timeb = 0;
 	Random rand = new Random();
 	// to check if all ships have been placed or not
 	int counter = 0;
-	public Integer[][] computerGrid = new Integer[rows][cols];
+	static public Integer[][] computerGrid = new Integer[rows][cols];
 
 	private String UserWon = "";
 
@@ -146,6 +146,8 @@ public class Computer extends Observable {
 
 			setReply("Some other error");
 		}
+		
+		//printGrid();
 	
 	}
 
@@ -481,9 +483,11 @@ public class Computer extends Observable {
 		for (int i = 0; i < rows; i++) {
 
 			for (int j = 0; j < cols; j++) {
-
+				
+				System.out.print(computerGrid[i][j]);
 
 			}
+			System.out.println("");
 		}
 
 	}

@@ -4,6 +4,7 @@ import application.Models.Computer;
 import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
 import application.Models.Player;
+import application.Models.SaveClass;
 import main.Main;
 
 /**
@@ -20,6 +21,7 @@ public class GridUser {
 	Player player;
 	HitStrategy strategy;
 	HitStrategySalvo strategySalvo;
+	SaveClass saveClass;
 	String callType = "";
 
 	public String getCallType() {
@@ -38,11 +40,13 @@ public class GridUser {
 	 * @param strategy HitStrategy model object
 	 * @param strategySalvo HitStrategySalvo object 
 	 */
-	public GridUser(Player player, Computer computer, HitStrategy strategy, HitStrategySalvo strategySalvo) {
+	public GridUser(Player player, Computer computer, HitStrategy strategy
+			, HitStrategySalvo strategySalvo, SaveClass saveClass) {
 		this.computer = computer;
 		this.player = player;
 		this.strategy = strategy;
 		this.strategySalvo = strategySalvo;
+		this.saveClass = saveClass;
 
 	}
 
@@ -130,5 +134,21 @@ public class GridUser {
 	public void callSunkenShips(Computer computer) {
 		computer.checkSunkenShips();
 	}
+	
+	/**
+	 * method to transfer the call to checkUserName in models
+	 * @param saveClass Object for SaveClass
+	 * @param userName	username that the user entered
+	 * @throws Exception io exception
+	 */
+	public void checkUserName(SaveClass saveClass, String userName) throws Exception {
+		System.out.println("passing call from controller");
+		saveClass.checkUserName(userName);
+	}
+	
 
+	public void saveGame(String gameMode, String gameType) {
+		saveClass.saveGame(player, computer, strategy, gameMode, gameType);
+	}
+	
 }

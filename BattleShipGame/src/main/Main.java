@@ -7,6 +7,7 @@ import application.Models.Computer;
 import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
 import application.Models.Player;
+import application.Models.SaveClass;
 import application.Views.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -52,8 +53,12 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	Player player;
+	Computer computer;
 	ShipGrid sg;
+	SaveClass saveClass;
 	static GridUser ob;
+	UserWindow userWindow;
+	UserDetailsWindow userDetailsWindow;
 	Scene scene1;
 	Scene scene2;
 	GridPane g_pane1, g_pane2;
@@ -80,7 +85,6 @@ public class Main extends Application {
 
 	/**
 	 * This method is overridden from base class that will be called once the launch is triggered.
-	 * 
 	 * @param primaryStage reference to primary stage
 	 */
 	@Override
@@ -90,16 +94,20 @@ public class Main extends Application {
 			stage.setTitle(" Battle Ship Game");
 			launchStartupWindow(stage);
 			player = new Player();
-			Computer computer = new Computer();
+			computer = new Computer();
+			SaveClass saveClass = new SaveClass();
 			HitStrategy strategy = new HitStrategy();
 			HitStrategySalvo strategySalvo = new HitStrategySalvo();
+			userWindow = new UserWindow();
 			resulttext1 = new Label();
 			resulttext4 = new Label();
-			ob = new GridUser(player, computer, strategy, strategySalvo);
+			ob = new GridUser(player, computer, strategy, strategySalvo, saveClass);
 			sg = new ShipGrid(player, ob, resulttext1, resulttext4);
+			userDetailsWindow = new UserDetailsWindow(ob, saveClass);
 			player.addObserver(sg);
 			strategy.addObserver(sg);
 			strategySalvo.addObserver(sg);
+			saveClass.addObserver(userDetailsWindow);
 			SplitPane split_pane = new SplitPane();
 			SplitPane split_pane2 = new SplitPane();
 			g_pane1 = new GridPane();
@@ -650,6 +658,7 @@ public class Main extends Application {
 		menuBar.getMenus().add(menu2);
 		MenuItem menu1Item1 = new MenuItem("Start new game");
 		MenuItem menu1Item2 = new MenuItem("Exit");
+		MenuItem menu1Item3 = new MenuItem("Save game");
 		menu1Item1.setOnAction(e -> {
 			stage.close();
 			try {
@@ -664,10 +673,18 @@ public class Main extends Application {
 			if (res)
 				stage.close();
 		});
+		menu1Item3.setOnAction(e -> {
+			Boolean res = ConfirmBox.display("Save game", "Do you wish to save the game?");
+			if (res) {
+				ob.saveGame(gameMode, gameType);
+			}
+				
+		});
 
 		menu1.getItems().add(menu1Item1);
 		menu1.getItems().add(menu1Item2);
-
+		menu1.getItems().add(menu1Item3);
+		
 		Menu place_ship = new Menu("Place");
 		MenuItem Carrier = new MenuItem("Carrier (5)");
 		Carrier.setGraphic(new ImageView("file:images/blue1.png"));
@@ -722,31 +739,37 @@ public class Main extends Application {
 				BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 		Background background = new Background(backgroundimage);
 		root1.setBackground(background);
-		MenuItem mI1 = new MenuItem("Salvo");
-		MenuItem mI2 = new MenuItem("Classic");
-		MenuButton menuButton = new MenuButton("Please select game type.");
-		menuButton.getItems().addAll(mI1, mI2);
-		mI1.setOnAction(event -> {
-			gameType = "Salvo";
-			menuButton.setText(gameType);
-		});
-		mI2.setOnAction(event -> {
-			gameType = "Classic";
-			menuButton.setText(gameType);
-		});
-
+		
 		Button btn1 = new Button("Start New Game");
 		btn1.setStyle("-fx-background-color: #a3a0a0; ");
 		Button btn2 = new Button("Exit Game");
 		btn2.setStyle("-fx-background-color: #a3a0a0; ");
 		btn1.setOnAction((ActionEvent event) -> {
-			if (gameType.equals("None")) {
-				AlertBox.displayError("Start up error", "Please select game type(salvo or classic).");
-			} else {
+			
+			if(userWindow.selectUser().equalsIgnoreCase("New")) {
+				userDetailsWindow.newUser();
+				gameType = AlertBox.displayGameType();
 				if (gameType.equals("Classic"))
 					gameMode = AlertBox.displayDifficulty();
 				stg.setScene(scene1);
 			}
+			else {
+				
+				String useroption = userDetailsWindow.existingUser();
+				
+				//if the existing user wishes to start a new game
+				if(useroption.equals("newgame")) {
+					gameType = AlertBox.displayGameType();
+					if (gameType.equals("Classic"))
+						gameMode = AlertBox.displayDifficulty();
+					stg.setScene(scene1);
+				}
+				//add the code for loading data
+				else {
+					stg.close();
+				}
+			}
+			
 		});
 		btn2.setOnAction((ActionEvent event) -> {
 			Boolean res = ConfirmBox.display("Confirmation box", "Are you sure?");
@@ -754,7 +777,6 @@ public class Main extends Application {
 				stg.close();
 		});
 		root1.setAlignment(Pos.CENTER);
-		root1.add(menuButton, 0, 0);
 		root1.add(btn1, 0, 1);
 		root1.add(btn2, 0, 2);
 		stg.setScene(scene2);

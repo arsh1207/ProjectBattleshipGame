@@ -18,7 +18,7 @@ import application.Views.ShipGrid;
 public class Player extends Observable {
 
 	//
-	public int userScore;
+	public static int userScore;
 	public List<String> deployedShips = new ArrayList<>();
 	public HashMap<String, Integer> convert = new HashMap<>();
 	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
@@ -33,6 +33,14 @@ public class Player extends Observable {
 
 	String axis = "";
 
+	public static String getName() {
+		return name;
+	}
+
+	public static void setName(String name) {
+		Player.name = name;
+	}
+
 	public String reply = "";
 
 	public String compWon = "";
@@ -42,6 +50,7 @@ public class Player extends Observable {
 
 	final static int rows = 9;
 	final static int cols = 11;
+	static String name = "";
 
 	// original Grid that remains unchanged throughout the game
 	public static Integer[][] userGrid = new Integer[rows][cols];

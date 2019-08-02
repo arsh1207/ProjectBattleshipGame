@@ -213,7 +213,7 @@ public class ShipGrid implements Observer {
 	 * @param axis     tell either horizontal of vertical
 	 */
 	public static void deployShipsWithColors(int[] coords, String shipType, String axis) {
-
+		
 		// if the ship is to be placed along Y-axis
 		if (axis.equals("Y")) {
 			if (shipType.equals("Carrier"))

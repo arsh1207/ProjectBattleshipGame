@@ -16,6 +16,7 @@ public class AlertBox {
 	static ToggleGroup radioGroup;
 	static String difficulty;
 	static RadioButton selectedRadioButton;
+	static String gameType;
 
 	public static void displayError(String title, String msg) {
 		Stage stage = new Stage();
@@ -113,6 +114,50 @@ public class AlertBox {
 		stage.setScene(scene);
 		stage.showAndWait();
 		return difficulty;
+
+	}
+	
+	public static String displayGameType() {
+		Stage stage = new Stage();
+		radioGroup = new ToggleGroup();
+		difficulty = new String();
+
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setTitle("Battleship Game Type");
+		stage.setMinWidth(450);
+		stage.setMinHeight(300);
+
+		Label label = new Label("Choose Game Type:");
+		RadioButton rb1 = new RadioButton("Salvo");
+		RadioButton rb2 = new RadioButton("Classic");
+		
+		rb1.setToggleGroup(radioGroup);
+		rb2.setToggleGroup(radioGroup);
+
+		Button btn1 = new Button("Ok");
+		btn1.setOnAction(e -> {
+			try {
+
+				selectedRadioButton = (RadioButton) radioGroup.getSelectedToggle();
+				gameType = selectedRadioButton.getText();
+				stage.close();
+
+			} catch (Exception e1) {
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Battleship Game");
+				alert.setHeaderText("Please select a mode before proceeding.");
+				alert.showAndWait();
+			}
+		});
+
+		VBox v_box = new VBox();
+		v_box.getChildren().addAll(label, rb1, rb2, btn1);
+		v_box.setAlignment(Pos.CENTER);
+
+		Scene scene = new Scene(v_box);
+		stage.setScene(scene);
+		stage.showAndWait();
+		return gameType;
 
 	}
 }

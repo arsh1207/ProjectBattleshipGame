@@ -116,7 +116,9 @@ public class HitStrategy extends Observable {
 			setReply("It's a Hit!!!!!");
 
 		} else if (Player.userGrid[x][y] == 0) {
-			Player.userGrid[x][y] = 2;
+			//Sagar
+			//marked this 3 to signify a miss to help in loading the game
+			Player.userGrid[x][y] = 3;
 			setScore(-1);
 			setReply("It's a miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2) {
@@ -251,7 +253,7 @@ public class HitStrategy extends Observable {
 			setScore(10);
 			setReply("It's a Hit!!!!!");
 		} else if (Player.userGrid[x][y] == 0) {
-			Player.userGrid[x][y] = 2;
+			Player.userGrid[x][y] = 3;
 			setScore(-1);
 			setReply("It's a miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2) {
@@ -509,7 +511,9 @@ public class HitStrategy extends Observable {
 			}//if time between consecutive hit is less than 3 seconds ,then bonus score
 			setScore(10);
 		} else if (Player.userGrid[x][y] == 0) {
-			Player.userGrid[x][y] = 2;
+			//Sagar
+			//marked this 3 to signify a miss to help in loading the game
+			Player.userGrid[x][y] = 3;
 			setScore(-1);
 			setReply("It's a miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2) {
