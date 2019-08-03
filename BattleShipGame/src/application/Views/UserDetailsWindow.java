@@ -21,6 +21,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import main.Main;
 
 /**
  * Class to enter the details for the new as well as the existing users
@@ -35,6 +36,13 @@ public class UserDetailsWindow implements Observer{
 	String userOptions;
 	GridUser ob;
 	SaveClass saveClass;
+	
+	public String getUserName() {
+		return this.userName;
+	}
+	public void setUserName(String name) {
+		this.userName = name;
+	}
 	
 	public UserDetailsWindow(GridUser ob, SaveClass saveClass){
 		this.ob = ob;
@@ -85,6 +93,7 @@ public class UserDetailsWindow implements Observer{
 			try {
 				
 				this.userName = userTextField.getText();
+				
 				this.password = pwBox.getText();
 				System.out.println("User name is: "+userName);
 				System.out.println("User psswd is: "+password);

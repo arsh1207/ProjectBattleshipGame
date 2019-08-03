@@ -29,7 +29,7 @@ public class Computer extends Observable {
 
 	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 	static ArrayList<String> tempList = new ArrayList<String>();
-	static ArrayList<String> sunkenShips = new ArrayList<String>();
+	public static ArrayList<String> sunkenShips = new ArrayList<String>();
 	static ArrayList<String> coordinatesHit = new ArrayList<String>();
 	public static int scoringComp = 0;
 	private String reply = "";
@@ -84,14 +84,11 @@ public class Computer extends Observable {
 	}
 
 	public void setUserWon(String userWon) {
-		this.UserWon = userWon;
-		
+		this.UserWon = userWon;	
 	}
 
 	public Computer() {
-
 		initialize();
-
 	}
 
 	/**
@@ -192,16 +189,12 @@ public class Computer extends Observable {
 
 			for (Map.Entry<Integer, Integer> entry : Carrier.entrySet()) {
 				computerGrid[entry.getValue()][entry.getKey()] = 1;
-	
 			}
 
 			int battleShipX = rand.nextInt(9);
 			int battleShipY = rand.nextInt(11);
-
 			HashMap<Integer, Integer> BattleShip = new HashMap<>();
-
 			tempList = new ArrayList<String>();
-
 			placed = false;
 			while (!placed) {
 				if (check(battleShipX, battleShipY, "vertical", 4)) {
@@ -260,7 +253,6 @@ public class Computer extends Observable {
 			}
 
 			for (Map.Entry<Integer, Integer> entry : Cruiser.entrySet()) {
-
 				computerGrid[entry.getKey()][entry.getValue()] = 1;
 	
 			}

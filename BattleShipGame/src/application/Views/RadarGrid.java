@@ -26,6 +26,9 @@ import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
 import application.Models.Player;
 import javafx.animation.FadeTransition;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 
 /**
@@ -213,12 +216,13 @@ public class RadarGrid implements Observer {
 	public void update(Observable o, Object arg) {
 		if (o instanceof Computer) {
 			if (arg.equals("HITORMISS")) {
-
 				String res = ((Computer) o).getReply();
 				int score1 = ((Computer) o).getScoreComp();
 				resulttext2.setText("");
 				resulttext3.setText("" + score1);
 				afterCompReply(res, (Computer) o);
+				System.out.println("Player ships down:"+ Player.sunkenShips.size());
+			
 			}
 		} else if (o instanceof HitStrategy) {
 			if (arg.equals("Won")) {
@@ -234,6 +238,10 @@ public class RadarGrid implements Observer {
 			}
 			resulttext1.setText(reply);
 			resulttext4.setText("" + score);
+			ob.callPlayerSunkenShips();
+			double health = 1 - Player.sunkenShips.size()*0.2;		
+			//Main.healthbarTank1.setWidth(40*health);
+			Main.healthbarTank1.setProgress(health);
 			ob.callCheckIfCompWon();
 
 			if (getUserWon().equals("Won")) {
@@ -293,6 +301,10 @@ public class RadarGrid implements Observer {
 					ob.computerTurn(lastCompResult, Main.gameMode);
 				}
 			} else {
+				ob.callSunkenShips(o);
+				System.out.println("Computer ships down:"+ Computer.sunkenShips.size());
+				double health = 1 - Computer.sunkenShips.size()*0.2;		
+				Main.healthbarTank2.setProgress(health);
 				ob.callCheckIfUserWon();
 				if(((Computer) o).getUserWon().equals("Won")) {
 					AlertBox.displayResult("Hurray!", "User has won ");

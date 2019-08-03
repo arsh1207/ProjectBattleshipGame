@@ -491,7 +491,8 @@ public class HitStrategy extends Observable {
 		if (Player.userGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
 			Player.userGrid[x][y] = 2;
-			setReply("It's a Hit!!!!!");
+			String coordx = Integer.toString(x);
+			String coordy = Integer.toString(y);
 			if(!time1) {
 				timea=java.lang.System.currentTimeMillis();
 				time1=!time1;
@@ -510,6 +511,8 @@ public class HitStrategy extends Observable {
 				
 			}//if time between consecutive hit is less than 3 seconds ,then bonus score
 			setScore(10);
+			Player.coordinatesHit.add(coordx + "," + coordy);
+			setReply("It's a Hit!!!!!");
 		} else if (Player.userGrid[x][y] == 0) {
 			//Sagar
 			//marked this 3 to signify a miss to help in loading the game

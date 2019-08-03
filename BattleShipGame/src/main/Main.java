@@ -20,8 +20,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -41,6 +41,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -51,7 +52,6 @@ import javafx.stage.Stage;
  *
  */
 public class Main extends Application {
-
 	Player player;
 	Computer computer;
 	ShipGrid sg;
@@ -68,12 +68,14 @@ public class Main extends Application {
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;
+	public static ProgressBar healthbarTank1, healthbarTank2;
 	static Label resulttext1, resulttext2, resulttext3, resulttext4;
 	public static String gameType = "None";
 	public static String shipType = "";
 	public static String gameMode = "Medium";
 	public static Button tossBtn;
-	
+	public static Label resultLabel1, resultLabel2;
+
 	/**
 	 * It is the main method
 	 * 
@@ -84,7 +86,9 @@ public class Main extends Application {
 	}
 
 	/**
-	 * This method is overridden from base class that will be called once the launch is triggered.
+	 * This method is overridden from base class that will be called once the launch
+	 * is triggered.
+	 * 
 	 * @param primaryStage reference to primary stage
 	 */
 	@Override
@@ -123,6 +127,15 @@ public class Main extends Application {
 			for (String name : shipNames) {
 				setShipImages(v_box2, name);
 			}
+			healthbarTank1 = new ProgressBar();
+			healthbarTank1.setMinWidth(200);
+
+			healthbarTank1.setStyle("-fx-accent: red;");
+			healthbarTank2 = new ProgressBar();
+			healthbarTank2.setMinWidth(200);
+			// healthbarTank2 = new Rectangle(200.0, 25.0, Color.BLUE);
+			// healthbarTank2 = new Rectangle(200.0, 25.0, Color.BLUE);
+			h_box2.getChildren().add(healthbarTank2);
 			MenuBar menuBar = battleMenu(v_box1, stage);
 			g_pane1.setVgap(10);
 			g_pane1.setHgap(10);
@@ -132,9 +145,9 @@ public class Main extends Application {
 			v_box3.getChildren().add(l1);
 			seeResultComp("User ");
 			seeResultUser("Computer ");
-			Score("Player SCORE");
-			ScoreComp("Computer SCORE");
 
+			ScoreComp("Computer");
+			Score("Player");
 			RadarGrid radarGridObserver = new RadarGrid(resulttext2, resulttext1, resulttext3, resulttext4, ob);
 			computer.addObserver(radarGridObserver);
 			strategy.addObserver(radarGridObserver);
@@ -147,7 +160,7 @@ public class Main extends Application {
 			v_box1.setSpacing(20.0);
 			userRandomShips.setOnAction((ActionEvent event) -> {
 				if (Player.numOfShipsDep == 0)
-			
+
 					ob.deployUserShips();
 			});
 
@@ -159,14 +172,16 @@ public class Main extends Application {
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
-				if (Player.numOfShipsDep == 5) {										
-					  if (gameType.equals("Salvo")) { salvoAlertCall(); }					 
+				if (Player.numOfShipsDep == 5) {
+					if (gameType.equals("Salvo")) {
+						salvoAlertCall();
+					}
 					for (int i = 0; i < 9; i++) {
 						for (int j = 0; j < 11; j++) {
 							radarGridObserver.radarButton[i][j].setDisable(false);
 						}
 					}
-					ob.deployCompShips();					
+					ob.deployCompShips();
 				} else {
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
@@ -186,8 +201,9 @@ public class Main extends Application {
 				node.setOnMouseExited((MouseEvent t) -> {
 					node.setStyle("-fx-background-color: black;");
 				});
-
 			}
+
+			h_box1.getChildren().add(healthbarTank1);
 			split_pane2.getItems().addAll(h_box1, h_box2);
 			v_box3.getChildren().addAll(startBtn, tossBtn);
 			v_box4.getChildren().addAll(menuBar, split_pane2, split_pane);
@@ -197,15 +213,15 @@ public class Main extends Application {
 			v_box2.getStylesheets().add("application/Views/application.css");
 			split_pane.prefHeightProperty().bind(stage.heightProperty());
 			stage.show();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 
 	}
 
 	/**
-	 * This function will set different action listeners over the button drag actions
+	 * This function will set different action listeners over the button drag
+	 * actions
 	 */
 	public void setShipPlacementActions() {
 		for (Node node : g_pane2.getChildren()) {
@@ -457,10 +473,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Carrier")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Carrier");
-									} else {									
+									} else {
 										AlertBox.displayError("Carrier", "Already Deployed!");
 									}
-								} else {									
+								} else {
 									AlertBox.displayError("Carrier", "All Ships Deployed!");
 								}
 							}
@@ -472,10 +488,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Battleship")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Battleship");
-									} else {									
+									} else {
 										AlertBox.displayError("Battleship", "Already Deployed!");
 									}
-								} else {							
+								} else {
 									AlertBox.displayError("Battleship", "All Ships Deployed!");
 								}
 							}
@@ -487,10 +503,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Cruiser")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Cruiser");
-									} else {										
+									} else {
 										AlertBox.displayError("Cruiser", "Already Deployed!");
 									}
-								} else {									
+								} else {
 									AlertBox.displayError("Cruiser", "All Ships Deployed!");
 								}
 							}
@@ -502,10 +518,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Submarine")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Submarine");
-									} else {										
+									} else {
 										AlertBox.displayError("Submarine", "Already Deployed!");
 									}
-								} else {									
+								} else {
 									AlertBox.displayError("Submarine", "All Ships Deployed!");
 								}
 							}
@@ -517,10 +533,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Destroyer")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Destroyer");
-									} else {									
+									} else {
 										AlertBox.displayError("Destroyer", "Already Deployed!");
 									}
-								} else {									
+								} else {
 									AlertBox.displayError("Destroyer", "All Ships Deployed!");
 								}
 							}
@@ -534,10 +550,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Carrier")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Carrier");
-									} else {										
+									} else {
 										AlertBox.displayError("Carrier", "Already Deployed!");
 									}
-								} else {									
+								} else {
 									AlertBox.displayError("Carrier", "All Ships Deployed!");
 								}
 							}
@@ -549,10 +565,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Battleship")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Battleship");
-									} else {										
+									} else {
 										AlertBox.displayError("Battleship", "Already Deployed!");
 									}
-								} else {									
+								} else {
 									AlertBox.displayError("Battleship", "All Ships Deployed!");
 								}
 							}
@@ -567,7 +583,7 @@ public class Main extends Application {
 									} else {
 										AlertBox.displayError("Cruiser", "Already Deployed!");
 									}
-								} else {								
+								} else {
 									AlertBox.displayError("Cruiser", "All Ships Deployed!");
 								}
 							}
@@ -579,10 +595,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Submarine")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Submarine");
-									} else {										
+									} else {
 										AlertBox.displayError("Submarine", "Already Deployed!");
 									}
-								} else {								
+								} else {
 									AlertBox.displayError("Submarine", "All Ships Deployed!");
 								}
 							}
@@ -594,10 +610,10 @@ public class Main extends Application {
 									if (!player.isShipDeployed("Destroyer")) {
 										String res = initialCoordinates + " " + finalCoordinates;
 										ob.callDeployUserGrid(res, "Destroyer");
-									} else {									
+									} else {
 										AlertBox.displayError("Destroyer", "Already Deployed!");
 									}
-								} else {									
+								} else {
 									AlertBox.displayError("Destroyer", "All Ships Deployed!");
 								}
 							}
@@ -629,7 +645,7 @@ public class Main extends Application {
 
 					if (event.getButton() == MouseButton.PRIMARY) {
 						content.putString("Primary;" + shipName);
-						content.putImage(imageView.getImage());					
+						content.putImage(imageView.getImage());
 					} else if (event.getButton() == MouseButton.SECONDARY) {
 						content.putString("Secondary;" + shipName);
 						content.putImage(image2);
@@ -642,12 +658,12 @@ public class Main extends Application {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 	/**
-	 *  This method sets the menu bar on the scene
-	 *  
+	 * This method sets the menu bar on the scene
+	 * 
 	 * @param v_box1 reference to vertical box for holding the menubar
-	 * @param stage stage reference
+	 * @param stage  stage reference
 	 * @return MenuBar that is created
 	 */
 	public MenuBar battleMenu(VBox v_box1, Stage stage) {
@@ -678,13 +694,13 @@ public class Main extends Application {
 			if (res) {
 				ob.saveGame(gameMode, gameType);
 			}
-				
+
 		});
 
 		menu1.getItems().add(menu1Item1);
 		menu1.getItems().add(menu1Item2);
 		menu1.getItems().add(menu1Item3);
-		
+
 		Menu place_ship = new Menu("Place");
 		MenuItem Carrier = new MenuItem("Carrier (5)");
 		Carrier.setGraphic(new ImageView("file:images/blue1.png"));
@@ -718,7 +734,7 @@ public class Main extends Application {
 		Destroyer.setOnAction(e -> {
 			shipType = "Destroyer";
 		});
-		
+
 		return menuBar;
 	}
 
@@ -739,37 +755,36 @@ public class Main extends Application {
 				BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 		Background background = new Background(backgroundimage);
 		root1.setBackground(background);
-		
+
 		Button btn1 = new Button("Start New Game");
 		btn1.setStyle("-fx-background-color: #a3a0a0; ");
 		Button btn2 = new Button("Exit Game");
 		btn2.setStyle("-fx-background-color: #a3a0a0; ");
 		btn1.setOnAction((ActionEvent event) -> {
-			
-			if(userWindow.selectUser().equalsIgnoreCase("New")) {
+
+			if (userWindow.selectUser().equalsIgnoreCase("New")) {
 				userDetailsWindow.newUser();
 				gameType = AlertBox.displayGameType();
 				if (gameType.equals("Classic"))
 					gameMode = AlertBox.displayDifficulty();
 				stg.setScene(scene1);
-			}
-			else {
-				
+			} else {
+
 				String useroption = userDetailsWindow.existingUser();
-				
-				//if the existing user wishes to start a new game
-				if(useroption.equals("newgame")) {
+
+				// if the existing user wishes to start a new game
+				if (useroption.equals("newgame")) {
 					gameType = AlertBox.displayGameType();
 					if (gameType.equals("Classic"))
 						gameMode = AlertBox.displayDifficulty();
 					stg.setScene(scene1);
 				}
-				//add the code for loading data
+				// add the code for loading data
 				else {
 					stg.close();
 				}
 			}
-			
+
 		});
 		btn2.setOnAction((ActionEvent event) -> {
 			Boolean res = ConfirmBox.display("Confirmation box", "Are you sure?");
@@ -780,7 +795,6 @@ public class Main extends Application {
 		root1.add(btn1, 0, 1);
 		root1.add(btn2, 0, 2);
 		stg.setScene(scene2);
-		
 	}
 
 	/**
@@ -817,12 +831,21 @@ public class Main extends Application {
 	 * @param title To display name of caller (User or CPU).
 	 */
 	public void Score(String title) {
-		Label resultLabel = new Label(title + ": ");
-		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
-		resultLabel.setTextFill(Color.web("#c40831"));
+		VBox vBox = new VBox();
+		resultLabel1 = new Label();
+		// resultLabel1.setGraphic(new ImageView("file:images/icon2.jpg"));
+		ImageView imageView = new ImageView("file:images/icon5.gif");
+		imageView.setFitHeight(50);
+		imageView.setFitWidth(50);
+		imageView.setPreserveRatio(true);
+		//imageView.fitWidthProperty().bind(v_box2.widthProperty());
+	//	resultLabel1.setGraphic(imageView);
+		resultLabel1.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+		resultLabel1.setTextFill(Color.web("#c40831"));
 		resulttext3 = new Label();
 		resulttext3.setStyle("-fx-background-color: white;");
-		h_box1.getChildren().addAll(resultLabel, resulttext3);
+		vBox.getChildren().addAll(resultLabel1, resulttext3);
+		h_box1.getChildren().addAll(imageView, vBox);
 
 	}
 
@@ -832,11 +855,19 @@ public class Main extends Application {
 	 * @param title To display name of caller (User or CPU).
 	 */
 	public void ScoreComp(String title) {
-		Label resultLabel = new Label(title + ": ");
-		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
-		resultLabel.setTextFill(Color.web("#c40831"));
+		 resultLabel2 = new Label(title);
+		 VBox vBox = new VBox();
+		ImageView imageView = new ImageView("file:images/icon4.gif");
+		imageView.setFitHeight(50);
+		imageView.setFitWidth(50);
+		imageView.setPreserveRatio(true);
+		//imageView.fitWidthProperty().bind(v_box2.widthProperty());
+	//	resultLabel2.setGraphic(imageView);
+		resultLabel2.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+		resultLabel2.setTextFill(Color.web("#00bfff"));
 		resulttext4.setStyle("-fx-background-color: white;");
-		h_box2.getChildren().addAll(resultLabel, resulttext4);
+		vBox.getChildren().addAll(resultLabel2, resulttext4);
+		h_box2.getChildren().addAll(vBox, imageView);
 
 	}
 

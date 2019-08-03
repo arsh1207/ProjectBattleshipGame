@@ -54,14 +54,7 @@ public class ShipGrid implements Observer {
 		this.resulttext4 = resulttext4;
 	}
 
-	public String getCompWon() {
-		return compWon;
-	}
-
-	public void setCompWon(String compWon) {
-		this.compWon = compWon;
-	}
-
+	
 	/**
 	 * Deploys user grid on the screen
 	 * 
@@ -157,14 +150,21 @@ public class ShipGrid implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		if (o instanceof Player) {
-			String value = ((Player) o).getReply();
-			int coord[] = ((Player) o).getCoords();
-			String shipType = ((Player) o).getShipType();
-			String axis = ((Player) o).getAxis();
-			deployShipsWithColors(coord, shipType, axis);
-			if (!(value.equals("Done")) && !value.isEmpty()) {
-				userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
-				AlertBox.displayError(Main.shipType, value);
+			if (arg.equals("compwon")) {
+				if (((Player) o).getCompWon().equals("Won")) {
+					AlertBox.displayResult("Hurray!!", "Computer has Won ");
+				}
+			}
+			else {
+				String value = ((Player) o).getReply();
+				int coord[] = ((Player) o).getCoords();
+				String shipType = ((Player) o).getShipType();
+				String axis = ((Player) o).getAxis();
+				deployShipsWithColors(coord, shipType, axis);
+				if (!(value.equals("Done")) && !value.isEmpty()) {
+					userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
+					AlertBox.displayError(Main.shipType, value);
+				}
 			}
 		} else if (o instanceof HitStrategy) {
 			String reply = ((HitStrategy) o).getReply();
@@ -213,7 +213,7 @@ public class ShipGrid implements Observer {
 	 * @param axis     tell either horizontal of vertical
 	 */
 	public static void deployShipsWithColors(int[] coords, String shipType, String axis) {
-		
+
 		// if the ship is to be placed along Y-axis
 		if (axis.equals("Y")) {
 			if (shipType.equals("Carrier"))
@@ -286,8 +286,8 @@ public class ShipGrid implements Observer {
 	/**
 	 * This function will set the button color as per the response
 	 * 
-	 * @param x x-axis coordinate
-	 * @param y y-axis coordinate
+	 * @param x   x-axis coordinate
+	 * @param y   y-axis coordinate
 	 * @param res response from user
 	 */
 	public static void setUserShipCoordinates(int x, int y, String res) {

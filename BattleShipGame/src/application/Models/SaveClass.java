@@ -13,6 +13,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import main.Main;
+
 /**
  * Class to save the user data
  * @author Sagar Bhatia
@@ -28,8 +30,8 @@ public class SaveClass extends Observable {
 
 	
 	public SaveClass(){
-		filePath = "C:\\Users\\Ishita Bhola\\git\\ProjectBattleshipGame\\BattleShipGame\\User-Data\\Users-List.txt";
-		folderPath = "C:\\Users\\Ishita Bhola\\git\\ProjectBattleshipGame\\BattleShipGame\\User-Data\\";
+		filePath = "User-Data\\Users-List.txt";
+		folderPath = "User-Data\\";
 		
 	}
 	
@@ -86,6 +88,7 @@ public class SaveClass extends Observable {
 				check = true;
 				System.out.println("Username found");
 				setuName(userName);
+				Main.resultLabel1.setText(userName);
 				break;
 				
 			}
