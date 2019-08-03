@@ -3,6 +3,7 @@ package application.Controllers;
 import application.Models.Computer;
 import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
+import application.Models.LoadClass;
 import application.Models.Player;
 import application.Models.SaveClass;
 import main.Main;
@@ -22,6 +23,7 @@ public class GridUser {
 	HitStrategy strategy;
 	HitStrategySalvo strategySalvo;
 	SaveClass saveClass;
+	LoadClass loadClass;
 	String callType = "";
 
 	public String getCallType() {
@@ -41,12 +43,13 @@ public class GridUser {
 	 * @param strategySalvo HitStrategySalvo object 
 	 */
 	public GridUser(Player player, Computer computer, HitStrategy strategy
-			, HitStrategySalvo strategySalvo, SaveClass saveClass) {
+			, HitStrategySalvo strategySalvo, SaveClass saveClass, LoadClass loadClass) {
 		this.computer = computer;
 		this.player = player;
 		this.strategy = strategy;
 		this.strategySalvo = strategySalvo;
 		this.saveClass = saveClass;
+		this.loadClass = loadClass;
 
 	}
 
@@ -157,6 +160,10 @@ public class GridUser {
 			saveClass.saveGame(player, computer, strategySalvo, gameMode, gameType);
 		else
 			saveClass.saveGame(player, computer, strategy, gameMode, gameType);
+	}
+	
+	public void loadGame() {
+		loadClass.loadGame(computer, player, saveClass);
 	}
 	
 }

@@ -7,7 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -151,7 +153,10 @@ public class SaveClass extends Observable {
 		else
 			out.println("Computer Score: "+ ((HitStrategySalvo)strategy).getScore());
 		out.println("Computer Sunken ships: "+computer.getSunkenShips());
-		out.println("Computer ships status: "+computer.shipsMap);
+		out.println("Computer ships status: ");
+		for (Map.Entry<String, ArrayList<String>> entry : Computer.shipsMap.entrySet()) {
+			out.println(entry.getKey()+" "+entry.getValue());
+		}
 		out.println("ShipGrid:");
 		int[][] saveUserGrid = new int[Player.userGrid.length][Player.userGrid[0].length];
 		for (int i = 0; i < Player.userGrid.length; ++i) {
@@ -164,6 +169,10 @@ public class SaveClass extends Observable {
 		}
 		out.println("Player Score: "+computer.getScoreComp());
 		out.println("Player Sunken ships: "+player.getSunkenShips());
-		out.println("Player ships status: "+player.shipsMap);
+		out.println("Player ships status: ");
+		for (Map.Entry<String, ArrayList<String>> entry : Player.shipsMap.entrySet()) {
+			out.println(entry.getKey()+" "+entry.getValue());
+		}
 	}
+	
 }

@@ -6,6 +6,7 @@ import java.util.Observer;
 import application.Controllers.GridUser;
 import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
+import application.Models.LoadClass;
 import application.Models.Player;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -36,7 +37,7 @@ public class ShipGrid implements Observer {
 	static String gameMode = "Medium";
 	public static Boolean lastCompResult = false;
 	private GridUser ob;
-	Label resulttext1, resulttext4;
+	Label resulttext1, resulttext4, resulttext3;
 	private Player player;
 
 	/**
@@ -47,11 +48,12 @@ public class ShipGrid implements Observer {
 	 * @param resulttext1 Its a reference for label for setting user result
 	 * @param resulttext4 Its a reference for label for setting user score
 	 */
-	public ShipGrid(Player player, GridUser ob, Label resulttext1, Label resulttext4) {
+	public ShipGrid(Player player, GridUser ob, Label resulttext1, Label resulttext4, Label resulttext3) {
 		this.player = player;
 		this.ob = ob;
 		this.resulttext1 = resulttext1;
 		this.resulttext4 = resulttext4;
+		this.resulttext3 = resulttext3;
 	}
 
 	
@@ -181,7 +183,7 @@ public class ShipGrid implements Observer {
 				setUserShipCoordinates(coord[0], coord[1], "Miss");
 			}
 
-		} else {
+		} else if (o instanceof HitStrategySalvo){
 			if (!player.getCompWon().equals("Won")) {
 				String reply = ((HitStrategySalvo) o).getReply();
 				int score = ((HitStrategySalvo) o).getScore();
@@ -201,6 +203,36 @@ public class ShipGrid implements Observer {
 					AlertBox.displayResult("OOPS:( :(", "Computer Won ");
 
 				}
+			}
+		}else if (o instanceof LoadClass){
+			if(arg.equals("setcoordsuser")) {
+				int[] coordState = ((LoadClass) o).getShipGridCoords();
+				//loadRadarGrid[coordState[0]][coordState[1]] = coordState[2];
+				//System.out.println("Buttons "+coordState[1]+" "+coordState[1]+" "+coordState[2]);
+				if(coordState[2] == 0)
+					userButton[coordState[0]][coordState[1]].setStyle("-fx-background-color: black; ");
+				else if(coordState[2] == 3)
+					userButton[coordState[0]][coordState[1]].setStyle("-fx-background-color: #FFFFFF; ");
+				else if(coordState[2] == 2)
+					userButton[coordState[0]][coordState[1]].setStyle("-fx-background-color: #ff1100; ");
+			}
+			else if(arg.equals("setscoreuser")){
+				int score = ((LoadClass) o).getUserScore();
+				resulttext3.setText("" + score);
+			}else if(arg.equals("setcolorcoords")) {
+				String[] coords = ((LoadClass) o).getColoredShipsCoord();
+				int rcoord = Integer.parseInt(coords[0]);
+				int ccoord = Integer.parseInt(coords[1]);
+				if (coords[2].equals("Carrier"))
+					userButton[rcoord][ccoord].setStyle("-fx-background-color: #000080; ");
+				if (coords[2].equals("Battleship"))
+					userButton[rcoord][ccoord].setStyle("-fx-background-color: #D2691E; ");
+				if (coords[2].equals("Cruiser"))
+					userButton[rcoord][ccoord].setStyle("-fx-background-color: #008000; ");
+				if (coords[2].equals("Submarine"))
+					userButton[rcoord][ccoord].setStyle("-fx-background-color: #FFA500; ");
+				if (coords[2].equals("Destroyer"))
+					userButton[rcoord][ccoord].setStyle("-fx-background-color: #FFFF00; ");
 			}
 		}
 	}
