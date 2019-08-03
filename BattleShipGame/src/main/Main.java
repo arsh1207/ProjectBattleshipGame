@@ -6,6 +6,7 @@ import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
+import application.Models.LoadClass;
 import application.Models.Player;
 import application.Models.SaveClass;
 import application.Views.*;
@@ -56,6 +57,7 @@ public class Main extends Application {
 	Computer computer;
 	ShipGrid sg;
 	SaveClass saveClass;
+	LoadClass loadClass;
 	static GridUser ob;
 	UserWindow userWindow;
 	UserDetailsWindow userDetailsWindow;
@@ -73,6 +75,7 @@ public class Main extends Application {
 	public static String shipType = "";
 	public static String gameMode = "Medium";
 	public static Button tossBtn;
+	public static boolean newGame = true;
 	
 	/**
 	 * It is the main method
@@ -96,13 +99,15 @@ public class Main extends Application {
 			player = new Player();
 			computer = new Computer();
 			SaveClass saveClass = new SaveClass();
+			LoadClass loadClass = new LoadClass();
 			HitStrategy strategy = new HitStrategy();
 			HitStrategySalvo strategySalvo = new HitStrategySalvo();
 			userWindow = new UserWindow();
 			resulttext1 = new Label();
+			resulttext3 = new Label();
 			resulttext4 = new Label();
-			ob = new GridUser(player, computer, strategy, strategySalvo, saveClass);
-			sg = new ShipGrid(player, ob, resulttext1, resulttext4);
+			ob = new GridUser(player, computer, strategy, strategySalvo, saveClass, loadClass);
+			sg = new ShipGrid(player, ob, resulttext1, resulttext4, resulttext3);
 			userDetailsWindow = new UserDetailsWindow(ob, saveClass);
 			player.addObserver(sg);
 			strategy.addObserver(sg);
@@ -138,6 +143,8 @@ public class Main extends Application {
 			RadarGrid radarGridObserver = new RadarGrid(resulttext2, resulttext1, resulttext3, resulttext4, ob);
 			computer.addObserver(radarGridObserver);
 			strategy.addObserver(radarGridObserver);
+			loadClass.addObserver(radarGridObserver);
+			loadClass.addObserver(sg);
 			radarGridObserver.setUserRadarGrid(g_pane1, resulttext2);
 			sg.setUserShipGrid(g_pane2);
 			setShipPlacementActions();
@@ -159,8 +166,11 @@ public class Main extends Application {
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
 			startBtn.setOnAction((ActionEvent event) -> {
-				if (Player.numOfShipsDep == 5) {										
-					  if (gameType.equals("Salvo")) { salvoAlertCall(); }					 
+				if (Player.numOfShipsDep == 5) {
+					gameType = AlertBox.displayGameType();
+					if (gameType.equals("Classic"))
+						gameMode = AlertBox.displayDifficulty();
+					if (gameType.equals("Salvo")) { salvoAlertCall(); }					 
 					for (int i = 0; i < 9; i++) {
 						for (int j = 0; j < 11; j++) {
 							radarGridObserver.radarButton[i][j].setDisable(false);
@@ -607,7 +617,8 @@ public class Main extends Application {
 			});
 		}
 	}
-
+	
+	
 	public void setShipImages(VBox v_box2, String shipName) {
 		try {
 			Image image = new Image(new FileInputStream("images/ships/" + shipName + ".png"));
@@ -659,6 +670,7 @@ public class Main extends Application {
 		MenuItem menu1Item1 = new MenuItem("Start new game");
 		MenuItem menu1Item2 = new MenuItem("Exit");
 		MenuItem menu1Item3 = new MenuItem("Save game");
+		MenuItem menu1Item4 = new MenuItem("Load game");
 		menu1Item1.setOnAction(e -> {
 			stage.close();
 			try {
@@ -680,10 +692,18 @@ public class Main extends Application {
 			}
 				
 		});
+		menu1Item4.setOnAction(e -> {
+			Boolean res = ConfirmBox.display("Load game", "Do you wish to load the game?");
+			if (res) {
+				ob.loadGame();
+			}
+				
+		});
 
 		menu1.getItems().add(menu1Item1);
 		menu1.getItems().add(menu1Item2);
 		menu1.getItems().add(menu1Item3);
+		menu1.getItems().add(menu1Item4);
 		
 		Menu place_ship = new Menu("Place");
 		MenuItem Carrier = new MenuItem("Carrier (5)");
@@ -746,29 +766,29 @@ public class Main extends Application {
 		btn2.setStyle("-fx-background-color: #a3a0a0; ");
 		btn1.setOnAction((ActionEvent event) -> {
 			
-			if(userWindow.selectUser().equalsIgnoreCase("New")) {
-				userDetailsWindow.newUser();
-				gameType = AlertBox.displayGameType();
-				if (gameType.equals("Classic"))
-					gameMode = AlertBox.displayDifficulty();
-				stg.setScene(scene1);
-			}
-			else {
-				
-				String useroption = userDetailsWindow.existingUser();
-				
-				//if the existing user wishes to start a new game
-				if(useroption.equals("newgame")) {
-					gameType = AlertBox.displayGameType();
-					if (gameType.equals("Classic"))
-						gameMode = AlertBox.displayDifficulty();
-					stg.setScene(scene1);
-				}
-				//add the code for loading data
-				else {
-					stg.close();
-				}
-			}
+			userDetailsWindow.newUser();
+			
+
+			stg.setScene(scene1);
+//			}
+//			else {
+//				
+//				String useroption = userDetailsWindow.existingUser();
+//				
+//				//if the existing user wishes to start a new game
+//				if(useroption.equals("newgame")) {
+//					gameType = AlertBox.displayGameType();
+//					if (gameType.equals("Classic"))
+//						gameMode = AlertBox.displayDifficulty();
+//					stg.setScene(scene1);
+//				}
+//				//add the code for loading data
+//				else {
+//					newGame = false;
+//					ob.loadGame();
+//					stg.setScene(scene1);
+//				}
+//			}
 			
 		});
 		btn2.setOnAction((ActionEvent event) -> {
@@ -820,7 +840,6 @@ public class Main extends Application {
 		Label resultLabel = new Label(title + ": ");
 		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
 		resultLabel.setTextFill(Color.web("#c40831"));
-		resulttext3 = new Label();
 		resulttext3.setStyle("-fx-background-color: white;");
 		h_box1.getChildren().addAll(resultLabel, resulttext3);
 

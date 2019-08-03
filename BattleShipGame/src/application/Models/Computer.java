@@ -133,6 +133,7 @@ public class Computer extends Observable {
 
 		
 		} else if (computerGrid[x][y] == 0) {
+			computerGrid[x][y] = 3;
 			setScoreComp(-1);
 			setReply("It's a miss!!!!!");
 		

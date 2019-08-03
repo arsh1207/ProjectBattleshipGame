@@ -24,6 +24,7 @@ import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
+import application.Models.LoadClass;
 import application.Models.Player;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
@@ -38,7 +39,8 @@ public class RadarGrid implements Observer {
 	int columnButtonCount;
 	public static int buttonCount = 0;
 	int tempButtonCount;
-	public Button[][] radarButton;
+	public static Button[][] radarButton;
+	static int[][] loadRadarGrid = new int[9][11];
 	public String[][] selectedButtons;
 	int coordX = 0;
 	int coordY = 0;
@@ -190,7 +192,24 @@ public class RadarGrid implements Observer {
 			Text text1 = new Text(Character.toString(ch));
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
+		System.out.println("New game is "+Main.newGame);
 	}
+	
+	public static void loadRadarGrid() {
+		for(int i  = 0; i < radarButton.length; i++) {
+			for(int j = 0; j < radarButton[i].length; j++) {
+				System.out.print("Buttons "+i+" "+j+" "+loadRadarGrid[i][j]);
+				if(loadRadarGrid[i][j] == 1 || loadRadarGrid[i][j] == 0)
+					radarButton[i][j].setStyle("-fx-background-color: black; ");
+				else if(loadRadarGrid[i][j] == 2)
+					radarButton[i][j].setStyle("-fx-background-color: #FF0000; ");
+				else
+					radarButton[i][j].setStyle("-fx-background-color: #FFFFFF; ");
+			}
+			System.out.println("");
+		}
+	}
+	
 
 	/**
 	 * This class makes the radar grid visible on appropriate calling.
@@ -250,6 +269,23 @@ public class RadarGrid implements Observer {
 			}
 			resulttext1.setText(reply);
 			resulttext4.setText("" + score);
+		}else if (o instanceof LoadClass){
+			if(arg.equals("setcoordscomp")) {
+				int[] coordState = ((LoadClass) o).getRadarGridCoords();
+				//loadRadarGrid[coordState[0]][coordState[1]] = coordState[2];
+				//System.out.print("Buttons "+coordState[1]+" "+coordState[1]+" "+coordState[2]);
+				if(coordState[2] == 1 || coordState[2] == 0)
+					radarButton[coordState[0]][coordState[1]].setStyle("-fx-background-color: black; ");
+				else if(coordState[2] == 2)
+					radarButton[coordState[0]][coordState[1]].setStyle("-fx-background-color: #FF0000; ");
+				else
+					radarButton[coordState[0]][coordState[1]].setStyle("-fx-background-color: #FFFFFF; ");
+				radarButton[coordState[0]][coordState[1]].setDisable(false);
+			}
+			else if(arg.equals("setscorecomp")){
+				int score = ((LoadClass) o).getScore();
+				resulttext4.setText("" + score);
+			}
 		}
 	}
 	/**

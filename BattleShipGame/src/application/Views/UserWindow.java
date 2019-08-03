@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,8 +33,8 @@ public class UserWindow {
 		stage.setMinWidth(450);
 		stage.setMinHeight(300);
 
-		RadioButton rb1 = new RadioButton("New User");
-		RadioButton rb2 = new RadioButton("Existing User");
+		RadioButton rb1 = new RadioButton("New Player");
+		RadioButton rb2 = new RadioButton("Existing Player");
 		
 		rb1.setToggleGroup(radioGroup);
 		rb2.setToggleGroup(radioGroup);
@@ -60,12 +61,12 @@ public class UserWindow {
 			}
 		});
 
-		VBox v_box = new VBox(10);
+		HBox h_box = new HBox(10);
 		Node label;
-		v_box.getChildren().addAll(rb1, rb2, btn1);
-		v_box.setAlignment(Pos.CENTER);
+		h_box.getChildren().addAll(rb1, rb2, btn1);
+		h_box.setAlignment(Pos.CENTER);
 
-		Scene scene = new Scene(v_box);
+		Scene scene = new Scene(h_box);
 		stage.setScene(scene);
 		stage.showAndWait();
 		return user;
