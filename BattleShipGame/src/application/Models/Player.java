@@ -869,16 +869,16 @@ public class Player extends Observable {
 							timeb = 0;
 
 						}
-						sendReply(6792, "It's a Hit!!!!!", "132.205.94.100");
+						sendReply(6792, "It's a Hit!!!!!", prop.getProperty("Player2"));
 					} else if (userGrid[x][y] == 0) {
 						userGrid[x][y] = 3;
 						setScore(-1);
-						sendReply(6792, "It's a miss!!!!!", "132.205.94.100");
+						sendReply(6792, "It's a miss!!!!!", prop.getProperty("Player2"));
 					} else if (userGrid[x][y] == 2) {
-						sendReply(6792, "The location has been hit earlier", "132.205.94.100");
+						sendReply(6792, "The location has been hit earlier", prop.getProperty("Player2"));
 					}
 					else {
-						sendReply(6792, "Some other error", "132.205.94.100");
+						sendReply(6792, "Some other error", prop.getProperty("Player2"));
 					}
 				} else if (coordinates.length > 2) {
 					// case when some message is received
@@ -944,15 +944,15 @@ public class Player extends Observable {
 							timeb = 0;
 
 						}
-						sendReply(6795, "It's a Hit!!!!!", "132.205.94.99");
+						sendReply(6795, "It's a Hit!!!!!", prop.getProperty("Player1"));
 					} else if (userGrid[x][y] == 0) {
-						sendReply(6795, "It's a miss!!!!!", "132.205.94.99");
+						sendReply(6795, "It's a miss!!!!!", prop.getProperty("Player1"));
 					} else if (userGrid[x][y] == 2) {
 						userGrid[x][y] = 3;
 						setScore(-1);
-						sendReply(6795, "The location has been hit earlier", "132.205.94.99");
+						sendReply(6795, "The location has been hit earlier", prop.getProperty("Player1"));
 					} else {
-						sendReply(6795, "Some other error", "132.205.94.99");
+						sendReply(6795, "Some other error", prop.getProperty("Player1"));
 					}
 				} else if (coordinates.length > 2) {
 					// case when some message is received
@@ -1016,7 +1016,7 @@ public class Player extends Observable {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
 
-			InetAddress aHost_soen = InetAddress.getByName("132.205.94.100");
+			InetAddress aHost_soen = InetAddress.getByName(prop.getProperty("Player2"));
 			int player2Port = 6792;
 
 			DatagramPacket request_PLayer1 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player2Port);
@@ -1056,7 +1056,7 @@ public class Player extends Observable {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
 
-			InetAddress aHost_soen = InetAddress.getByName("132.205.94.99");
+			InetAddress aHost_soen = InetAddress.getByName(prop.getProperty("Player1"));
 			int player1Port = 6795;
 
 			DatagramPacket request_PLayer2 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player1Port);
@@ -1123,11 +1123,11 @@ public class Player extends Observable {
 		if (getPlayerWon().equals("Won")) {
 			if (PlayerNum == 1) {// send msg to player 2 that player 1 has won
 
-				sendReply(6792, "Won", "132.205.94.99");
+				sendReply(6792, "Won", prop.getProperty("Player1"));
 			} else {
 				// player 2 case
 				// send msg to player 1 that player 2 has won
-				sendReply(6795, "Won", "132.205.94.100");
+				sendReply(6795, "Won", prop.getProperty("Player2"));
 
 			}
 		}
