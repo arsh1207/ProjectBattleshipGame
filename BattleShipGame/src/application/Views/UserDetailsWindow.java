@@ -119,7 +119,7 @@ public class UserDetailsWindow implements Observer{
 		PasswordField pwBox = new PasswordField();
 		grid.add(pwBox, 1, 3);
 		
-		Button btn = new Button("Start game");
+		Button btn = new Button("Login");
 		btn.setOnAction(e -> {
 			try {
 				
@@ -134,7 +134,7 @@ public class UserDetailsWindow implements Observer{
 				if(this.user.equals("New Player")) {
 					System.out.println(this.user+" "+this.getVerifyUserName());
 					if(!this.getVerifyUserName()) {
-						AlertBox.displayResult("Success", "Have a good game.");
+						//AlertBox.displayResult("Success", "Have a good game.");
 						setUser("new");
 						stage.close();
 					}
@@ -150,7 +150,7 @@ public class UserDetailsWindow implements Observer{
 				else {
 					
 					if(this.getVerifyUserName()) {
-						AlertBox.displayResult("Success", "Have a good game.");
+						//AlertBox.displayResult("Success", "Have a good game.");
 						setUser("existing");
 						stage.close();
 					}

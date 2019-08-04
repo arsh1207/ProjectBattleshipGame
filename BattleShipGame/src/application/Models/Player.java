@@ -14,6 +14,11 @@ import java.util.Observable;
 import java.util.Properties;
 import java.util.Random;
 
+
+import application.Views.AlertBox;
+import application.Views.RadarGrid;
+import application.Views.ShipGrid;
+
 /**
  * Class to set the states for the functionality of user grid
  * 
@@ -28,7 +33,7 @@ public class Player extends Observable {
 	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 	public static ArrayList<String> sunkenShips = new ArrayList<String>();
 	public static ArrayList<String> coordinatesHit = new ArrayList<String>();
-
+	public int hitX, hitY;
 	public static int numOfShipsDep = 0;
 
 	public String shipType = "";
