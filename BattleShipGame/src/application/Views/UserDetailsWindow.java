@@ -24,6 +24,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import main.Main;
 
 /**
  * Class to enter the details for the new as well as the existing users
@@ -41,6 +42,13 @@ public class UserDetailsWindow implements Observer{
 	ToggleGroup radioGroup;
 	RadioButton selectedRadioButton;
 	String user;
+	
+	public String getUserName() {
+		return this.userName;
+	}
+	public void setUserName(String name) {
+		this.userName = name;
+	}
 	
 	public UserDetailsWindow(GridUser ob, SaveClass saveClass){
 		this.ob = ob;
@@ -111,11 +119,12 @@ public class UserDetailsWindow implements Observer{
 		PasswordField pwBox = new PasswordField();
 		grid.add(pwBox, 1, 3);
 		
-		Button btn = new Button("Start game");
+		Button btn = new Button("Login");
 		btn.setOnAction(e -> {
 			try {
 				
 				this.userName = userTextField.getText();
+				
 				this.password = pwBox.getText();
 				System.out.println("User name is: "+userName);
 				System.out.println("User psswd is: "+password);
@@ -125,7 +134,7 @@ public class UserDetailsWindow implements Observer{
 				if(this.user.equals("New Player")) {
 					System.out.println(this.user+" "+this.getVerifyUserName());
 					if(!this.getVerifyUserName()) {
-						AlertBox.displayResult("Success", "Have a good game.");
+						//AlertBox.displayResult("Success", "Have a good game.");
 						setUser("new");
 						stage.close();
 					}
@@ -141,7 +150,7 @@ public class UserDetailsWindow implements Observer{
 				else {
 					
 					if(this.getVerifyUserName()) {
-						AlertBox.displayResult("Success", "Have a good game.");
+						//AlertBox.displayResult("Success", "Have a good game.");
 						setUser("existing");
 						stage.close();
 					}

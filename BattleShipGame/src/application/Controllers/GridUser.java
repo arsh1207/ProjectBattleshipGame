@@ -138,6 +138,19 @@ public class GridUser {
 		computer.checkSunkenShips();
 	}
 	
+	public void callPlayerSunkenShips() {
+		Player.checkSunkenShips();
+	}
+	
+	public void CallPlayer1Hit2Send(int x, int y) {
+		player.Player1Hit2Send(x, y);
+	}
+	
+	public void CallPlayer2Hit1Send(int x, int y) {
+		player.Player2Hit1Send(x, y);
+	}
+	
+	
 	/**
 	 * method to transfer the call to checkUserName in models
 	 * @param saveClass Object for SaveClass

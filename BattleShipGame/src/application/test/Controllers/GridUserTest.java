@@ -47,7 +47,7 @@ public class GridUserTest {
 		HitStrategySalvo salvo = Mockito.spy(new HitStrategySalvo());
 		// HitStrategy stat= Mockito.spy(new HitStrategy());
 
-		gridUser = Mockito.spy(new GridUser(new Player(), new Computer(), new HitStrategy(), salvo));
+		//gridUser = Mockito.spy(new GridUser(new Player(), new Computer(), new HitStrategy(), salvo));
 
 		Main.gameType = "Salvo";
 
@@ -72,7 +72,7 @@ public class GridUserTest {
 		// HitStrategySalvo salvo = Mockito.spy(new HitStrategySalvo());
 		HitStrategy stat = Mockito.spy(new HitStrategy());
 
-		gridUser = Mockito.spy(new GridUser(new Player(), new Computer(), stat, new HitStrategySalvo()));
+		//gridUser = Mockito.spy(new GridUser(new Player(), new Computer(), stat, new HitStrategySalvo()));
 
 		Mockito.doNothing().when(stat).randomHit();
 		// doNothing().when(myList).add(isA(Integer.class), isA(String.class));
