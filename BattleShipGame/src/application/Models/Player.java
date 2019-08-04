@@ -1,5 +1,10 @@
 package application.Models;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,17 +12,16 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
-import application.Views.AlertBox;
 import application.Views.ShipGrid;
 
 /**
  * Class to set the states for the functionality of user grid
+ * 
  * @author Sagar Bhatia
  *
  */
 public class Player extends Observable {
 
-	//
 	public static int userScore;
 	public List<String> deployedShips = new ArrayList<>();
 	public HashMap<String, Integer> convert = new HashMap<>();
@@ -278,13 +282,13 @@ public class Player extends Observable {
 			notifyObservers();
 		}
 	}
-	
-	
+
 	/**
 	 * Method to check whether the ships are placed adjacent to each other or not
+	 * 
 	 * @param i x-axis
 	 * @param j y-axis
-	 * @return  Boolean tell if a ship is adjacent or not
+	 * @return Boolean tell if a ship is adjacent or not
 	 */
 	public Boolean adjacentShipCheck(int i, int j) {
 		Boolean shipPresence = false;
@@ -303,9 +307,10 @@ public class Player extends Observable {
 		}
 		return shipPresence;
 	}
-	
+
 	/**
 	 * methods to check whether the points are not out of the grid
+	 * 
 	 * @param i x - axis
 	 * @param j y - axis
 	 * @return Boolean if the point is valid or not
@@ -388,7 +393,7 @@ public class Player extends Observable {
 		else
 			return false;
 	}
-	
+
 	/**
 	 * Method to set the functionality of feeling lazy
 	 */
@@ -426,7 +431,7 @@ public class Player extends Observable {
 				userGrid[entry.getValue()][entry.getKey()] = 1;
 				templist.add(Integer.toString(entry.getValue()) + "," + Integer.toString(entry.getKey()));
 				shipsMap.put("Carrier", (ArrayList) templist);
-	
+
 			}
 
 			if (shipPlacementFlag) {
@@ -522,7 +527,7 @@ public class Player extends Observable {
 				userGrid[entry.getKey()][entry.getValue()] = 1;
 				templist.add(Integer.toString(entry.getKey()) + "," + Integer.toString(entry.getValue()));
 				shipsMap.put("Cruiser", (ArrayList) templist);
-		
+
 			}
 
 			if (shipPlacementFlag) {
@@ -568,7 +573,7 @@ public class Player extends Observable {
 				userGrid[entry.getKey()][entry.getValue()] = 1;
 				templist.add(Integer.toString(entry.getKey()) + "," + Integer.toString(entry.getValue()));
 				shipsMap.put("Submarine", (ArrayList) templist);
-		
+
 			}
 			if (shipPlacementFlag) {
 				int[] coords = { subY, subX, (subY), subX + 2 };
@@ -642,14 +647,15 @@ public class Player extends Observable {
 
 		}
 	}
-	
+
 	/**
 	 * method to check the adjacency in user ships
-	 * @param x x-coordinate
-	 * @param y y-coordinate
+	 * 
+	 * @param x         x-coordinate
+	 * @param y         y-coordinate
 	 * @param direction tell the direction horizontal or vertical
-	 * @param points size of ship points
- 	 * @return Boolean returns if it can place or not
+	 * @param points    size of ship points
+	 * @return Boolean returns if it can place or not
 	 */
 	public Boolean checkUserShip(int x, int y, String direction, int points) {
 		Boolean canPlace = true;
@@ -711,13 +717,12 @@ public class Player extends Observable {
 			if (cscore > pscore) {
 				scoreReverse = true;
 				setCompWon("Won");
-				//AlertBox.displayResult("Hurray!!", "Computer Won ");
+				// AlertBox.displayResult("Hurray!!", "Computer Won ");
 			} else { // do nothing
-				 setCompWon("Lost");
+				setCompWon("Lost");
 			}
 		}
 	}
-	
 
 	/**
 	 * Method to display the computer grid
@@ -729,7 +734,7 @@ public class Player extends Observable {
 		for (int i = 0; i < rows; i++) {
 
 			for (int j = 0; j < cols; j++) {
-	
+
 			}
 		}
 
@@ -780,8 +785,275 @@ public class Player extends Observable {
 			shipsMap = new HashMap<>();
 			shipsMap.putAll(tempMap);
 		}
-		
+
 		ShipGrid.salvaAlertCall(sunkenShips);
+
+	}
+
+	public void launchServer1() {
+
+		DatagramSocket aSocket = null;
+
+		try {
+
+			aSocket = new DatagramSocket(6792);
+			byte[] buffer = new byte[1000];
+
+			while (true) {
+				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
+				aSocket.receive(request);
+
+				String msg = new String(request.getData(), 0, request.getLength());
+
+				String[] coordinates = msg.split("\\s");
+
+				// case when the coordinates are received
+				if (coordinates.length == 2) {
+
+					int x = Integer.parseInt(coordinates[0]);
+					int y = Integer.parseInt(coordinates[1]);
+
+					String coordx = coordinates[0];
+					String coordy = coordinates[1];
+					if (userGrid[x][y] == 1) {
+						// change the grid value from 1 to 2 to signify hit
+						userGrid[x][y] = 2;
+
+						coordinatesHit.add(coordx + "," + coordy);
+
+						sendReply(6795, "It's a Hit!!!!!");
+
+					} else if (userGrid[x][y] == 0) {
+
+						sendReply(6795, "It's a miss!!!!!");
+
+					} else if (userGrid[x][y] == 2) {
+
+						sendReply(6795, "The location has been hit earlier");
+
+					}
+
+					else {
+
+						sendReply(6795, "Some other error");
+
+					}
+
+				} else if (coordinates.length > 2) {
+					// case when some message is received
+					// set the message in the right getter and setter
+
+					setReply(msg);
+				}
+
+			}
+
+		} catch (SocketException e) {
+			System.out.println("Socket: " + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("IO: " + e.getMessage());
+		}
+
+	}
+	/*
+	 * 
+	 * launch server for player 2 receives the hit coordinates from other server
+	 * check if its a hit or miss
+	 * 
+	 */
+
+	public void launchServer2() {
+
+		DatagramSocket aSocket = null;
+
+		try {
+
+			aSocket = new DatagramSocket(6792);
+			byte[] buffer = new byte[1000];
+
+			while (true) {
+				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
+				aSocket.receive(request);
+
+				String msg = new String(request.getData(), 0, request.getLength());
+
+				String[] coordinates = msg.split("\\s");
+
+				// case when the coordinates are received
+				if (coordinates.length == 2) {
+
+					int x = Integer.parseInt(coordinates[0]);
+					int y = Integer.parseInt(coordinates[1]);
+
+					String coordx = coordinates[0];
+					String coordy = coordinates[1];
+					if (userGrid[x][y] == 1) {
+						// change the grid value from 1 to 2 to signify hit
+						userGrid[x][y] = 2;
+
+						coordinatesHit.add(coordx + "," + coordy);
+
+						sendReply(6792, "It's a Hit!!!!!");
+
+					} else if (userGrid[x][y] == 0) {
+
+						sendReply(6792, "It's a miss!!!!!");
+
+					} else if (userGrid[x][y] == 2) {
+
+						sendReply(6792, "The location has been hit earlier");
+
+					}
+
+					else {
+
+						sendReply(6792, "Some other error");
+
+					}
+
+				} else if (coordinates.length > 2) {
+					// case when some message is received
+					// set the message in the right getter and setter
+
+					setReply(msg);
+				}
+
+			}
+
+		} catch (SocketException e) {
+			System.out.println("Socket: " + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("IO: " + e.getMessage());
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param playerType
+	 */
+	public void PlayerMode(int playerNum) {
+
+		if (playerNum == 1) {// launch for the first player
+
+			Runnable task = () -> {
+
+				launchServer1();
+			};
+
+		} else if (playerNum == 2) {
+			Runnable task = () -> {
+
+				launchServer2();
+			};
+
+		}
+
+	}
+
+	/**
+	 * Front end will call this method whenever there is PLayer 1 hits player 2
+	 * 
+	 * 
+	 * @param x
+	 * @param y
+	 */
+
+	public void Player1Hit2Send(int x, int y) {
+
+		String rply = x + " " + y;
+		byte[] bytesSend = null;
+		DatagramSocket aSocket = null;
+		try {
+			bytesSend = rply.getBytes();
+			aSocket = new DatagramSocket();
+
+			InetAddress aHost_soen = InetAddress.getByName("localhost");
+			int player2Port = 6792;
+
+			DatagramPacket request_PLayer1 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player2Port);
+			aSocket.send(request_PLayer1);
+		} catch (SocketException e) {
+			System.out.println("Socket: " + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("IO: " + e.getMessage());
+		} finally
+
+		{
+			{
+				if (aSocket != null)
+					aSocket.close();
+
+			}
+		}
+
+	}
+
+	/**
+	 * Front end will call this method whenever Player 2 hits player 1
+	 * 
+	 * 
+	 * @param x
+	 * @param y
+	 */
+
+	public void Player2Hit1Send(int x, int y) {
+
+		String rply = x + " " + y;
+		byte[] bytesSend = null;
+		DatagramSocket aSocket = null;
+		try {
+			bytesSend = rply.getBytes();
+			aSocket = new DatagramSocket();
+
+			InetAddress aHost_soen = InetAddress.getByName("localhost");
+			int player1Port = 6795;
+
+			DatagramPacket request_PLayer2 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player1Port);
+			aSocket.send(request_PLayer2);
+		} catch (SocketException e) {
+			System.out.println("Socket: " + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("IO: " + e.getMessage());
+		} finally
+
+		{
+			{
+				if (aSocket != null)
+					aSocket.close();
+
+			}
+		}
+
+	}
+
+	public void sendReply(int port, String msg) {
+
+		String rply = msg;
+		byte[] bytesSend = null;
+		DatagramSocket aSocket = null;
+		try {
+			bytesSend = rply.getBytes();
+			aSocket = new DatagramSocket();
+
+			InetAddress aHost_soen = InetAddress.getByName("localhost");
+			int player1Port = port;
+
+			DatagramPacket repy_PLayer2or1 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player1Port);
+			aSocket.send(repy_PLayer2or1);
+		} catch (SocketException e) {
+			System.out.println("Socket: " + e.getMessage());
+		} catch (IOException e) {
+			System.out.println("IO: " + e.getMessage());
+		} finally
+
+		{
+			{
+				if (aSocket != null)
+					aSocket.close();
+
+			}
+		}
 
 	}
 
