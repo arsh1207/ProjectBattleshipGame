@@ -33,6 +33,39 @@ public class Player extends Observable {
 	public static int numOfShipsDep = 0;
 
 	public String shipType = "";
+	// msg for himself that he has won or not
+	public String PlayerWon = "";
+
+	// msg from other player that he won or not
+
+	public String OtherWon = "";
+
+	public String getOtherWon() {
+		return OtherWon;
+	}
+
+	public void setOtherWon(String otherWon) {
+		OtherWon = otherWon;
+	}
+
+	public String getPlayerWon() {
+		return PlayerWon;
+	}
+
+	public void setPlayerWon(String playerWon) {
+		PlayerWon = playerWon;
+	}
+
+	// gives that which player is playing
+	public int PlayerNum = 0;
+
+	public int getPlayerNum() {
+		return PlayerNum;
+	}
+
+	public void setPlayerNum(int playerNum) {
+		PlayerNum = playerNum;
+	}
 
 	int[] coords = {};
 
@@ -144,8 +177,6 @@ public class Player extends Observable {
 		setChanged();
 		notifyObservers("compwon");
 	}
-
-	
 
 	/**
 	 * 
@@ -783,7 +814,7 @@ public class Player extends Observable {
 			shipsMap.putAll(tempMap);
 		}
 
-		//ShipGrid.salvaAlertCall(sunkenShips);
+		// ShipGrid.salvaAlertCall(sunkenShips);
 
 	}
 
@@ -805,7 +836,12 @@ public class Player extends Observable {
 				String[] coordinates = msg.split("\\s");
 
 				// case when the coordinates are received
-				if (coordinates.length == 2) {
+
+				if (coordinates.length == 1) {
+
+					setOtherWon("Won");
+
+				} else if (coordinates.length == 2) {
 
 					int x = Integer.parseInt(coordinates[0]);
 					int y = Integer.parseInt(coordinates[1]);
@@ -877,7 +913,12 @@ public class Player extends Observable {
 				String[] coordinates = msg.split("\\s");
 
 				// case when the coordinates are received
-				if (coordinates.length == 2) {
+
+				if (coordinates.length == 1) {
+
+					setOtherWon("Won");
+
+				} else if (coordinates.length == 2) {
 
 					int x = Integer.parseInt(coordinates[0]);
 					int y = Integer.parseInt(coordinates[1]);
@@ -931,6 +972,7 @@ public class Player extends Observable {
 	 */
 	public void PlayerMode(int playerNum) {
 
+		setPlayerNum(playerNum);
 		if (playerNum == 1) {// launch for the first player
 
 			Runnable task = () -> {
@@ -1048,6 +1090,40 @@ public class Player extends Observable {
 			{
 				if (aSocket != null)
 					aSocket.close();
+
+			}
+		}
+
+	}
+
+	public void checkPlayerWon() {
+
+		boolean flagcomp = false;
+
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (userGrid[i][j] == 1) {
+					flagcomp = true;
+				}
+			}
+		}
+
+		if (!flagcomp) {
+
+			setPlayerWon("Won");
+
+		} else { // do nothing
+			setPlayerWon("Lost");
+		}
+
+		if (getPlayerWon().equals("Won")) {
+			if (PlayerNum == 1) {// send msg to player 2 that player 1 has won
+
+				sendReply(6792, "Won");
+			} else {
+				// player 2 case
+				// send msg to player 1 that player 2 has won
+				sendReply(6795, "Won");
 
 			}
 		}
