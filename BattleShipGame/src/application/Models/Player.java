@@ -1,6 +1,7 @@
 package application.Models;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -10,11 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Properties;
 import java.util.Random;
-
-import application.Views.AlertBox;
-import application.Views.RadarGrid;
-import application.Views.ShipGrid;
 
 /**
  * Class to set the states for the functionality of user grid
@@ -94,6 +92,13 @@ public class Player extends Observable {
 	final static int rows = 9;
 	final static int cols = 11;
 	static String name = "";
+
+	Properties prop = new Properties();
+	
+	
+	String propFileName="config.properties";
+	InputStream inputStream=getClass().getClassLoader().getResourceAsStream(propFileName);	
+	
 
 	// original Grid that remains unchanged throughout the game
 	public static Integer[][] userGrid = new Integer[rows][cols];
