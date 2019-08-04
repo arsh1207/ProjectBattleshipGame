@@ -1,6 +1,7 @@
 package application.Models;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -10,10 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Properties;
 import java.util.Random;
-
-import application.Views.AlertBox;
-import application.Views.ShipGrid;
 
 /**
  * Class to set the states for the functionality of user grid
@@ -89,6 +88,13 @@ public class Player extends Observable {
 	final static int rows = 9;
 	final static int cols = 11;
 	static String name = "";
+
+	Properties prop = new Properties();
+	
+	
+	String propFileName="config.properties";
+	InputStream inputStream=getClass().getClassLoader().getResourceAsStream(propFileName);	
+	
 
 	// original Grid that remains unchanged throughout the game
 	public static Integer[][] userGrid = new Integer[rows][cols];
@@ -854,21 +860,21 @@ public class Player extends Observable {
 
 						coordinatesHit.add(coordx + "," + coordy);
 
-						sendReply(6795, "It's a Hit!!!!!");
+						sendReply(6795, "It's a Hit!!!!!",prop.getProperty("Player2"));
 
 					} else if (userGrid[x][y] == 0) {
 
-						sendReply(6795, "It's a miss!!!!!");
+						sendReply(6795, "It's a miss!!!!!",prop.getProperty("Player2"));
 
 					} else if (userGrid[x][y] == 2) {
 
-						sendReply(6795, "The location has been hit earlier");
+						sendReply(6795, "The location has been hit earlier",prop.getProperty("Player2"));
 
 					}
 
 					else {
 
-						sendReply(6795, "Some other error");
+						sendReply(6795, "Some other error",prop.getProperty("Player2"));
 
 					}
 
@@ -931,21 +937,21 @@ public class Player extends Observable {
 
 						coordinatesHit.add(coordx + "," + coordy);
 
-						sendReply(6792, "It's a Hit!!!!!");
+						sendReply(6792, "It's a Hit!!!!!",prop.getProperty("Player1"));
 
 					} else if (userGrid[x][y] == 0) {
 
-						sendReply(6792, "It's a miss!!!!!");
+						sendReply(6792, "It's a miss!!!!!",prop.getProperty("Player1"));
 
 					} else if (userGrid[x][y] == 2) {
 
-						sendReply(6792, "The location has been hit earlier");
+						sendReply(6792, "The location has been hit earlier",prop.getProperty("Player1"));
 
 					}
 
 					else {
 
-						sendReply(6792, "Some other error");
+						sendReply(6792, "Some other error",prop.getProperty("Player1"));
 
 					}
 
@@ -1007,7 +1013,7 @@ public class Player extends Observable {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
 
-			InetAddress aHost_soen = InetAddress.getByName("localhost");
+			InetAddress aHost_soen = InetAddress.getByName(prop.getProperty("Player2"));
 			int player2Port = 6792;
 
 			DatagramPacket request_PLayer1 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player2Port);
@@ -1045,7 +1051,7 @@ public class Player extends Observable {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
 
-			InetAddress aHost_soen = InetAddress.getByName("localhost");
+			InetAddress aHost_soen = InetAddress.getByName(prop.getProperty("Player2"));
 			int player1Port = 6795;
 
 			DatagramPacket request_PLayer2 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player1Port);
@@ -1066,7 +1072,7 @@ public class Player extends Observable {
 
 	}
 
-	public void sendReply(int port, String msg) {
+	public void sendReply(int port, String msg,String address) {
 
 		String rply = msg;
 		byte[] bytesSend = null;
@@ -1075,7 +1081,7 @@ public class Player extends Observable {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
 
-			InetAddress aHost_soen = InetAddress.getByName("localhost");
+			InetAddress aHost_soen = InetAddress.getByName(address);
 			int player1Port = port;
 
 			DatagramPacket repy_PLayer2or1 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player1Port);
@@ -1119,11 +1125,11 @@ public class Player extends Observable {
 		if (getPlayerWon().equals("Won")) {
 			if (PlayerNum == 1) {// send msg to player 2 that player 1 has won
 
-				sendReply(6792, "Won");
+				sendReply(6792, "Won",prop.getProperty("Player1"));
 			} else {
 				// player 2 case
 				// send msg to player 1 that player 2 has won
-				sendReply(6795, "Won");
+				sendReply(6795, "Won",prop.getProperty("Player2"));
 
 			}
 		}
