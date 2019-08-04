@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
+import application.Views.AlertBox;
 import application.Views.ShipGrid;
 
 /**
@@ -140,15 +141,11 @@ public class Player extends Observable {
 
 	public void setCompWon(String compWon) {
 		this.compWon = compWon;
+		setChanged();
+		notifyObservers("compwon");
 	}
 
-	public int getScore() {
-		return userScore;
-	}
-
-	public void setScore(int score) {
-		this.userScore = score;
-	}
+	
 
 	/**
 	 * 
@@ -279,7 +276,7 @@ public class Player extends Observable {
 			setReply("Invalid input, please try again.");
 		} finally {
 			setChanged();
-			notifyObservers();
+			notifyObservers("ShipDeploy");
 		}
 	}
 
@@ -446,7 +443,7 @@ public class Player extends Observable {
 			setAxis("X");
 
 			setChanged();
-			notifyObservers();
+			notifyObservers("ShipDeploy");
 
 			int battleShipX = rand.nextInt(9);
 			int battleShipY = rand.nextInt(11);
@@ -494,7 +491,7 @@ public class Player extends Observable {
 			setAxis("Y");
 
 			setChanged();
-			notifyObservers();
+			notifyObservers("ShipDeploy");
 
 			int cruiserX = rand.nextInt(9);
 			int cruiserY = rand.nextInt(11);
@@ -542,7 +539,7 @@ public class Player extends Observable {
 			setAxis("Y");
 
 			setChanged();
-			notifyObservers();
+			notifyObservers("ShipDeploy");
 
 			int subX = rand.nextInt(9);
 			int subY = rand.nextInt(11);
@@ -590,7 +587,7 @@ public class Player extends Observable {
 			setAxis("Y");
 
 			setChanged();
-			notifyObservers();
+			notifyObservers("ShipDeploy");
 
 			int destroyerX = rand.nextInt(9);
 			int destroyerY = rand.nextInt(11);
@@ -638,7 +635,7 @@ public class Player extends Observable {
 			setAxis("X");
 
 			setChanged();
-			notifyObservers();
+			notifyObservers("ShipDeploy");
 
 			numOfShipsDep = 5;
 
@@ -786,7 +783,7 @@ public class Player extends Observable {
 			shipsMap.putAll(tempMap);
 		}
 
-		ShipGrid.salvaAlertCall(sunkenShips);
+		//ShipGrid.salvaAlertCall(sunkenShips);
 
 	}
 
