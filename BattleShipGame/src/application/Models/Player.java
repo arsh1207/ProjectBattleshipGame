@@ -1098,17 +1098,17 @@ public class Player extends Observable {
 
 	public void checkPlayerWon() {
 
-		boolean flagcomp = false;
+		boolean flag = false;
 
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				if (userGrid[i][j] == 1) {
-					flagcomp = true;
+					flag = true;
 				}
 			}
 		}
 
-		if (!flagcomp) {
+		if (!flag) {
 
 			setPlayerWon("Won");
 
