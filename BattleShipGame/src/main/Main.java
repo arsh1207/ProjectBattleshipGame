@@ -2,6 +2,9 @@ package main;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
@@ -15,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -33,6 +37,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
@@ -78,6 +83,7 @@ public class Main extends Application {
 	public static Button tossBtn;
 	public static boolean newGame = true;
 	public static Label resultLabel1, resultLabel2;
+	Timer timer;
 
 	/**
 	 * It is the main method
@@ -167,7 +173,6 @@ public class Main extends Application {
 			v_box1.setSpacing(20.0);
 			userRandomShips.setOnAction((ActionEvent event) -> {
 				if (Player.numOfShipsDep == 0)
-
 					ob.deployUserShips();
 			});
 
@@ -178,18 +183,21 @@ public class Main extends Application {
 
 			Button startBtn = new Button("Start Playing");
 			startBtn.setDisable(false);
-			startBtn.setOnAction((ActionEvent event) -> {				
+			startBtn.setOnAction((ActionEvent event) -> {
 				if (Player.numOfShipsDep == 5) {
-					gameType = AlertBox.displayGameType();
-					if (gameType.equals("Classic"))
-						gameMode = AlertBox.displayDifficulty();
-					if (gameType.equals("Salvo")) { salvoAlertCall(); }					 
 					for (int i = 0; i < 9; i++) {
 						for (int j = 0; j < 11; j++) {
 							radarGridObserver.radarButton[i][j].setDisable(false);
 						}
 					}
-					ob.deployCompShips();
+					if (!gameMode.equalsIgnoreCase("vsmode")) {
+						ob.deployCompShips();
+					}
+					timer = new Timer();
+					timer.schedule(new RemindTask(), 30 * 1000);
+
+					// Label timerLabel = new Label(timer.toString());
+					System.out.println(timer.toString());
 				} else {
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
@@ -212,9 +220,15 @@ public class Main extends Application {
 			}
 
 			h_box1.getChildren().add(healthbarTank1);
-			split_pane2.getItems().addAll(h_box1, h_box2);
+			// split_pane2.getItems().addAll(h_box1, h_box2);
+			AnchorPane healthbars = new AnchorPane();
+
+			healthbars.getChildren().addAll(h_box1, h_box2);
+			AnchorPane.setBottomAnchor(h_box1, 8.0);
+			AnchorPane.setRightAnchor(h_box2, 5.0);
+			// AnchorPane.setRightAnchor(timerLabel, 10.0);
 			v_box3.getChildren().addAll(startBtn, tossBtn);
-			v_box4.getChildren().addAll(menuBar, split_pane2, split_pane);
+			v_box4.getChildren().addAll(menuBar, healthbars, split_pane);
 			v_box1.fillWidthProperty();
 			scene1 = new Scene(v_box4, 850, 850);
 			v_box1.getStylesheets().add("application/Views/application.css");
@@ -225,6 +239,17 @@ public class Main extends Application {
 			System.out.println(e.getMessage());
 		}
 
+	}
+
+	public void initializingVsComputer() {
+
+	}
+
+	class RemindTask extends TimerTask {
+		public void run() {
+			System.out.println("Time's up!");
+			timer.cancel(); // Terminate the timer thread
+		}
 	}
 
 	/**
@@ -631,8 +656,7 @@ public class Main extends Application {
 			});
 		}
 	}
-	
-	
+
 	public void setShipImages(VBox v_box2, String shipName) {
 		try {
 			Image image = new Image(new FileInputStream("images/ships/" + shipName + ".png"));
@@ -654,7 +678,7 @@ public class Main extends Application {
 
 					if (event.getButton() == MouseButton.PRIMARY) {
 						content.putString("Primary;" + shipName);
-						content.putImage(imageView.getImage());					
+						content.putImage(imageView.getImage());
 					} else if (event.getButton() == MouseButton.SECONDARY) {
 						content.putString("Secondary;" + shipName);
 						content.putImage(image2);
@@ -711,7 +735,7 @@ public class Main extends Application {
 			if (res) {
 				ob.loadGame();
 			}
-				
+
 		});
 
 		menu1.getItems().add(menu1Item1);
@@ -773,17 +797,30 @@ public class Main extends Application {
 				BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 		Background background = new Background(backgroundimage);
 		root1.setBackground(background);
-
-		Button btn1 = new Button("Start New Game");
+		
+		Button btn5 = new Button("Player 1");
+		btn5.setStyle("-fx-background-color: #a3a0a0; ");
+		btn5.setVisible(false);
+		Button btn6 = new Button("Player 2");
+		btn6.setStyle("-fx-background-color: #a3a0a0; ");
+		btn6.setVisible(false);
+		
+		
+		Button btn1 = new Button("Vs Player");
 		btn1.setStyle("-fx-background-color: #a3a0a0; ");
 		Button btn2 = new Button("Exit Game");
 		btn2.setStyle("-fx-background-color: #a3a0a0; ");
+		Button btn3 = new Button("Vs Computer");
+		btn3.setStyle("-fx-background-color: #a3a0a0; ");
+		Button btn4 = new Button("Salvo Mode");
+		btn4.setStyle("-fx-background-color: #a3a0a0; ");
 		btn1.setOnAction((ActionEvent event) -> {
-			
-			userDetailsWindow.newUser();
-			
-
-			stg.setScene(scene1);
+		//add playr 1 or 2
+			gameType = "vsmode";
+			btn5.setVisible(true);
+			btn6.setVisible(true);
+			//userDetailsWindow.newUser();
+			//stg.setScene(scene1);
 //			}
 //			else {
 //				
@@ -805,14 +842,43 @@ public class Main extends Application {
 //			}
 
 		});
+		
+		btn5.setOnAction((ActionEvent event) -> {			
+			player.PlayerMode(1);
+			userDetailsWindow.newUser();
+			stg.setScene(scene1);
+		});
+
+		btn6.setOnAction((ActionEvent event) -> {			
+			player.PlayerMode(2);
+			userDetailsWindow.newUser();
+			stg.setScene(scene1);
+		});
+		
+		btn3.setOnAction((ActionEvent event) -> {
+			gameType = "Classic";
+			gameMode = AlertBox.displayDifficulty();
+			userDetailsWindow.newUser();
+			stg.setScene(scene1);
+		});
+		btn4.setOnAction((ActionEvent event) -> {
+			userDetailsWindow.newUser();
+			gameType = "Salvo";
+			stg.setScene(scene1);
+		});
 		btn2.setOnAction((ActionEvent event) -> {
 			Boolean res = ConfirmBox.display("Confirmation box", "Are you sure?");
 			if (res)
 				stg.close();
 		});
+		
 		root1.setAlignment(Pos.CENTER);
 		root1.add(btn1, 0, 1);
-		root1.add(btn2, 0, 2);
+		root1.add(btn5, 2, 1);
+		root1.add(btn6, 3, 1);
+		root1.add(btn3, 0, 2);
+		root1.add(btn4, 0, 3);
+		root1.add(btn2, 0, 4);
 		stg.setScene(scene2);
 	}
 
@@ -857,8 +923,8 @@ public class Main extends Application {
 		imageView.setFitHeight(50);
 		imageView.setFitWidth(50);
 		imageView.setPreserveRatio(true);
-		//imageView.fitWidthProperty().bind(v_box2.widthProperty());
-	//	resultLabel1.setGraphic(imageView);
+		// imageView.fitWidthProperty().bind(v_box2.widthProperty());
+		// resultLabel1.setGraphic(imageView);
 		resultLabel1.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 		resultLabel1.setTextFill(Color.web("#c40831"));
 		resulttext3.setStyle("-fx-background-color: white;");
@@ -873,14 +939,14 @@ public class Main extends Application {
 	 * @param title To display name of caller (User or CPU).
 	 */
 	public void ScoreComp(String title) {
-		 resultLabel2 = new Label(title);
-		 VBox vBox = new VBox();
+		resultLabel2 = new Label(title);
+		VBox vBox = new VBox();
 		ImageView imageView = new ImageView("file:images/icon4.gif");
 		imageView.setFitHeight(50);
 		imageView.setFitWidth(50);
 		imageView.setPreserveRatio(true);
-		//imageView.fitWidthProperty().bind(v_box2.widthProperty());
-	//	resultLabel2.setGraphic(imageView);
+		// imageView.fitWidthProperty().bind(v_box2.widthProperty());
+		// resultLabel2.setGraphic(imageView);
 		resultLabel2.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 		resultLabel2.setTextFill(Color.web("#00bfff"));
 		resulttext4.setStyle("-fx-background-color: white;");

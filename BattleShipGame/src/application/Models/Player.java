@@ -13,6 +13,7 @@ import java.util.Observable;
 import java.util.Random;
 
 import application.Views.AlertBox;
+import application.Views.RadarGrid;
 import application.Views.ShipGrid;
 
 /**
@@ -29,7 +30,7 @@ public class Player extends Observable {
 	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 	public static ArrayList<String> sunkenShips = new ArrayList<String>();
 	public static ArrayList<String> coordinatesHit = new ArrayList<String>();
-
+	public int hitX, hitY;
 	public static int numOfShipsDep = 0;
 
 	public String shipType = "";
@@ -57,7 +58,7 @@ public class Player extends Observable {
 	}
 
 	// gives that which player is playing
-	public int PlayerNum = 0;
+	public static int PlayerNum = 0;
 
 	public int getPlayerNum() {
 		return PlayerNum;
@@ -758,14 +759,10 @@ public class Player extends Observable {
 	 * @param Grid contains the reference to the grid
 	 */
 	public void printGrid(Integer[][] Grid) {
-
 		for (int i = 0; i < rows; i++) {
-
 			for (int j = 0; j < cols; j++) {
-
 			}
 		}
-
 	}
 
 	/**
@@ -773,16 +770,11 @@ public class Player extends Observable {
 	 * 
 	 */
 	public void initialize() {
-
 		for (int i = 0; i < rows; i++) {
-
 			for (int j = 0; j < cols; j++) {
-
 				userGrid[i][j] = 0;
-
 			}
 		}
-
 	}
 
 	/**
@@ -813,74 +805,52 @@ public class Player extends Observable {
 			shipsMap = new HashMap<>();
 			shipsMap.putAll(tempMap);
 		}
-
 		// ShipGrid.salvaAlertCall(sunkenShips);
 
 	}
 
 	public void launchServer1() {
-
 		DatagramSocket aSocket = null;
-
 		try {
-
 			aSocket = new DatagramSocket(6792);
 			byte[] buffer = new byte[1000];
-
 			while (true) {
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 				aSocket.receive(request);
-
 				String msg = new String(request.getData(), 0, request.getLength());
-
 				String[] coordinates = msg.split("\\s");
-
 				// case when the coordinates are received
-
 				if (coordinates.length == 1) {
-
 					setOtherWon("Won");
-
 				} else if (coordinates.length == 2) {
-
 					int x = Integer.parseInt(coordinates[0]);
 					int y = Integer.parseInt(coordinates[1]);
-
 					String coordx = coordinates[0];
 					String coordy = coordinates[1];
 					if (userGrid[x][y] == 1) {
 						// change the grid value from 1 to 2 to signify hit
 						userGrid[x][y] = 2;
-
 						coordinatesHit.add(coordx + "," + coordy);
-
 						sendReply(6795, "It's a Hit!!!!!");
-
 					} else if (userGrid[x][y] == 0) {
-
 						sendReply(6795, "It's a miss!!!!!");
-
 					} else if (userGrid[x][y] == 2) {
-
 						sendReply(6795, "The location has been hit earlier");
-
 					}
-
 					else {
-
 						sendReply(6795, "Some other error");
-
 					}
-
 				} else if (coordinates.length > 2) {
 					// case when some message is received
 					// set the message in the right getter and setter
-
-					setReply(msg);
+				//	setReply(msg);
+					if(msg.contains("Hit")) {
+						RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FF0000; ");
+					} else if(msg.contains("miss")) {
+						RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FFFFFF; ");
+					}					
 				}
-
 			}
-
 		} catch (SocketException e) {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
@@ -888,74 +858,53 @@ public class Player extends Observable {
 		}
 
 	}
+	
 	/*
 	 * 
 	 * launch server for player 2 receives the hit coordinates from other server
 	 * check if its a hit or miss
 	 * 
 	 */
-
 	public void launchServer2() {
-
 		DatagramSocket aSocket = null;
-
 		try {
-
 			aSocket = new DatagramSocket(6792);
 			byte[] buffer = new byte[1000];
-
 			while (true) {
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 				aSocket.receive(request);
-
 				String msg = new String(request.getData(), 0, request.getLength());
-
 				String[] coordinates = msg.split("\\s");
-
 				// case when the coordinates are received
-
 				if (coordinates.length == 1) {
-
 					setOtherWon("Won");
-
 				} else if (coordinates.length == 2) {
-
 					int x = Integer.parseInt(coordinates[0]);
 					int y = Integer.parseInt(coordinates[1]);
-
 					String coordx = coordinates[0];
 					String coordy = coordinates[1];
 					if (userGrid[x][y] == 1) {
 						// change the grid value from 1 to 2 to signify hit
 						userGrid[x][y] = 2;
-
 						coordinatesHit.add(coordx + "," + coordy);
-
 						sendReply(6792, "It's a Hit!!!!!");
-
 					} else if (userGrid[x][y] == 0) {
-
 						sendReply(6792, "It's a miss!!!!!");
-
 					} else if (userGrid[x][y] == 2) {
-
 						sendReply(6792, "The location has been hit earlier");
-
-					}
-
-					else {
-
+					} else {
 						sendReply(6792, "Some other error");
-
 					}
-
 				} else if (coordinates.length > 2) {
 					// case when some message is received
 					// set the message in the right getter and setter
-
-					setReply(msg);
+					//setReply(msg);
+					if(msg.contains("Hit")) {
+						RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FF0000; ");
+					} else if(msg.contains("miss")) {
+						RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FFFFFF; ");
+					}
 				}
-
 			}
 
 		} catch (SocketException e) {
@@ -976,13 +925,11 @@ public class Player extends Observable {
 		if (playerNum == 1) {// launch for the first player
 
 			Runnable task = () -> {
-
 				launchServer1();
 			};
 
 		} else if (playerNum == 2) {
 			Runnable task = () -> {
-
 				launchServer2();
 			};
 
@@ -993,13 +940,14 @@ public class Player extends Observable {
 	/**
 	 * Front end will call this method whenever there is PLayer 1 hits player 2
 	 * 
-	 * 
 	 * @param x
 	 * @param y
 	 */
-
 	public void Player1Hit2Send(int x, int y) {
 
+		hitX = x;
+		hitY = y;
+		
 		String rply = x + " " + y;
 		byte[] bytesSend = null;
 		DatagramSocket aSocket = null;
@@ -1038,6 +986,8 @@ public class Player extends Observable {
 
 	public void Player2Hit1Send(int x, int y) {
 
+		hitX = x;
+		hitY = y;
 		String rply = x + " " + y;
 		byte[] bytesSend = null;
 		DatagramSocket aSocket = null;
@@ -1054,16 +1004,10 @@ public class Player extends Observable {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
-		} finally
-
-		{
-			{
-				if (aSocket != null)
-					aSocket.close();
-
-			}
+		} finally {
+			if (aSocket != null)
+				aSocket.close();
 		}
-
 	}
 
 	public void sendReply(int port, String msg) {
@@ -1087,11 +1031,10 @@ public class Player extends Observable {
 		} finally
 
 		{
-			{
-				if (aSocket != null)
-					aSocket.close();
 
-			}
+			if (aSocket != null)
+				aSocket.close();
+
 		}
 
 	}

@@ -170,16 +170,23 @@ public class RadarGrid implements Observer {
 				b.setShape(new Circle(r));
 				b.setMinSize(2 * r, 2 * r);
 				b.setMaxSize(2 * r, 2 * r);
+				String xy[] = b.getId().split(":");
 				b.setOnAction((ActionEvent event) -> {
 					b.setStyle("-fx-background-color: #FFFFFF; ");
 					if (Main.gameType.equals("Salvo")) {
-						String xy[] = b.getId().split(":");
 						salvaFunc(xy);
-					} else {
-						String xy[] = b.getId().split(":");
+					} else if (Main.gameType.equalsIgnoreCase("Classic")){
 						coordX = Integer.parseInt(xy[0]);
 						coordY = Integer.parseInt(xy[1]);
 						ob.callUserTurn(coordX, coordY);
+					}
+					else {
+						coordX = Integer.parseInt(xy[0]);
+						coordY = Integer.parseInt(xy[1]);
+						if(Player.PlayerNum == 1)
+							ob.CallPlayer1Hit2Send(coordX, coordY);
+						else
+							ob.CallPlayer2Hit1Send(coordX, coordY);
 					}
 				});
 				g_pane.add(b, columnButtonCount, rowButtonCount);
