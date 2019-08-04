@@ -693,10 +693,7 @@ public class Main extends Application {
 				
 		});
 		menu1Item4.setOnAction(e -> {
-			Boolean res = ConfirmBox.display("Load game", "Do you wish to load the game?");
-			if (res) {
-				ob.loadGame();
-			}
+				ob.getSelectedLoadGame();
 				
 		});
 

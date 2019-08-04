@@ -144,9 +144,9 @@ public class GridUser {
 	 * @param userName	username that the user entered
 	 * @throws Exception io exception
 	 */
-	public void checkUserName(SaveClass saveClass, String userName) throws Exception {
+	public void checkUserName(String userName, String playerType) throws Exception {
 		System.out.println("passing call from controller");
-		saveClass.checkUserName(userName);
+		saveClass.checkUserName(userName, playerType);
 	}
 	
 
@@ -157,8 +157,11 @@ public class GridUser {
 			saveClass.saveGame(player, computer, strategy, gameMode, gameType);
 	}
 	
-	public void loadGame() {
-		loadClass.loadGame(computer, player, saveClass);
+	public void loadGame(String createdOn) {
+		loadClass.loadGame(computer, player, saveClass,createdOn, strategy, strategySalvo);
 	}
 	
+	public void getSelectedLoadGame() {
+		loadClass.getSelectedLoadGame(saveClass);;
+	}
 }

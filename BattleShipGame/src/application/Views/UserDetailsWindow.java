@@ -117,11 +117,11 @@ public class UserDetailsWindow implements Observer{
 				
 				this.userName = userTextField.getText();
 				this.password = pwBox.getText();
-				ob.checkUserName(saveClass, userName);
 				System.out.println("User name is: "+userName);
 				System.out.println("User psswd is: "+password);
 				selectedRadioButton = (RadioButton) radioGroup.getSelectedToggle();
 				this.user = selectedRadioButton.getText();
+				ob.checkUserName(userName, this.user);
 				if(this.user.equals("New Player")) {
 					System.out.println(this.user+" "+this.getVerifyUserName());
 					if(!this.getVerifyUserName()) {

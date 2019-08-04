@@ -8,15 +8,30 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Scanner;
 
-
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.layout.TilePane;
+import javafx.stage.Stage;
 import main.Main;
 
+/**
+ * Class to handle the loading user data
+ * @author Sagar Bhatia
+ *
+ */
 public class LoadClass extends Observable{
 	
 	int rowNum, colNum;
 	int coordState;
 	int score;
 	String rowCoord, colCoord, shipType;
+	String createdOn = "";
+	String[] listOfSaves;
 	
 	public void setRadarGridCoords(int j, int i, int coordstate) {
 		this.rowNum = j;
@@ -55,6 +70,15 @@ public class LoadClass extends Observable{
 		return coords;
 	}
 	
+	public void setListOfSaves(String[] listOfSaves) {
+		this.listOfSaves = listOfSaves;
+		setChanged();
+		notifyObservers("listofsaves");
+	}
+	
+	public String[] getListOfSaves() {
+		return this.listOfSaves;
+	}
 	
 	public int getUserScore() {
 		return score;
@@ -80,17 +104,28 @@ public class LoadClass extends Observable{
 		String[] coords = {this.rowCoord, this.colCoord, this.shipType}; 
 		return coords;
 	}
-
-	public void loadGame(Computer computer, Player player, SaveClass saveClass) {
+	
+	/**
+	 * method to load the state of the required saved game
+	 * @param computer	Object of Computer
+	 * @param player	Object of Player
+	 * @param saveClass	Object of SaveClass
+	 * @param createdOn	createdOn criteria for selected saved game
+	 * @param strategy	Object of HitStrategy
+	 * @param strategySalvo	Object of HitStrategySalvo
+	 */
+	public void loadGame(Computer computer, Player player, SaveClass saveClass,
+			String createdOn, HitStrategy strategy, HitStrategySalvo strategySalvo) {
 		
 		String folderPath = "User-Data\\"; 
-		String userName = saveClass.getuName();
+		String username = saveClass.getuName();
 		String line = "";
+		this.createdOn = createdOn;
 		try {
-			Scanner in  = new Scanner(new File(folderPath+userName+".txt"));
+			Scanner in  = new Scanner(new File(folderPath+username+".txt"));
 			while(in.hasNextLine()) {
 				line = in.nextLine();
-				if(line.contains("Sat Aug 03 00:16:01")) {
+				if(line.contains(this.createdOn)) {
 					break;
 				}
 			}
@@ -98,14 +133,17 @@ public class LoadClass extends Observable{
 			Main.gameType = in.nextLine().split(" ")[2];
 			System.out.println("game mode and type are "+Main.gameMode+" "+Main.gameType);
 			in.nextLine();
-			storeComputerGrid(in, computer);
+			if(Main.gameType.equals("Salvo"))
+				loadComputerGrid(in, computer, strategySalvo);
+			else
+				loadComputerGrid(in, computer, strategy);
 			//store sunken ships
 			line = in.nextLine();
 			//System.out.println(line);
-			storeComputerSunkenShips(line);
+			loadComputerSunkenShips(line);
 			line = in.nextLine();
 			//store shipsmap
-			storeComputerShipsMap(in);
+			loadComputerShipsMap(in);
 			//perform operations for ship grid
 			while(in.hasNextLine()) {
 				line = in.nextLine();
@@ -116,10 +154,11 @@ public class LoadClass extends Observable{
 			//load the ships with colors
 			loadColoredUserShips(in);
 			//load the ship grid with hits and misses
-			in  = new Scanner(new File(folderPath+userName+".txt"));
+			in  = new Scanner(new File(folderPath+username+".txt"));
 			while(in.hasNextLine()) {
 				line = in.nextLine();
-				if(line.contains("Sat Aug 03 00:16:01")) {
+				//"Sat Aug 03 00:16:01"
+				if(line.contains(this.createdOn)) {
 					break;
 				}
 			}
@@ -129,9 +168,9 @@ public class LoadClass extends Observable{
 					break;
 				}
 			}
-			storeUserGrid(in, player);
+			loadUserGrid(in, player, computer);
 			line = in.nextLine();
-			storeUserSunkenShips(line);
+			loadUserSunkenShips(line);
 			in.close();
 		}
 		catch(Exception e) {
@@ -139,7 +178,47 @@ public class LoadClass extends Observable{
 		}
 	}
 	
-	public void storeComputerGrid(Scanner in, Computer computer) {
+	/**
+	 * method to get the list of saved games
+	 * @param saveClass object of save class
+	 */
+	@SuppressWarnings("unchecked")
+	public void getSelectedLoadGame(SaveClass saveClass) {
+		ArrayList<String> listofsaves = new ArrayList<>();
+		String username = saveClass.getuName();
+		String folderPath = "User-Data\\";
+		String line;
+		try {
+			File file = new File(folderPath+username+".txt");
+			if(file.exists() && !file.isDirectory()) {
+				Scanner in  = new Scanner(new File(folderPath+username+".txt"));
+				//System.out.println("created on: "+createdOn);
+				while(in.hasNextLine()) {
+					line = in.nextLine();
+					if(line.contains("Created on")) {
+						listofsaves.add(line);
+					}
+				}
+			}
+			else {
+				line = "No available save games";
+				listofsaves.add(line);
+			}
+			String[] listofsavesarr = listofsaves.toArray(new String[listofsaves.size()]);
+			setListOfSaves(listofsavesarr);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * method to load the computer grid
+	 * @param in Scanner object
+	 * @param computer	Computer object
+	 * @param o	HitStrategy or HitStrategySalvo Object
+	 */
+	public void loadComputerGrid(Scanner in, Computer computer, Object o) {
 		
 		String line;
 		int j = 0;
@@ -148,19 +227,27 @@ public class LoadClass extends Observable{
 			if(line.contains("Computer Score")) {
 				String[] line2 = line.split(" ");
 				setScore(Integer.parseInt(line2[2]));
+				if(o instanceof HitStrategySalvo)
+					((HitStrategySalvo) o).setScore(Integer.parseInt(line2[2]));
+				else
+					((HitStrategy) o).setScore(Integer.parseInt(line2[2]));
 				break;
 			}
 			for(int i = 0; i < line.length(); i++) {
 				computer.computerGrid[j][i] = Integer.parseInt(Character.toString(line.charAt(i)));
-				System.out.print(computer.computerGrid[j][i]);
+				//System.out.print(computer.computerGrid[j][i]);
 				setRadarGridCoords(j, i, computer.computerGrid[j][i]);
 			}
-			System.out.println("");
+			//System.out.println("");
 			j++;
 		}
 	}
 	
-	public void storeComputerSunkenShips(String line) {
+	/**
+	 * method to load the state of sunken Ships
+	 * @param line	sunken ships line in the file
+	 */
+	public void loadComputerSunkenShips(String line) {
 		
 		List<String> sunkenShips = new ArrayList<>();
 		int i;
@@ -178,10 +265,14 @@ public class LoadClass extends Observable{
 			sunkenShips.add(subline);
 		}
 		Computer.sunkenShips = (ArrayList<String>) sunkenShips;
-		System.out.println(Computer.sunkenShips.size());
+		System.out.println(Computer.sunkenShips);
 	}
 	
-	public void storeComputerShipsMap(Scanner in) {
+	/**
+	 * method to load the computer shipsMap
+	 * @param in Scanner object
+	 */
+	public void loadComputerShipsMap(Scanner in) {
 		String line;
 		ArrayList<String> tempList = new ArrayList<>();
 		Map<String, ArrayList<String>> shipsMap = new HashMap<>();
@@ -192,32 +283,23 @@ public class LoadClass extends Observable{
 			else {
 				tempList = new ArrayList<>();
 				String[] sublines = line.split(" ");
-				System.out.println(sublines[0]);
 				for(int i = 1; i < sublines.length; i++) {
-					String sublines2 = sublines[i];
-					if(sublines2.contains("[")) {
-						int x = sublines2.indexOf("[");
-						sublines2 = sublines2.substring(x+1, x+4);
-						//System.out.println(sublines2);
-					}
-					else if(sublines2.contains("]")) {
-						int x = sublines2.indexOf("]");
-						sublines2 = sublines2.substring(x-3, x);
-					}
-					else {
-						sublines2 = sublines2.substring(0, 3);
-					}
-					System.out.println(sublines2);
-					tempList.add(sublines2);
+					tempList.add(sublines[i]);
 				}
 				shipsMap.put(sublines[0], tempList);
 			}
 		}
 		Computer.shipsMap.putAll(shipsMap);
-		System.out.println(Computer.shipsMap.size());
+		System.out.println(Computer.shipsMap);
 	}
 	
-	public void storeUserGrid(Scanner in, Player player) {
+	/**
+	 * method to load the user grid
+	 * @param in Scanner Object
+	 * @param player Player Object
+	 * @param computer Computer Object
+	 */
+	public void loadUserGrid(Scanner in, Player player, Computer computer) {
 		
 		String line;
 		int j = 0;
@@ -226,6 +308,7 @@ public class LoadClass extends Observable{
 			if(line.contains("Player Score")) {
 				String[] line2 = line.split(" ");
 				setUserScore(Integer.parseInt(line2[2]));
+				computer.setScoreComp(Integer.parseInt(line2[2]));
 				break;
 			}
 			for(int i = 0; i < line.length(); i++) {
@@ -238,38 +321,40 @@ public class LoadClass extends Observable{
 		}
 	}
 	
+	/**
+	 * method to load the ships in colored button
+	 * @param in Scanner object
+	 */
 	public void loadColoredUserShips(Scanner in) {
 		String line;
+		ArrayList<String> tempList = new ArrayList<>();
+		Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 		while(in.hasNextLine()) {
 			line = in.nextLine();
 			if(line.contains("Created on"))
 				break;
 			else {
+				tempList = new ArrayList<>();
 				String[] sublines = line.split(" ");
 				System.out.println(sublines[0]);
 				for(int i = 1; i < sublines.length; i++) {
-					String sublines2 = sublines[i];
-					if(sublines2.contains("[")) {
-						int x = sublines2.indexOf("[");
-						sublines2 = sublines2.substring(x+1, x+4);
-						//System.out.println(sublines2);
-					}
-					if(sublines2.contains("]")) {
-						int x = sublines2.indexOf("]");
-						sublines2 = sublines2.substring(x-3, x);
-					}
-					else {
-						sublines2 = sublines2.substring(0, 3);
-					}
-					System.out.println(sublines2);
-					String[] sublines3 = sublines2.split(",");
-					setColoredShipsCoord(sublines3[0], sublines3[1], sublines[0]);
+					tempList.add(sublines[i]);
+					String[] sublines2 = sublines[i].split(",");
+					setColoredShipsCoord(sublines2[0], sublines2[1], sublines[0]);
 				}
+				shipsMap.put(sublines[0], tempList);
 			}
 		}
 		
+		Player.shipsMap.putAll(shipsMap);
+		System.out.println(Player.shipsMap);
 	}
-	public void storeUserSunkenShips(String line) {
+	
+	/**
+	 * method to load the sunken ships arraylist of the user 
+	 * @param line sunken ships line in the text file
+	 */
+	public void loadUserSunkenShips(String line) {
 			
 		List<String> sunkenShips = new ArrayList<>();
 		int i;
@@ -296,7 +381,7 @@ public class LoadClass extends Observable{
 		}else {
 			Player.sunkenShips = new ArrayList<>();
 		}
-		System.out.println(sunkenShips.size());
+		System.out.println(Player.sunkenShips);
 	}
 	
 }

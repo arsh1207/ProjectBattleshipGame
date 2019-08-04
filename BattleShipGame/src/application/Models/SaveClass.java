@@ -39,10 +39,10 @@ public class SaveClass extends Observable {
 		return nameSame;
 	}
 
-	public void setNameSame(boolean r, String userName) throws Exception {
+	public void setNameSame(boolean r, String userName, String playerType) throws Exception {
 		nameSame = r;
 		
-		if(!isnameSame()) {
+		if(!isnameSame() && playerType.equals("New Player")) {
 			saveUserName(userName);
 		}
 		setChanged();
@@ -76,7 +76,7 @@ public class SaveClass extends Observable {
 	 * This function checks whether there is any other user of the same name
 	 * @param userName user name passed from the view
 	 */
-	public void checkUserName(String userName) throws Exception{
+	public void checkUserName(String userName, String playerType) throws Exception{
 		
 		boolean check = false;
 		System.out.println("Checking Username");
@@ -92,7 +92,7 @@ public class SaveClass extends Observable {
 				
 			}
 		}
-		setNameSame(check, userName) ;
+		setNameSame(check, userName, playerType) ;
 		in.close();
 	}
 	
@@ -151,9 +151,7 @@ public class SaveClass extends Observable {
 			out.println("Computer Score: "+ ((HitStrategySalvo)strategy).getScore());
 		out.println("Computer Sunken ships: "+computer.getSunkenShips());
 		out.println("Computer ships status: ");
-		for (Map.Entry<String, ArrayList<String>> entry : Computer.shipsMap.entrySet()) {
-			out.println(entry.getKey()+" "+entry.getValue());
-		}
+		saveComputerShipsMap(out);
 		out.println("ShipGrid:");
 		int[][] saveUserGrid = new int[Player.userGrid.length][Player.userGrid[0].length];
 		for (int i = 0; i < Player.userGrid.length; ++i) {
@@ -167,9 +165,34 @@ public class SaveClass extends Observable {
 		out.println("Player Score: "+computer.getScoreComp());
 		out.println("Player Sunken ships: "+player.getSunkenShips());
 		out.println("Player ships status: ");
-		for (Map.Entry<String, ArrayList<String>> entry : Player.shipsMap.entrySet()) {
-			out.println(entry.getKey()+" "+entry.getValue());
+		saveUserShipsMap(out);
+	}
+	
+	/**
+	 * method to save the computer ships hashmap
+	 * @param out Printwriter Object
+	 */
+	public void saveComputerShipsMap(PrintWriter out) {
+		for (Map.Entry<String, ArrayList<String>> entry : Computer.shipsMap.entrySet()) {
+			out.print(entry.getKey());
+			for(String it : entry.getValue()) {
+				out.print(" "+it);
+			}
+			out.println("");
 		}
 	}
 	
+	/**
+	 * method to save the user ships hasmap
+	 * @param out PrintWriter Object
+	 */
+	public void saveUserShipsMap(PrintWriter out) {
+		for (Map.Entry<String, ArrayList<String>> entry : Player.shipsMap.entrySet()) {
+			out.print(entry.getKey());
+			for(String it : entry.getValue()) {
+				out.print(" "+it);
+			}
+			out.println("");
+		}
+	}
 }
