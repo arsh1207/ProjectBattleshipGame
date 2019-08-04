@@ -32,6 +32,10 @@ public class Player extends Observable {
 	public static ArrayList<String> coordinatesHit = new ArrayList<String>();
 	public int hitX, hitY;
 	public static int numOfShipsDep = 0;
+	
+	boolean time1 = false, time2 = false;
+	double timea = 0;
+	double timeb = 0;
 
 	public String shipType = "";
 	// msg for himself that he has won or not
@@ -81,7 +85,7 @@ public class Player extends Observable {
 	}
 
 	public String reply = "";
-
+	public int scoring;
 	public String compWon = "";
 
 	public boolean Hit = false;
@@ -113,8 +117,18 @@ public class Player extends Observable {
 
 	public void setReply(String reply) {
 		this.reply = reply;
+		setChanged();
+		notifyObservers("RadarSet");
 	}
 
+	public void setScore(int s) {
+		scoring = scoring + s;
+	}
+
+	public int getScore() {
+		return scoring;
+	}
+	
 	public boolean isHit() {
 		return Hit;
 	}
@@ -810,14 +824,16 @@ public class Player extends Observable {
 	}
 
 	public void launchServer1() {
+		System.out.println("launch 1");
 		DatagramSocket aSocket = null;
 		try {
-			aSocket = new DatagramSocket(6792);
+			aSocket = new DatagramSocket(6795);
 			byte[] buffer = new byte[1000];
 			while (true) {
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 				aSocket.receive(request);
 				String msg = new String(request.getData(), 0, request.getLength());
+				System.out.println("msg1"+msg);
 				String[] coordinates = msg.split("\\s");
 				// case when the coordinates are received
 				if (coordinates.length == 1) {
@@ -831,24 +847,43 @@ public class Player extends Observable {
 						// change the grid value from 1 to 2 to signify hit
 						userGrid[x][y] = 2;
 						coordinatesHit.add(coordx + "," + coordy);
-						sendReply(6795, "It's a Hit!!!!!");
+						if (!time1) {
+							timea = java.lang.System.currentTimeMillis();
+							time1 = !time1;
+						} else if (!time2) {
+							timeb = java.lang.System.currentTimeMillis();
+							time2 = !time2;
+						} else {
+							double t = timeb - timea;
+							if (t < 3000) {
+								setScore(20);
+							}
+							time1 = false;
+							time2 = false;
+							timea = 0;
+							timeb = 0;
+
+						}
+						sendReply(6792, "It's a Hit!!!!!", "132.205.94.100");
 					} else if (userGrid[x][y] == 0) {
-						sendReply(6795, "It's a miss!!!!!");
+						userGrid[x][y] = 3;
+						setScore(-1);
+						sendReply(6792, "It's a miss!!!!!", "132.205.94.100");
 					} else if (userGrid[x][y] == 2) {
-						sendReply(6795, "The location has been hit earlier");
+						sendReply(6792, "The location has been hit earlier", "132.205.94.100");
 					}
 					else {
-						sendReply(6795, "Some other error");
+						sendReply(6792, "Some other error", "132.205.94.100");
 					}
 				} else if (coordinates.length > 2) {
 					// case when some message is received
 					// set the message in the right getter and setter
-				//	setReply(msg);
-					if(msg.contains("Hit")) {
+					setReply(msg);
+					/*if(msg.contains("Hit")) {
 						RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FF0000; ");
 					} else if(msg.contains("miss")) {
 						RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FFFFFF; ");
-					}					
+					}	*/				
 				}
 			}
 		} catch (SocketException e) {
@@ -887,23 +922,42 @@ public class Player extends Observable {
 						// change the grid value from 1 to 2 to signify hit
 						userGrid[x][y] = 2;
 						coordinatesHit.add(coordx + "," + coordy);
-						sendReply(6792, "It's a Hit!!!!!");
+						if (!time1) {
+							timea = java.lang.System.currentTimeMillis();
+							time1 = !time1;
+						} else if (!time2) {
+							timeb = java.lang.System.currentTimeMillis();
+							time2 = !time2;
+						} else {
+							double t = timeb - timea;
+							if (t < 3000) {
+								setScore(20);
+							}
+							time1 = false;
+							time2 = false;
+							timea = 0;
+							timeb = 0;
+
+						}
+						sendReply(6795, "It's a Hit!!!!!", "132.205.94.99");
 					} else if (userGrid[x][y] == 0) {
-						sendReply(6792, "It's a miss!!!!!");
+						sendReply(6795, "It's a miss!!!!!", "132.205.94.99");
 					} else if (userGrid[x][y] == 2) {
-						sendReply(6792, "The location has been hit earlier");
+						userGrid[x][y] = 3;
+						setScore(-1);
+						sendReply(6795, "The location has been hit earlier", "132.205.94.99");
 					} else {
-						sendReply(6792, "Some other error");
+						sendReply(6795, "Some other error", "132.205.94.99");
 					}
 				} else if (coordinates.length > 2) {
 					// case when some message is received
 					// set the message in the right getter and setter
-					//setReply(msg);
-					if(msg.contains("Hit")) {
+					setReply(msg);
+					/*if(msg.contains("Hit")) {
 						RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FF0000; ");
 					} else if(msg.contains("miss")) {
 						RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FFFFFF; ");
-					}
+					}*/
 				}
 			}
 
@@ -920,20 +974,22 @@ public class Player extends Observable {
 	 * @param playerType
 	 */
 	public void PlayerMode(int playerNum) {
-
+		System.out.println("called player mode");
 		setPlayerNum(playerNum);
 		if (playerNum == 1) {// launch for the first player
-
 			Runnable task = () -> {
+				System.out.println("inside player mode");
 				launchServer1();
 			};
+			new Thread(task).start();
 
 		} else if (playerNum == 2) {
 			Runnable task = () -> {
 				launchServer2();
 			};
-
+			new Thread(task).start();
 		}
+	
 
 	}
 
@@ -955,7 +1011,7 @@ public class Player extends Observable {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
 
-			InetAddress aHost_soen = InetAddress.getByName("localhost");
+			InetAddress aHost_soen = InetAddress.getByName("132.205.94.100");
 			int player2Port = 6792;
 
 			DatagramPacket request_PLayer1 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player2Port);
@@ -995,7 +1051,7 @@ public class Player extends Observable {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
 
-			InetAddress aHost_soen = InetAddress.getByName("localhost");
+			InetAddress aHost_soen = InetAddress.getByName("132.205.94.99");
 			int player1Port = 6795;
 
 			DatagramPacket request_PLayer2 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player1Port);
@@ -1010,7 +1066,7 @@ public class Player extends Observable {
 		}
 	}
 
-	public void sendReply(int port, String msg) {
+	public void sendReply(int port, String msg, String address) {
 
 		String rply = msg;
 		byte[] bytesSend = null;
@@ -1019,7 +1075,7 @@ public class Player extends Observable {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
 
-			InetAddress aHost_soen = InetAddress.getByName("localhost");
+			InetAddress aHost_soen = InetAddress.getByName(address);
 			int player1Port = port;
 
 			DatagramPacket repy_PLayer2or1 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player1Port);
@@ -1062,11 +1118,11 @@ public class Player extends Observable {
 		if (getPlayerWon().equals("Won")) {
 			if (PlayerNum == 1) {// send msg to player 2 that player 1 has won
 
-				sendReply(6792, "Won");
+				sendReply(6792, "Won", "132.205.94.99");
 			} else {
 				// player 2 case
 				// send msg to player 1 that player 2 has won
-				sendReply(6795, "Won");
+				sendReply(6795, "Won", "132.205.94.100");
 
 			}
 		}

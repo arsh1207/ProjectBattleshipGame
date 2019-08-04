@@ -16,6 +16,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import main.Main;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -33,7 +34,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 
 /**
- * This class is a view for computer grid and renders Computer.java model class 
+ * This class is a view for computer grid and renders Computer.java model class
  *
  */
 public class RadarGrid implements Observer {
@@ -65,11 +66,16 @@ public class RadarGrid implements Observer {
 	/**
 	 * It is the parameterized class constructor
 	 * 
-	 * @param resulttext2 It is a label for setting computer result on scene
-	 * @param resulttext1 It is a label for setting User result on scene
-	 * @param resulttext3 It is a label for setting User Score on scene
-	 * @param resulttext4 It is a label for setting computer score on scene
-	 * @param ob          It is controller object
+	 * @param resulttext2
+	 *            It is a label for setting computer result on scene
+	 * @param resulttext1
+	 *            It is a label for setting User result on scene
+	 * @param resulttext3
+	 *            It is a label for setting User Score on scene
+	 * @param resulttext4
+	 *            It is a label for setting computer score on scene
+	 * @param ob
+	 *            It is controller object
 	 */
 	public RadarGrid(Label resulttext2, Label resulttext1, Label resulttext3, Label resulttext4, GridUser ob) {
 
@@ -133,8 +139,10 @@ public class RadarGrid implements Observer {
 	/**
 	 * Deploys the radar grid on the screen
 	 * 
-	 * @param g_pane      This store the reference for radar grid pane.
-	 * @param resulttext2 It is a label for setting computer result on scene
+	 * @param g_pane
+	 *            This store the reference for radar grid pane.
+	 * @param resulttext2
+	 *            It is a label for setting computer result on scene
 	 */
 	public void setUserRadarGrid(GridPane g_pane, Label resulttext2) {
 		g_pane1 = g_pane;
@@ -175,15 +183,14 @@ public class RadarGrid implements Observer {
 					b.setStyle("-fx-background-color: #FFFFFF; ");
 					if (Main.gameType.equals("Salvo")) {
 						salvaFunc(xy);
-					} else if (Main.gameType.equalsIgnoreCase("Classic")){
+					} else if (Main.gameType.equalsIgnoreCase("Classic")) {
 						coordX = Integer.parseInt(xy[0]);
 						coordY = Integer.parseInt(xy[1]);
 						ob.callUserTurn(coordX, coordY);
-					}
-					else {
+					} else {
 						coordX = Integer.parseInt(xy[0]);
 						coordY = Integer.parseInt(xy[1]);
-						if(Player.PlayerNum == 1)
+						if (Player.PlayerNum == 1)
 							ob.CallPlayer1Hit2Send(coordX, coordY);
 						else
 							ob.CallPlayer2Hit1Send(coordX, coordY);
@@ -202,16 +209,16 @@ public class RadarGrid implements Observer {
 			Text text1 = new Text(Character.toString(ch));
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
-		System.out.println("New game is "+Main.newGame);
+		System.out.println("New game is " + Main.newGame);
 	}
-	
+
 	public static void loadRadarGrid() {
-		for(int i  = 0; i < radarButton.length; i++) {
-			for(int j = 0; j < radarButton[i].length; j++) {
-				System.out.print("Buttons "+i+" "+j+" "+loadRadarGrid[i][j]);
-				if(loadRadarGrid[i][j] == 1 || loadRadarGrid[i][j] == 0)
+		for (int i = 0; i < radarButton.length; i++) {
+			for (int j = 0; j < radarButton[i].length; j++) {
+				System.out.print("Buttons " + i + " " + j + " " + loadRadarGrid[i][j]);
+				if (loadRadarGrid[i][j] == 1 || loadRadarGrid[i][j] == 0)
 					radarButton[i][j].setStyle("-fx-background-color: black; ");
-				else if(loadRadarGrid[i][j] == 2)
+				else if (loadRadarGrid[i][j] == 2)
 					radarButton[i][j].setStyle("-fx-background-color: #FF0000; ");
 				else
 					radarButton[i][j].setStyle("-fx-background-color: #FFFFFF; ");
@@ -219,13 +226,14 @@ public class RadarGrid implements Observer {
 			System.out.println("");
 		}
 	}
-	
 
 	/**
 	 * This class makes the radar grid visible on appropriate calling.
 	 * 
-	 * @param i Contains the x axis for the radar button
-	 * @param j Contains the y axis for the radar button
+	 * @param i
+	 *            Contains the x axis for the radar button
+	 * @param j
+	 *            Contains the y axis for the radar button
 	 */
 	public void disableButtons(int i, int j) {
 		radarButton[i][j].setDisable(false);
@@ -301,14 +309,58 @@ public class RadarGrid implements Observer {
 				int score = ((LoadClass) o).getScore();
 				resulttext4.setText("" + score);
 			}
+		}else if (o instanceof Player) {
+			if (arg.equals("RadarSet")) {
+				String res = ((Player) o).getReply();
+				int score1 = ((Player) o).getScore();
+				resulttext2.setText("");
+				resulttext3.setText("" + score1);
+				Image image;
+				try {
+					image = new Image(new FileInputStream("images/blast.png"));
+				
+				ImageView imageView = new ImageView(image);
+				imageView.setFitHeight(25);
+				imageView.setFitWidth(25);
+				FadeTransition ft = new FadeTransition(Duration.millis(3000), imageView);
+				ft.setFromValue(1.0);
+				ft.setToValue(0.0);
+				ft.play();
+				AudioClip audioClip = new AudioClip(Paths.get("Sounds/blast.wav").toUri().toString());
+				if (res.equals("It's a Hit!!!!!")) {
+					radarButton[coordX][coordY].setStyle("-fx-background-color: #FF0000; ");
+					g_pane1.add(imageView, (coordY + 1), (9 - coordX));
+					audioClip.play(100);
+				} else if (res.equals("It's a miss!!!!!")) {
+					radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
+				}
+				System.out.println("Player ships down:"+ Player.sunkenShips.size());
+				
+				if(((Player) o).getPlayerNum() == 1) {
+					double health = 1 - Player.sunkenShips.size()*0.2;		
+					Main.healthbarTank1.setProgress(health);
+				}
+				else {
+					double health = 1 - Player.sunkenShips.size()*0.2;		
+					Main.healthbarTank2.setProgress(health);
+				}
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					System.out.println(e.getMessage());
+				}
+			}
 		}
 	}
+
 	/**
-	 * This class make the changes on the grid as per the response from the model class and calls controller to 
-	 * check if user won and tell computer to take its turn.
+	 * This class make the changes on the grid as per the response from the model
+	 * class and calls controller to check if user won and tell computer to take its
+	 * turn.
 	 * 
-	 * @param res This parameter contains the response received after state change
-	 * @param o This param contains object reference of the notifying class 
+	 * @param res
+	 *            This parameter contains the response received after state change
+	 * @param o
+	 *            This param contains object reference of the notifying class
 	 */
 	public void afterCompReply(String res, Computer o) {
 		try {
@@ -345,11 +397,11 @@ public class RadarGrid implements Observer {
 				}
 			} else {
 				ob.callSunkenShips(o);
-				System.out.println("Computer ships down:"+ Computer.sunkenShips.size());
-				double health = 1 - Computer.sunkenShips.size()*0.2;		
+				System.out.println("Computer ships down:" + Computer.sunkenShips.size());
+				double health = 1 - Computer.sunkenShips.size() * 0.2;
 				Main.healthbarTank2.setProgress(health);
 				ob.callCheckIfUserWon();
-				if(((Computer) o).getUserWon().equals("Won")) {
+				if (((Computer) o).getUserWon().equals("Won")) {
 					AlertBox.displayResult("Hurray!", "User has won ");
 				}
 				ob.computerTurn(lastCompResult, Main.gameMode);
@@ -363,7 +415,8 @@ public class RadarGrid implements Observer {
 	/**
 	 * Method to keep storing the salvos of the user in every round
 	 * 
-	 * @param xy coordinates
+	 * @param xy
+	 *            coordinates
 	 */
 	public void salvaFunc(String[] xy) {
 		int shipsremaining = Main.TOTAL_SHIPS - Player.sunkenShips.size();
@@ -386,7 +439,8 @@ public class RadarGrid implements Observer {
 	/**
 	 * Method to display the enemy ships that have sunk in the latest round
 	 * 
-	 * @param sunkenShips list of sunken ships
+	 * @param sunkenShips
+	 *            list of sunken ships
 	 */
 	public static void salvaAlertCall(ArrayList<String> sunkenShips) {
 		Alert alert = new Alert(AlertType.INFORMATION);
