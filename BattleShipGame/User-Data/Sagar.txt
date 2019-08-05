@@ -1,0 +1,39 @@
+Created on: Sun Aug 04 01:38:33 EDT 2019
+Game Mode: Medium
+Game Type: Classic
+CompGrid:
+00003333300
+10030100310
+10330133010
+13333133310
+03033033310
+02222230000
+00033000000
+00030000000
+00031100000
+Computer Score: 74
+Computer Sunken ships: []
+Computer ships status: 
+Cruiser 1,0 2,0 3,0
+Submarine 1,5 2,5 3,5
+Destroyer 8,4 8,5
+Carrier 5,1 5,2 5,3 5,4 5,5
+Battleship 1,9 2,9 3,9 4,9
+ShipGrid:
+00003003000
+00000303000
+30001030330
+33301300330
+20201030303
+20201000030
+20203001100
+30333030003
+00300111110
+Player Score: 21
+Player Sunken ships: []
+Player ships status: 
+Cruiser 4,0 5,0 6,0
+Submarine 4,2 5,2 6,2
+Destroyer 6,7 6,8
+Carrier 8,5 8,6 8,7 8,8 8,9
+Battleship 2,4 3,4 4,4 5,4

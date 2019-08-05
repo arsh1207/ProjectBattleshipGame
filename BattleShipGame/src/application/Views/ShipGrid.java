@@ -8,16 +8,23 @@ import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
 import application.Models.LoadClass;
 import application.Models.Player;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import main.Main;
 
 /**
@@ -219,7 +226,8 @@ public class ShipGrid implements Observer {
 			else if(arg.equals("setscoreuser")){
 				int score = ((LoadClass) o).getUserScore();
 				resulttext3.setText("" + score);
-			}else if(arg.equals("setcolorcoords")) {
+			}
+			else if(arg.equals("setcolorcoords")) {
 				String[] coords = ((LoadClass) o).getColoredShipsCoord();
 				int rcoord = Integer.parseInt(coords[0]);
 				int ccoord = Integer.parseInt(coords[1]);
@@ -233,6 +241,29 @@ public class ShipGrid implements Observer {
 					userButton[rcoord][ccoord].setStyle("-fx-background-color: #FFA500; ");
 				if (coords[2].equals("Destroyer"))
 					userButton[rcoord][ccoord].setStyle("-fx-background-color: #FFFF00; ");
+			}
+			else if(arg.equals("listofsaves")) {
+				Stage stage = new Stage();
+				stage.setTitle("Choose a game to load"); 
+
+		        TilePane r = new TilePane();
+		        Button loadbutton = new Button("Load Game");
+		        ComboBox combo_box = 
+		                    new ComboBox(FXCollections 
+		                              .observableArrayList(((LoadClass) o).getListOfSaves()));
+		        combo_box.getSelectionModel().selectFirst();
+		        loadbutton.setOnMouseClicked(event -> {
+		        	ob.loadGame(combo_box.getValue().toString());
+	                stage.close();
+		        });
+		        Label selected = new Label("List of saves");  
+		        TilePane tile_pane = new TilePane(selected, combo_box, loadbutton); 
+		        Scene scene = new Scene(tile_pane, 300, 200); 
+		  
+		        // Set the scene 
+		        stage.setScene(scene); 
+		  
+		        stage.showAndWait();
 			}
 		}
 	}
