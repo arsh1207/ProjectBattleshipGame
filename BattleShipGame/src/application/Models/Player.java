@@ -36,6 +36,8 @@ public class Player extends Observable {
 	public static ArrayList<String> coordinatesHit = new ArrayList<String>();
 	public int hitX, hitY;
 	public static int numOfShipsDep = 0;
+	
+	Boolean server1Flag = true, server2Flag = true;
 
 	boolean time1 = false, time2 = false;
 	double timea = 0;
@@ -891,6 +893,10 @@ public class Player extends Observable {
 					}
 				} else if (coordinates.length == 2) {
 					RadarGrid.enableButtons();
+					if(server1Flag) {
+						sendReply(6792, "Name:" + saveObj.getuName(), "132.205.94.100");
+						server1Flag = false;
+					}
 					int x = Integer.parseInt(coordinates[0]);
 					int y = Integer.parseInt(coordinates[1]);
 					int xy[] = {x,y};
@@ -978,6 +984,10 @@ public class Player extends Observable {
 					}
 				} else if (coordinates.length == 2) {
 					RadarGrid.enableButtons();
+					if(server2Flag) {
+						sendReply(6795, "Name:" + saveObj.getuName(), "132.205.94.99");
+						server2Flag = false;
+					}
 					int x = Integer.parseInt(coordinates[0]);
 					int y = Integer.parseInt(coordinates[1]);
 					int xy[] = {x,y};
@@ -1010,7 +1020,7 @@ public class Player extends Observable {
 						sendReply(6795, "It's a Hit!!!!!", "132.205.94.99");
 					} else if (userGrid[x][y] == 0) {
 						userGrid[x][y] = 3;
-						setShipGridReply("It's a Hit!!!!!");
+						setShipGridReply("It's a miss!!!!!");
 						setScore(-1);
 						setCoords(xy);
 						sendReply(6795, "It's a miss!!!!!", "132.205.94.99");
@@ -1053,15 +1063,15 @@ public class Player extends Observable {
 			Runnable task = () -> {
 				System.out.println("inside player mode");
 				launchServer1();
-				sendReply(6792, "Name:" + saveObj.getuName(), "132.205.94.100");
+			
 			};
 			new Thread(task).start();
-			System.out.println(saveObj.getuName());
+		
 
 		} else if (playerNum == 2) {
 			Runnable task = () -> {
 				launchServer2();
-				sendReply(6795, "Name:" + saveObj.getuName(), "132.205.94.99");
+			
 			};
 			new Thread(task).start();
 		}

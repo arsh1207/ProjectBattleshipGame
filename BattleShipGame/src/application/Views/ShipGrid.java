@@ -189,11 +189,15 @@ public class ShipGrid implements Observer {
 					setUserShipCoordinates(coord[0], coord[1], "Miss");
 				}
 				if (Player.PlayerNum == 2) {
+					double health = 1 - Player.sunkenShips.size() * 0.2;
+					Platform.runLater(() -> Main.healthbarTank1.setProgress(health));
 					Platform.runLater(() -> resulttext3.setText("" + score));
 					Platform.runLater(() -> resulttext2.setText(reply));
 				}else {
 					Platform.runLater(() -> resulttext4.setText("" + score));
 					Platform.runLater(() -> resulttext1.setText(reply));
+					double health = 1 - Player.sunkenShips.size() * 0.2;
+					Platform.runLater(() -> Main.healthbarTank2.setProgress(health));
 				}
 			}
 		} else if (o instanceof HitStrategy) {
