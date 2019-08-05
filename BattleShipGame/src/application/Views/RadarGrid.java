@@ -96,37 +96,42 @@ public class RadarGrid implements Observer {
 						radarButton[i][j].setDisable(false);
 					}
 				}
-				ob.deployCompShips();
-				String tossResult = InputBox.display("Please choose Head or Tail");
-				int r = (int) Math.round(Math.random());
-				if ((r == 1 && tossResult.equalsIgnoreCase("Head"))
-						|| (r == 0 && tossResult.equalsIgnoreCase("Tail"))) {
-					if (Main.gameType.equals("Salvo")) {
-						Main.salvoAlertCall();
+				if (!Main.gameMode.equalsIgnoreCase("vsmode")) {
+					ob.deployCompShips();
+
+					String tossResult = InputBox.display("Please choose Head or Tail");
+					int r = (int) Math.round(Math.random());
+					if ((r == 1 && tossResult.equalsIgnoreCase("Head"))
+							|| (r == 0 && tossResult.equalsIgnoreCase("Tail"))) {
+						if (Main.gameType.equals("Salvo")) {
+							Main.salvoAlertCall();
+						}
+						Alert alert = new Alert(AlertType.INFORMATION);
+						alert.setTitle("Battleship - Toss Result");
+						alert.setHeaderText("It's computer turn first.");
+						alert.showAndWait();
+						ob.computerTurn(lastCompResult, Main.gameMode);
+					} else {
+						if (Main.gameType.equals("Salvo")) {
+							Main.salvoAlertCall();
+						}
+						Alert alert = new Alert(AlertType.INFORMATION);
+						alert.setTitle("Battleship Game");
+						alert.setHeaderText("It's a " + tossResult);
+						alert.setContentText("It's your turn first!");
+						alert.showAndWait();
 					}
-					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Battleship - Toss Result");
-					alert.setHeaderText("It's computer turn first.");
-					alert.showAndWait();
-					ob.computerTurn(lastCompResult, Main.gameMode);
 				} else {
-					if (Main.gameType.equals("Salvo")) {
-						Main.salvoAlertCall();
-					}
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
-					alert.setHeaderText("It's a " + tossResult);
-					alert.setContentText("It's your turn first!");
+					alert.setHeaderText("The battle ships are not placed correctly.");
+					alert.setContentText("Please place them before starting.");
 					alert.showAndWait();
-				}
-			} else {
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Battleship Game");
-				alert.setHeaderText("The battle ships are not placed correctly.");
-				alert.setContentText("Please place them before starting.");
-				alert.showAndWait();
 
+				}
 			}
+			
+
 		});
 	}
 

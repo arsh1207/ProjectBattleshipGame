@@ -69,11 +69,13 @@ public class Main extends Application {
 	static GridUser ob;
 	UserWindow userWindow;
 	UserDetailsWindow userDetailsWindow;
+	MenuBar menuBar;
 	Scene scene1;
-	Scene scene2;
+	Scene scene2, scene3;
 	GridPane g_pane1, g_pane2;
 	VBox v_box1, v_box2, v_box3;
 	HBox h_box1, h_box2;
+	AnchorPane healthbars;
 	public static final int TOTAL_SHIPS = 5;
 	int rowButtonCount;
 	int columnButtonCount;
@@ -149,16 +151,17 @@ public class Main extends Application {
 			healthbarTank2.setMinWidth(200);
 			// healthbarTank2 = new Rectangle(200.0, 25.0, Color.BLUE);
 			// healthbarTank2 = new Rectangle(200.0, 25.0, Color.BLUE);
-			h_box2.getChildren().add(healthbarTank2);
-			MenuBar menuBar = battleMenu(v_box1, stage);
+			h_box2.getChildren().addAll(healthbarTank2);
+			menuBar = battleMenu(v_box1, stage);
 			g_pane1.setVgap(10);
 			g_pane1.setHgap(10);
+			//g_pane1.setVisible(false);
 			g_pane2.setVgap(10);
 			g_pane2.setHgap(10);
 			Label l1 = new Label();
 			v_box3.getChildren().add(l1);
-			seeResultComp("User ");
-			seeResultUser("Computer ");
+			// seeResultComp("User ");
+			// seeResultUser("Computer ");
 
 			ScoreComp("Computer");
 			Score("Player");
@@ -173,7 +176,8 @@ public class Main extends Application {
 			setShipPlacementActions();
 			Button userRandomShips = new Button("Feelin' Lazy?");
 			VBox v_box4 = new VBox();
-			v_box1.getChildren().addAll(g_pane1, userRandomShips, g_pane2);
+			//v_box1.getChildren().addAll(g_pane1, userRandomShips, g_pane2);
+			v_box1.getChildren().addAll(userRandomShips, g_pane2);
 			v_box1.setSpacing(20.0);
 			userRandomShips.setOnAction((ActionEvent event) -> {
 				if (Player.numOfShipsDep == 0)
@@ -194,6 +198,9 @@ public class Main extends Application {
 							radarGridObserver.radarButton[i][j].setDisable(false);
 						}
 					}
+				//	g_pane1.setVisible(true);
+					gameStartScene(stage);
+					stage.setScene(scene3);
 					if (!gameMode.equalsIgnoreCase("vsmode")) {
 						ob.deployCompShips();
 					}
@@ -213,7 +220,8 @@ public class Main extends Application {
 			});
 
 			tossBtn = new Button("Toss");
-			radarGridObserver.addTossAction();
+			//radarGridObserver.addTossAction();
+			addTossAction(stage);
 			for (Node node : g_pane2.getChildren()) {
 				node.setOnMouseEntered((MouseEvent t) -> {
 					node.setStyle("-fx-background-color: blue;");
@@ -224,18 +232,18 @@ public class Main extends Application {
 				});
 			}
 
-			h_box1.getChildren().add(healthbarTank1);
+			h_box1.getChildren().addAll(healthbarTank1);
 			// split_pane2.getItems().addAll(h_box1, h_box2);
-			AnchorPane healthbars = new AnchorPane();
+			healthbars = new AnchorPane();
 
 			healthbars.getChildren().addAll(h_box1, h_box2);
 			AnchorPane.setBottomAnchor(h_box1, 8.0);
 			AnchorPane.setRightAnchor(h_box2, 5.0);
 			// AnchorPane.setRightAnchor(timerLabel, 10.0);
 			v_box3.getChildren().addAll(startBtn, tossBtn);
-			v_box4.getChildren().addAll(menuBar, healthbars, split_pane);
+			v_box4.getChildren().addAll(menuBar, split_pane);
 			v_box1.fillWidthProperty();
-			scene1 = new Scene(v_box4, 850, 850);
+			scene1 = new Scene(v_box4, 850, 650);
 			v_box1.getStylesheets().add("application/Views/application.css");
 			v_box2.getStylesheets().add("application/Views/application.css");
 			split_pane.prefHeightProperty().bind(stage.heightProperty());
@@ -245,9 +253,77 @@ public class Main extends Application {
 		}
 
 	}
+	
+	/**
+	 * This method adds action listener to the button toss. It calculates the winner
+	 * of the toss as per user choice and allows the user to play.
+	 * 
+	 */
+	public void addTossAction(Stage stage) {
+		tossBtn.setOnAction((ActionEvent event) -> {
+			if (Player.numOfShipsDep == 5) {
 
-	public void initializingVsComputer() {
+				if (!gameMode.equalsIgnoreCase("vsmode")) {
+					ob.deployCompShips();
 
+					String tossResult = InputBox.display("Please choose Head or Tail");
+					int r = (int) Math.round(Math.random());
+					if ((r == 1 && tossResult.equalsIgnoreCase("Head"))
+							|| (r == 0 && tossResult.equalsIgnoreCase("Tail"))) {
+						if (Main.gameType.equals("Salvo")) {
+							Main.salvoAlertCall();
+						}
+						Alert alert = new Alert(AlertType.INFORMATION);
+						alert.setTitle("Battleship - Toss Result");
+						alert.setHeaderText("It's computer turn first.");
+						alert.showAndWait();
+						ob.computerTurn(RadarGrid.lastCompResult, gameMode);
+					} else {
+						if (Main.gameType.equals("Salvo")) {
+							Main.salvoAlertCall();
+						}
+						Alert alert = new Alert(AlertType.INFORMATION);
+						alert.setTitle("Battleship Game");
+						alert.setHeaderText("It's a " + tossResult);
+						alert.setContentText("It's your turn first!");
+						alert.showAndWait();
+					}
+				} else {
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Battleship Game");
+					alert.setHeaderText("The battle ships are not placed correctly.");
+					alert.setContentText("Please place them before starting.");
+					alert.showAndWait();
+
+				}
+			}
+			
+			gameStartScene(stage);
+			stage.setScene(scene3);
+		});
+	}
+	
+
+	public void gameStartScene(Stage stage) {
+		//AnchorPane root = new AnchorPane();
+		SplitPane root = new SplitPane();
+		VBox v_box = new VBox();
+		root.setId("glass-grey");
+		v_box.setId("glass-grey");
+		
+		root.setDividerPositions(0.5);
+		root.getItems().add(g_pane2);
+		root.getItems().add(g_pane1);
+		/*
+		 * root.getChildren().addAll(g_pane1, g_pane2); root.setRightAnchor(g_pane1,
+		 * 30.0); root.setLeftAnchor(g_pane2, 30.0);
+		 */
+		root.getStylesheets().add("application/Views/application.css");
+		v_box.getStylesheets().add("application/Views/application.css");
+		root.prefHeightProperty().bind(stage.heightProperty());
+		v_box.getChildren().addAll(menuBar, healthbars, root);
+		scene3 = new Scene(v_box, 1100, 600);
+		
 	}
 
 	class RemindTask extends TimerTask {
@@ -799,8 +875,7 @@ public class Main extends Application {
 				BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 		Background background = new Background(backgroundimage);
 		root1.setBackground(background);
-		
-		
+
 		Button btn5 = new Button("Player 1");
 		btn5.setStyle("-fx-background-color: #a3a0a0; ");
 		btn5.setVisible(false);
@@ -819,6 +894,7 @@ public class Main extends Application {
 		btn1.setOnAction((ActionEvent event) -> {
 			// add playr 1 or 2
 			gameType = "vsmode";
+			tossBtn.setVisible(false);
 			btn5.setVisible(true);
 			btn6.setVisible(true);
 			// userDetailsWindow.newUser();
@@ -859,10 +935,10 @@ public class Main extends Application {
 
 		btn3.setOnAction((ActionEvent event) -> {
 			gameType = "Classic";
-			
-			 gameMode = AlertBox.displayDifficulty();
-			 userDetailsWindow.newUser();
-			 stg.setScene(scene1);
+
+			gameMode = AlertBox.displayDifficulty();
+			userDetailsWindow.newUser();
+			stg.setScene(scene1);
 		});
 		btn4.setOnAction((ActionEvent event) -> {
 			userDetailsWindow.newUser();
@@ -882,8 +958,7 @@ public class Main extends Application {
 		root1.add(btn3, 0, 2);
 		root1.add(btn4, 0, 3);
 		root1.add(btn2, 0, 4);
-	
-		
+
 		stg.setScene(scene2);
 	}
 
@@ -892,28 +967,29 @@ public class Main extends Application {
 	 * 
 	 * @param title To display name of caller (User or CPU).
 	 */
-	public void seeResultUser(String title) {
-		Label resultLabel = new Label(title + "Turn: ");
-		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
-		resultLabel.setTextFill(Color.web("#c40831"));
-		resulttext1.setStyle("-fx-background-color: white;");
-		v_box3.getChildren().addAll(resultLabel, resulttext1);
-
-	}
+	/*
+	 * public void seeResultUser(String title) { Label resultLabel = new Label(title
+	 * + "Turn: "); resultLabel.setFont(Font.font("verdana", FontWeight.BOLD,
+	 * FontPosture.ITALIC, 18)); resultLabel.setTextFill(Color.web("#c40831"));
+	 * resulttext1.setStyle("-fx-background-color: white;");
+	 * v_box3.getChildren().addAll(resultLabel, resulttext1);
+	 * 
+	 * }
+	 */
 
 	/**
 	 * Places the result of the computer on the screen
 	 * 
 	 * @param title To display name of caller (User or CPU).
 	 */
-	public void seeResultComp(String title) {
-		Label resultLabel = new Label(title + "Turn: ");
-		resultLabel.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 18));
-		resultLabel.setTextFill(Color.web("#c40831"));
-		resulttext2 = new Label();
-		resulttext2.setStyle("-fx-background-color: white;");
-		v_box3.getChildren().addAll(resultLabel, resulttext2);
-	}
+	/*
+	 * public void seeResultComp(String title) { Label resultLabel = new Label(title
+	 * + "Turn: "); resultLabel.setFont(Font.font("verdana", FontWeight.BOLD,
+	 * FontPosture.ITALIC, 18)); resultLabel.setTextFill(Color.web("#c40831"));
+	 * resulttext2 = new Label();
+	 * resulttext2.setStyle("-fx-background-color: white;");
+	 * v_box3.getChildren().addAll(resultLabel, resulttext2); }
+	 */
 
 	/**
 	 * Places the Score of the user on the screen
@@ -932,10 +1008,14 @@ public class Main extends Application {
 		// resultLabel1.setGraphic(imageView);
 		resultLabel1.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 		resultLabel1.setTextFill(Color.web("#c40831"));
-		resulttext3.setStyle("-fx-background-color: white;");
+		// resulttext3.setStyle("-fx-background-color: white;");
 		resulttext3.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
 		resulttext3.setTextFill(Color.web("#c40831"));
-		vBox.getChildren().addAll(resultLabel1, resulttext3);
+		resulttext2 = new Label();
+		// resulttext2.setStyle("-fx-background-color: white;");
+		resulttext2.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
+		resulttext2.setTextFill(Color.web("#c40831"));
+		vBox.getChildren().addAll(resultLabel1, resulttext3, resulttext2);
 		h_box1.getChildren().addAll(imageView, vBox);
 
 	}
@@ -956,10 +1036,14 @@ public class Main extends Application {
 		// resultLabel2.setGraphic(imageView);
 		resultLabel2.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 		resultLabel2.setTextFill(Color.web("#00bfff"));
-		resulttext4.setStyle("-fx-background-color: white;");
+		// resulttext4.setStyle("-fx-background-color: white;");
 		resulttext4.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
 		resulttext4.setTextFill(Color.web("#00bfff"));
-		vBox.getChildren().addAll(resultLabel2, resulttext4);
+		resulttext1 = new Label();
+		// resulttext1.setStyle("-fx-background-color: white;");
+		resulttext1.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
+		resulttext1.setTextFill(Color.web("#00bfff"));
+		vBox.getChildren().addAll(resultLabel2, resulttext4, resulttext1);
 		h_box2.getChildren().addAll(vBox, imageView);
 
 	}
