@@ -15,6 +15,9 @@ import java.util.Observable;
 import java.util.Properties;
 import java.util.Random;
 
+import application.Views.ShipGrid;
+import main.Main;
+
 /**
  * Class to set the states for the functionality of user grid
  * 
@@ -784,13 +787,18 @@ public class Player extends Observable {
 		if (!flagcomp) {
 			// set that user has won
 			int pscore = Computer.scoringComp;
-			int cscore = HitStrategy.scoring;
+			int cscore;
+			if(Main.gameType.equals("Salvo"))
+				cscore = HitStrategySalvo.scoring;
+			else
+				cscore = HitStrategy.scoring;
 			boolean scoreReverse = false;
-			if (cscore > pscore) {
+			
+			if ((cscore > pscore) || sunkenShips.size() == Main.TOTAL_SHIPS) {
 				scoreReverse = true;
+				System.out.println("Comp Won");
 				setCompWon("Won");
-				// AlertBox.displayResult("Hurray!!", "Computer Won ");
-			} else { // do nothing
+			} else { 
 				setCompWon("Lost");
 			}
 		}
@@ -825,6 +833,7 @@ public class Player extends Observable {
 	 * This function checks whether any ships have sunk or not
 	 */
 	public static void checkSunkenShips() {
+		
 		Map<String, ArrayList<String>> tempMap;
 		for (String coords : coordinatesHit) {
 			tempMap = new HashMap<>();
@@ -839,6 +848,7 @@ public class Player extends Observable {
 						// and remove the ships from the shipsMap
 						if (shipsMap.get(entry.getKey()).isEmpty()) {
 							setSunkenShips(entry.getKey());
+							System.out.println("Player sunken ships "+sunkenShips);
 							tempMap.remove(entry.getKey());
 						}
 					}
@@ -847,7 +857,7 @@ public class Player extends Observable {
 			shipsMap = new HashMap<>();
 			shipsMap.putAll(tempMap);
 		}
-		// ShipGrid.salvaAlertCall(sunkenShips);
+		ShipGrid.salvaAlertCall(sunkenShips);
 
 	}
 

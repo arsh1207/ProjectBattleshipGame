@@ -31,7 +31,7 @@ public class Computer extends Observable {
 	public static Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 	static ArrayList<String> tempList = new ArrayList<String>();
 	public static ArrayList<String> sunkenShips = new ArrayList<String>();
-	static ArrayList<String> coordinatesHit = new ArrayList<String>();
+	public static ArrayList<String> coordinatesHit = new ArrayList<String>();
 	public static int scoringComp = 0;
 	private String reply = "";
 

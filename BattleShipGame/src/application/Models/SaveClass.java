@@ -82,21 +82,24 @@ public class SaveClass extends Observable {
 		
 		boolean check = false;
 		System.out.println("Checking Username");
-		Scanner in = new Scanner(new File(filePath));
-		//if a user with the same name is found, then choose different name
-		while(in.hasNextLine()) {
-			if(userName.equals(in.nextLine())){
-				
-				check = true;
-				System.out.println("Username found");
-				setuName(userName);
-				Main.resultLabel1.setText(userName);
-				break;
-				
+		File file = new File(filePath);
+		if(file.exists()) {
+			Scanner in = new Scanner(file);
+			//if a user with the same name is found, then choose different name
+			while(in.hasNextLine()) {
+				if(userName.equals(in.nextLine())){
+					
+					check = true;
+					System.out.println("Username found");
+					setuName(userName);
+					Main.resultLabel1.setText(userName);
+					break;
+					
+				}
 			}
+			in.close();
 		}
 		setNameSame(check, userName, playerType) ;
-		in.close();
 	}
 	
 	/**
@@ -152,9 +155,12 @@ public class SaveClass extends Observable {
 			out.println("Computer Score: "+ ((HitStrategy)strategy).getScore());
 		else
 			out.println("Computer Score: "+ ((HitStrategySalvo)strategy).getScore());
-		out.println("Computer Sunken ships: "+computer.getSunkenShips());
+		out.print("Computer Sunken ships:");
+		saveComputerSunkenShips(out);
 		out.println("Computer ships status: ");
 		saveComputerShipsMap(out);
+		out.print("Coordinates hit:");
+		saveComputerCoordinatesHit(out);
 		out.println("ShipGrid:");
 		int[][] saveUserGrid = new int[Player.userGrid.length][Player.userGrid[0].length];
 		for (int i = 0; i < Player.userGrid.length; ++i) {
@@ -166,9 +172,28 @@ public class SaveClass extends Observable {
 	         out.println("");
 		}
 		out.println("Player Score: "+computer.getScoreComp());
-		out.println("Player Sunken ships: "+player.getSunkenShips());
+		out.print("Player Sunken ships:");
+		saveUserSunkenShips(out);
 		out.println("Player ships status: ");
 		saveUserShipsMap(out);
+		out.print("Coordinates hit:");
+		saveUserCoordinatesHit(out);		
+	}
+	
+	public void saveComputerCoordinatesHit(PrintWriter out){
+		
+		for (int i = 0; i < Computer.coordinatesHit.size(); i++) {
+			out.print(" "+Computer.coordinatesHit.get(i));
+		}
+		out.println("");		
+	}
+	
+	public void saveUserCoordinatesHit(PrintWriter out){
+		
+		for (int i = 0; i < Player.coordinatesHit.size(); i++) {
+			out.print(" "+Player.coordinatesHit.get(i));
+		}
+		out.println("");
 	}
 	
 	/**
@@ -198,4 +223,21 @@ public class SaveClass extends Observable {
 			out.println("");
 		}
 	}
+	
+	public void saveComputerSunkenShips(PrintWriter out) {
+		for(int i = 0; i < Computer.sunkenShips.size(); i++) {
+			out.print(" "+Computer.sunkenShips.get(i));
+		}
+		
+		out.println("");
+	}
+	
+	public void saveUserSunkenShips(PrintWriter out) {
+		for(int i = 0; i < Player.sunkenShips.size(); i++) {
+			out.print(" "+Player.sunkenShips.get(i));
+		}
+		
+		out.println("");
+	}
+	
 }

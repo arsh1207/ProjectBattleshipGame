@@ -24,7 +24,7 @@ public class HitStrategySalvo extends Observable {
 	int hitX, hitY;
 	int counter = 0;
 	int minMax = 0;
-	private int scoring=0;
+	public static int scoring=0;
 	public static int scoringComp=0;
 	private String reply = "";
 	private int[] coords = {};
@@ -92,7 +92,7 @@ public class HitStrategySalvo extends Observable {
 			if (!hitResult && direction.isEmpty()) {
 				boolean newHit = false;
 				while (!newHit) {
-					if (Player.userGrid[x][y] == 2) {
+					if (Player.userGrid[x][y] == 2 || Player.userGrid[x][y] == 3) {
 						x = ran.nextInt(9);
 						y = ran.nextInt(11);
 					} else

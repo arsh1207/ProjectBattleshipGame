@@ -243,7 +243,9 @@ public class Main extends Application {
 			v_box3.getChildren().addAll(startBtn, tossBtn);
 			v_box4.getChildren().addAll(menuBar, split_pane);
 			v_box1.fillWidthProperty();
+
 			scene1 = new Scene(v_box4, 850, 650);
+
 			v_box1.getStylesheets().add("application/Views/application.css");
 			v_box2.getStylesheets().add("application/Views/application.css");
 			split_pane.prefHeightProperty().bind(stage.heightProperty());

@@ -206,7 +206,7 @@ public class RadarGrid implements Observer {
 			Text text1 = new Text(Character.toString(ch));
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
-		System.out.println("New game is " + Main.newGame);
+		//System.out.println("New game is " + Main.newGame);
 	}
 
 	public static void loadRadarGrid() {
@@ -250,8 +250,8 @@ public class RadarGrid implements Observer {
 				resulttext2.setText("");
 				resulttext3.setText("" + score1);
 				afterCompReply(res, (Computer) o);
-				System.out.println("Player ships down:" + Player.sunkenShips.size());
-
+				//System.out.println("Player ships down:"+ Player.sunkenShips.size());
+							
 			}
 		} else if (o instanceof HitStrategy) {
 			if (arg.equals("Won")) {
@@ -313,7 +313,6 @@ public class RadarGrid implements Observer {
 				Image image;
 				try {
 					image = new Image(new FileInputStream("images/blast.png"));
-
 					ImageView imageView = new ImageView(image);
 					imageView.setFitHeight(25);
 					imageView.setFitWidth(25);
@@ -396,9 +395,10 @@ public class RadarGrid implements Observer {
 					ob.callSunkenShips(o);
 					// call the method for getting sunken ships from computer model here
 					sunkenShips = o.getSunkenShips();
+					//place the health bar calls of salvo in salvaAlertCall
 					salvaAlertCall(sunkenShips);
 					ob.callCheckIfUserWon();
-					if (getUserWon().equals("Won")) {
+					if (((Computer) o).getUserWon().equals("Won")) {
 						AlertBox.displayResult("Hurray!!", "User has Won ");
 					}
 					ob.computerTurn(lastCompResult, Main.gameMode);
@@ -464,5 +464,7 @@ public class RadarGrid implements Observer {
 			alert.setContentText(ships);
 		}
 		alert.showAndWait();
+		double health = 1 - Computer.sunkenShips.size() * 0.2;
+		Main.healthbarTank2.setProgress(health);
 	}
 }
