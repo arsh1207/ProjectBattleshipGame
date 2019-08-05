@@ -92,7 +92,10 @@ public class SaveClass extends Observable {
 					check = true;
 					System.out.println("Username found");
 					setuName(userName);
-					Main.resultLabel1.setText(userName);
+					if(Player.PlayerNum == 1)
+						Main.resultLabel1.setText(userName);
+					else
+						Main.resultLabel2.setText(userName);
 					break;
 					
 				}

@@ -111,9 +111,10 @@ public class Main extends Application {
 			Stage stage = primaryStage;
 			stage.setTitle(" Battle Ship Game");
 			launchStartupWindow(stage);
-			player = new Player();
-			computer = new Computer();
 			SaveClass saveClass = new SaveClass();
+			player = new Player(saveClass);
+			computer = new Computer();
+			
 			LoadClass loadClass = new LoadClass();
 			HitStrategy strategy = new HitStrategy();
 			HitStrategySalvo strategySalvo = new HitStrategySalvo();
@@ -121,8 +122,9 @@ public class Main extends Application {
 			resulttext1 = new Label();
 			resulttext3 = new Label();
 			resulttext4 = new Label();
+			resulttext2 = new Label();
 			ob = new GridUser(player, computer, strategy, strategySalvo, saveClass, loadClass);
-			sg = new ShipGrid(player, ob, resulttext1, resulttext4, resulttext3);
+			sg = new ShipGrid(player, ob, resulttext1, resulttext4, resulttext3, resulttext2);
 			userDetailsWindow = new UserDetailsWindow(ob, saveClass);
 			player.addObserver(sg);
 			strategy.addObserver(sg);
@@ -1012,8 +1014,7 @@ public class Main extends Application {
 		resultLabel1.setTextFill(Color.web("#c40831"));
 		// resulttext3.setStyle("-fx-background-color: white;");
 		resulttext3.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
-		resulttext3.setTextFill(Color.web("#c40831"));
-		resulttext2 = new Label();
+		resulttext3.setTextFill(Color.web("#c40831"));		
 		// resulttext2.setStyle("-fx-background-color: white;");
 		resulttext2.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
 		resulttext2.setTextFill(Color.web("#c40831"));
@@ -1040,8 +1041,7 @@ public class Main extends Application {
 		resultLabel2.setTextFill(Color.web("#00bfff"));
 		// resulttext4.setStyle("-fx-background-color: white;");
 		resulttext4.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
-		resulttext4.setTextFill(Color.web("#00bfff"));
-		resulttext1 = new Label();
+		resulttext4.setTextFill(Color.web("#00bfff"));		
 		// resulttext1.setStyle("-fx-background-color: white;");
 		resulttext1.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
 		resulttext1.setTextFill(Color.web("#00bfff"));

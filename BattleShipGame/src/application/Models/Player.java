@@ -103,7 +103,7 @@ public class Player extends Observable {
 	final static int rows = 9;
 	final static int cols = 11;
 	static String name = "";
-
+	SaveClass saveObj;
 	Properties prop = new Properties();
 
 	String propFileName = "C:\\Users\\ar_jave\\git\\ProjectBattleshipGame\\BattleShipGame\\src\\config.properties";
@@ -114,13 +114,11 @@ public class Player extends Observable {
 	// original Grid that remains unchanged throughout the game
 	public static Integer[][] userGrid = new Integer[rows][cols];
 
-	public Player() {
-		try {
+	public Player(SaveClass saveObj) {
+		this.saveObj = saveObj;
 
-			initialize();
-		} catch (Exception e) {
+		initialize();
 
-		}
 	}
 
 	public String getShipType() {
@@ -139,6 +137,16 @@ public class Player extends Observable {
 		this.reply = reply;
 		setChanged();
 		notifyObservers("RadarSet");
+	}
+
+	public String getShipGridReply() {
+		return reply;
+	}
+
+	public void setShipGridReply(String reply) {
+		this.reply = reply;
+		setChanged();
+		notifyObservers("ShipGridSet");
 	}
 
 	public void setScore(int s) {
@@ -885,6 +893,7 @@ public class Player extends Observable {
 					RadarGrid.enableButtons();
 					int x = Integer.parseInt(coordinates[0]);
 					int y = Integer.parseInt(coordinates[1]);
+					int xy[] = {x,y};
 					String coordx = coordinates[0];
 					String coordy = coordinates[1];
 					if (userGrid[x][y] == 1) {
@@ -900,7 +909,7 @@ public class Player extends Observable {
 						} else {
 							double t = timeb - timea;
 							if (t < 3000) {
-								setScore(20);
+								//setScore(20);
 							}
 							time1 = false;
 							time2 = false;
@@ -908,10 +917,14 @@ public class Player extends Observable {
 							timeb = 0;
 
 						}
-						setScore(10);
+						setShipGridReply("It's a Hit!!!!!");
+						setScore(10);						
+						setCoords(xy);
 						sendReply(6792, "It's a Hit!!!!!", "132.205.94.100");
 					} else if (userGrid[x][y] == 0) {
 						userGrid[x][y] = 3;
+						setShipGridReply("It's a miss!!!!!");
+						setCoords(xy);
 						setScore(-1);
 						sendReply(6792, "It's a miss!!!!!", "132.205.94.100");
 					} else if (userGrid[x][y] == 2 || userGrid[x][y] == 3) {
@@ -967,6 +980,7 @@ public class Player extends Observable {
 					RadarGrid.enableButtons();
 					int x = Integer.parseInt(coordinates[0]);
 					int y = Integer.parseInt(coordinates[1]);
+					int xy[] = {x,y};
 					String coordx = coordinates[0];
 					String coordy = coordinates[1];
 					if (userGrid[x][y] == 1) {
@@ -982,7 +996,7 @@ public class Player extends Observable {
 						} else {
 							double t = timeb - timea;
 							if (t < 3000) {
-								setScore(20);
+								//setScore(20);
 							}
 							time1 = false;
 							time2 = false;
@@ -990,10 +1004,15 @@ public class Player extends Observable {
 							timeb = 0;
 
 						}
+						setShipGridReply("It's a Hit!!!!!");
+						setScore(10);
+						setCoords(xy);
 						sendReply(6795, "It's a Hit!!!!!", "132.205.94.99");
 					} else if (userGrid[x][y] == 0) {
 						userGrid[x][y] = 3;
+						setShipGridReply("It's a Hit!!!!!");
 						setScore(-1);
+						setCoords(xy);
 						sendReply(6795, "It's a miss!!!!!", "132.205.94.99");
 					} else if (userGrid[x][y] == 2) {
 						sendReply(6795, "The location has been hit earlier", "132.205.94.99");
@@ -1028,21 +1047,21 @@ public class Player extends Observable {
 	 */
 	public void PlayerMode(int playerNum) {
 		System.out.println("called player mode");
-		UserDetailsWindow userObj = new UserDetailsWindow();
 
 		setPlayerNum(playerNum);
 		if (playerNum == 1) {// launch for the first player
 			Runnable task = () -> {
 				System.out.println("inside player mode");
 				launchServer1();
-				sendReply(6792, "Name:" + userObj.getUserName(), "132.205.94.100");
+				sendReply(6792, "Name:" + saveObj.getuName(), "132.205.94.100");
 			};
 			new Thread(task).start();
+			System.out.println(saveObj.getuName());
 
 		} else if (playerNum == 2) {
 			Runnable task = () -> {
 				launchServer2();
-				sendReply(6795, "Name:" + userObj.getUserName(), "132.205.94.99");
+				sendReply(6795, "Name:" + saveObj.getuName(), "132.205.94.99");
 			};
 			new Thread(task).start();
 		}
