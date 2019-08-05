@@ -111,7 +111,7 @@ public class Player extends Observable {
 
 	public Player() {
 		try {
-			inputStream = new FileInputStream(propFileName);
+		
 
 			initialize();
 		} catch (Exception e) {
@@ -897,7 +897,7 @@ public class Player extends Observable {
 						userGrid[x][y] = 3;
 						setScore(-1);
 						sendReply(6792, "It's a miss!!!!!", "132.205.94.100");
-					} else if (userGrid[x][y] == 2) {
+					} else if (userGrid[x][y] == 2 || userGrid[x][y] == 3) {
 						sendReply(6792, "The location has been hit earlier", "132.205.94.100");
 					} else {
 						sendReply(6792, "Some other error", "132.205.94.100");
@@ -970,10 +970,10 @@ public class Player extends Observable {
 						}
 						sendReply(6795, "It's a Hit!!!!!", "132.205.94.99");
 					} else if (userGrid[x][y] == 0) {
-						sendReply(6795, "It's a miss!!!!!", "132.205.94.99");
-					} else if (userGrid[x][y] == 2) {
 						userGrid[x][y] = 3;
 						setScore(-1);
+						sendReply(6795, "It's a miss!!!!!", "132.205.94.99");
+					} else if (userGrid[x][y] == 2) {
 						sendReply(6795, "The location has been hit earlier", "132.205.94.99");
 					} else {
 						sendReply(6795, "Some other error", "132.205.94.99");

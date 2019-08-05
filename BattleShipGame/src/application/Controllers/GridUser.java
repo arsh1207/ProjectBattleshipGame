@@ -1,5 +1,7 @@
 package application.Controllers;
 
+import application.Exception.LocationHitException;
+import application.Exception.WrongMethodException;
 import application.Models.Computer;
 import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
@@ -34,16 +36,16 @@ public class GridUser {
 		this.callType = callType;
 	}
 
-	
 	/**
 	 * Constructor to initialize the required object
-	 * @param player Player model object
-	 * @param computer Computer model object
-	 * @param strategy HitStrategy model object
-	 * @param strategySalvo HitStrategySalvo object 
+	 * 
+	 * @param player        Player model object
+	 * @param computer      Computer model object
+	 * @param strategy      HitStrategy model object
+	 * @param strategySalvo HitStrategySalvo object
 	 */
-	public GridUser(Player player, Computer computer, HitStrategy strategy
-			, HitStrategySalvo strategySalvo, SaveClass saveClass, LoadClass loadClass) {
+	public GridUser(Player player, Computer computer, HitStrategy strategy, HitStrategySalvo strategySalvo,
+			SaveClass saveClass, LoadClass loadClass) {
 		this.computer = computer;
 		this.player = player;
 		this.strategy = strategy;
@@ -57,25 +59,25 @@ public class GridUser {
 	 * Provides if its a hit or miss while hitting on the computer grid
 	 * 
 	 * @param hitResult String defining the computer turn results
-	 * @param gameMode Tells the game mode
+	 * @param gameMode  Tells the game mode
 	 */
 	public void computerTurn(Boolean hitResult, String gameMode) {
-		if (Main.gameType.equals("Salvo")) {
-			
-			setCallType("Salvo");
-			strategySalvo.mediumMode(hitResult);
-
-		} else {
-
-			// set call type for junit
-			setCallType("Normal");
-
-			if (gameMode.equals("Easy"))
-				strategy.randomHit();
-			else if (gameMode.equals("Medium"))
-				strategy.mediumMode(hitResult);
-			else
-				strategy.hardMode(hitResult);
+		try {
+			if (Main.gameType.equals("Salvo")) {
+				setCallType("Salvo");
+				strategySalvo.mediumMode(hitResult);
+			} else {
+				// set call type for junit
+				setCallType("Normal");
+				if (gameMode.equals("Easy"))
+					strategy.randomHit();
+				else if (gameMode.equals("Medium"))
+					strategy.mediumMode(hitResult);
+				else
+					strategy.hardMode(hitResult);
+			}
+		} catch (LocationHitException e) {
+			System.out.println(e);
 		}
 
 	}
@@ -97,6 +99,14 @@ public class GridUser {
 		player.deployUserRandomShips();
 	}
 
+	public void checkingManagedException(String methodName) {
+		try {
+			throw new WrongMethodException("No method found" + methodName);
+		} catch (WrongMethodException e) {
+			System.out.println(e);
+		}
+	}
+
 	/**
 	 * 
 	 * checks the grid of the User to verify if user has won or not displays the Win
@@ -116,7 +126,12 @@ public class GridUser {
 	 * @param coordY cordinate y axis
 	 */
 	public void callUserTurn(int coordX, int coordY) {
-		computer.userTurn(coordX, coordY);
+		try {
+			computer.userTurn(coordX, coordY);
+		} catch (LocationHitException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
+		}
 
 	}
 
@@ -137,44 +152,44 @@ public class GridUser {
 	public void callSunkenShips(Computer computer) {
 		computer.checkSunkenShips();
 	}
-	
+
 	public void callPlayerSunkenShips() {
 		Player.checkSunkenShips();
 	}
-	
+
 	public void CallPlayer1Hit2Send(int x, int y) {
 		player.Player1Hit2Send(x, y);
 	}
-	
+
 	public void CallPlayer2Hit1Send(int x, int y) {
 		player.Player2Hit1Send(x, y);
 	}
-	
-	
+
 	/**
 	 * method to transfer the call to checkUserName in models
+	 * 
 	 * @param saveClass Object for SaveClass
-	 * @param userName	username that the user entered
+	 * @param userName  username that the user entered
 	 * @throws Exception io exception
 	 */
 	public void checkUserName(String userName, String playerType) throws Exception {
 		System.out.println("passing call from controller");
 		saveClass.checkUserName(userName, playerType);
 	}
-	
 
 	public void saveGame(String gameMode, String gameType) {
-		if(gameType.equals("Salvo"))
+		if (gameType.equals("Salvo"))
 			saveClass.saveGame(player, computer, strategySalvo, gameMode, gameType);
 		else
 			saveClass.saveGame(player, computer, strategy, gameMode, gameType);
 	}
-	
+
 	public void loadGame(String createdOn) {
-		loadClass.loadGame(computer, player, saveClass,createdOn, strategy, strategySalvo);
+		loadClass.loadGame(computer, player, saveClass, createdOn, strategy, strategySalvo);
 	}
-	
+
 	public void getSelectedLoadGame() {
-		loadClass.getSelectedLoadGame(saveClass);;
+		loadClass.getSelectedLoadGame(saveClass);
+		;
 	}
 }

@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
+import application.Exception.LocationHitException;
+
 /**
  * Class to implement the easy, medium and hard functionality
  * @author arsal
@@ -73,7 +75,7 @@ public class HitStrategy extends Observable {
 	/**
 	 * method to implement the easy functionality of the game
 	 */
-	public void randomHit() {
+	public void randomHit() throws LocationHitException{
 		// Random ran = new Random();
 		int x = randomX();
 		int y = randomY();
@@ -121,9 +123,9 @@ public class HitStrategy extends Observable {
 			Player.userGrid[x][y] = 3;
 			setScore(-1);
 			setReply("It's a miss!!!!!");
-		} else if (Player.userGrid[x][y] == 2) {
-			setReply("The location has been hit earlier");
-
+		} else if (Player.userGrid[x][y] == 2 || Player.userGrid[x][y] == 3) {
+			//setReply("The location has been hit earlier");
+			 throw new LocationHitException("The location has been hit earlier");
 		}
 	}
 	
@@ -131,7 +133,7 @@ public class HitStrategy extends Observable {
 	 * method to implement the medium functionality of the game
 	 * @param hitResult previous hit or miss
 	 */
-	public void mediumMode(Boolean hitResult) {
+	public void mediumMode(Boolean hitResult) throws LocationHitException{
 		int x = ran.nextInt(9);
 		int y = ran.nextInt(11);
 
@@ -256,9 +258,9 @@ public class HitStrategy extends Observable {
 			Player.userGrid[x][y] = 3;
 			setScore(-1);
 			setReply("It's a miss!!!!!");
-		} else if (Player.userGrid[x][y] == 2) {
-			setReply("The location has been hit earlier");
-
+		} else if (Player.userGrid[x][y] == 2 || Player.userGrid[x][y] == 3) {
+			//setReply("The location has been hit earlier");
+			 throw new LocationHitException("The location has been hit earlier");
 		}
 
 	}
@@ -268,7 +270,7 @@ public class HitStrategy extends Observable {
 	 * 
 	 * @param hitResult tell the result the for the last hit 
 	 */
-	public void hardMode(Boolean hitResult) {
+	public void hardMode(Boolean hitResult) throws LocationHitException{
 		int x = 0, y = 0;
 		int mostProbable = probabilityGrid[x][y];
 
@@ -519,8 +521,9 @@ public class HitStrategy extends Observable {
 			Player.userGrid[x][y] = 3;
 			setScore(-1);
 			setReply("It's a miss!!!!!");
-		} else if (Player.userGrid[x][y] == 2) {
-			setReply("The location has been hit earlier");
+		} else if (Player.userGrid[x][y] == 2 || Player.userGrid[x][y] == 3) {
+			//setReply("The location has been hit earlier");
+			 throw new LocationHitException("The location has been hit earlier");
 
 		}
 

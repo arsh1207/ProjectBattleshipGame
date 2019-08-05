@@ -65,16 +65,11 @@ public class RadarGrid implements Observer {
 	/**
 	 * It is the parameterized class constructor
 	 * 
-	 * @param resulttext2
-	 *            It is a label for setting computer result on scene
-	 * @param resulttext1
-	 *            It is a label for setting User result on scene
-	 * @param resulttext3
-	 *            It is a label for setting User Score on scene
-	 * @param resulttext4
-	 *            It is a label for setting computer score on scene
-	 * @param ob
-	 *            It is controller object
+	 * @param resulttext2 It is a label for setting computer result on scene
+	 * @param resulttext1 It is a label for setting User result on scene
+	 * @param resulttext3 It is a label for setting User Score on scene
+	 * @param resulttext4 It is a label for setting computer score on scene
+	 * @param ob          It is controller object
 	 */
 	public RadarGrid(Label resulttext2, Label resulttext1, Label resulttext3, Label resulttext4, GridUser ob) {
 
@@ -138,10 +133,8 @@ public class RadarGrid implements Observer {
 	/**
 	 * Deploys the radar grid on the screen
 	 * 
-	 * @param g_pane
-	 *            This store the reference for radar grid pane.
-	 * @param resulttext2
-	 *            It is a label for setting computer result on scene
+	 * @param g_pane      This store the reference for radar grid pane.
+	 * @param resulttext2 It is a label for setting computer result on scene
 	 */
 	public void setUserRadarGrid(GridPane g_pane, Label resulttext2) {
 		g_pane1 = g_pane;
@@ -229,10 +222,8 @@ public class RadarGrid implements Observer {
 	/**
 	 * This class makes the radar grid visible on appropriate calling.
 	 * 
-	 * @param i
-	 *            Contains the x axis for the radar button
-	 * @param j
-	 *            Contains the y axis for the radar button
+	 * @param i Contains the x axis for the radar button
+	 * @param j Contains the y axis for the radar button
 	 */
 	public void disableButtons(int i, int j) {
 		radarButton[i][j].setDisable(false);
@@ -254,8 +245,8 @@ public class RadarGrid implements Observer {
 				resulttext2.setText("");
 				resulttext3.setText("" + score1);
 				afterCompReply(res, (Computer) o);
-				System.out.println("Player ships down:"+ Player.sunkenShips.size());
-			
+				System.out.println("Player ships down:" + Player.sunkenShips.size());
+
 			}
 		} else if (o instanceof HitStrategy) {
 			if (arg.equals("Won")) {
@@ -272,8 +263,8 @@ public class RadarGrid implements Observer {
 			resulttext1.setText(reply);
 			resulttext4.setText("" + score);
 			ob.callPlayerSunkenShips();
-			double health = 1 - Player.sunkenShips.size()*0.2;		
-			//Main.healthbarTank1.setWidth(40*health);
+			double health = 1 - Player.sunkenShips.size() * 0.2;
+			// Main.healthbarTank1.setWidth(40*health);
 			Main.healthbarTank1.setProgress(health);
 			ob.callCheckIfCompWon();
 
@@ -291,77 +282,76 @@ public class RadarGrid implements Observer {
 			}
 			resulttext1.setText(reply);
 			resulttext4.setText("" + score);
-		}else if (o instanceof LoadClass){
-			if(arg.equals("setcoordscomp")) {
+		} else if (o instanceof LoadClass) {
+			if (arg.equals("setcoordscomp")) {
 				int[] coordState = ((LoadClass) o).getRadarGridCoords();
-				//loadRadarGrid[coordState[0]][coordState[1]] = coordState[2];
-				//System.out.print("Buttons "+coordState[1]+" "+coordState[1]+" "+coordState[2]);
-				if(coordState[2] == 1 || coordState[2] == 0)
+				// loadRadarGrid[coordState[0]][coordState[1]] = coordState[2];
+				// System.out.print("Buttons "+coordState[1]+" "+coordState[1]+"
+				// "+coordState[2]);
+				if (coordState[2] == 1 || coordState[2] == 0)
 					radarButton[coordState[0]][coordState[1]].setStyle("-fx-background-color: black; ");
-				else if(coordState[2] == 2)
+				else if (coordState[2] == 2)
 					radarButton[coordState[0]][coordState[1]].setStyle("-fx-background-color: #FF0000; ");
 				else
 					radarButton[coordState[0]][coordState[1]].setStyle("-fx-background-color: #FFFFFF; ");
 				radarButton[coordState[0]][coordState[1]].setDisable(false);
-			}
-			else if(arg.equals("setscorecomp")){
+			} else if (arg.equals("setscorecomp")) {
 				int score = ((LoadClass) o).getScore();
 				resulttext4.setText("" + score);
 			}
-		}else if (o instanceof Player) {
+		} else if (o instanceof Player) {
 			if (arg.equals("RadarSet")) {
 				String res = ((Player) o).getReply();
 				int score1 = ((Player) o).getScore();
-				Platform.runLater( () -> resulttext2.setText(""));
-				Platform.runLater( () ->resulttext3.setText("" + score1));
+				Platform.runLater(() -> resulttext2.setText(""));
+				Platform.runLater(() -> resulttext3.setText("" + score1));
 				Image image;
 				try {
 					image = new Image(new FileInputStream("images/blast.png"));
-				
-				ImageView imageView = new ImageView(image);
-				imageView.setFitHeight(25);
-				imageView.setFitWidth(25);
-				FadeTransition ft = new FadeTransition(Duration.millis(3000), imageView);
-				ft.setFromValue(1.0);
-				ft.setToValue(0.0);
-				ft.play();
-				AudioClip audioClip = new AudioClip(Paths.get("Sounds/blast.wav").toUri().toString());
-				if (res.equals("It's a Hit!!!!!")) {
-					Platform.runLater( () -> radarButton[coordX][coordY].setStyle("-fx-background-color: #FF0000; "));
-				//	radarButton[coordX][coordY].setStyle("-fx-background-color: #FF0000; ");
-					Platform.runLater( () -> g_pane1.add(imageView, (coordY + 1), (9 - coordX)));
-					//g_pane1.add(imageView, (coordY + 1), (9 - coordX));
-					Platform.runLater( () -> audioClip.play(100));
-					//audioClip.play(100);
-				} else if (res.equals("It's a miss!!!!!")) {
-					Platform.runLater( () -> radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; "));
-					//radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
-				}
-				System.out.println("Player ships down:"+ Player.sunkenShips.size());
-				
-				if(((Player) o).getPlayerNum() == 1) {
-					double health = 1 - Player.sunkenShips.size()*0.2;	
-					Platform.runLater( () -> Main.healthbarTank1.setProgress(health));
-				//	Main.healthbarTank1.setProgress(health);
-				}
-				else {
-					double health = 1 - Player.sunkenShips.size()*0.2;	
-					Platform.runLater( () -> Main.healthbarTank2.setProgress(health));
-				//	Main.healthbarTank2.setProgress(health);
-				}
+
+					ImageView imageView = new ImageView(image);
+					imageView.setFitHeight(25);
+					imageView.setFitWidth(25);
+					FadeTransition ft = new FadeTransition(Duration.millis(3000), imageView);
+					ft.setFromValue(1.0);
+					ft.setToValue(0.0);
+					ft.play();
+					AudioClip audioClip = new AudioClip(Paths.get("Sounds/blast.wav").toUri().toString());
+					if (res.equals("It's a Hit!!!!!")) {
+						Platform.runLater(
+								() -> radarButton[coordX][coordY].setStyle("-fx-background-color: #FF0000; "));
+						// radarButton[coordX][coordY].setStyle("-fx-background-color: #FF0000; ");
+						Platform.runLater(() -> g_pane1.add(imageView, (coordY + 1), (9 - coordX)));
+						// g_pane1.add(imageView, (coordY + 1), (9 - coordX));
+						Platform.runLater(() -> audioClip.play(100));
+						// audioClip.play(100);
+					} else if (res.equals("It's a miss!!!!!")) {
+						Platform.runLater(
+								() -> radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; "));
+						// radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
+					}
+					System.out.println("Player ships down:" + Player.sunkenShips.size());
+
+					if (((Player) o).getPlayerNum() == 1) {
+						double health = 1 - Player.sunkenShips.size() * 0.2;
+						Platform.runLater(() -> Main.healthbarTank1.setProgress(health));
+						// Main.healthbarTank1.setProgress(health);
+					} else {
+						double health = 1 - Player.sunkenShips.size() * 0.2;
+						Platform.runLater(() -> Main.healthbarTank2.setProgress(health));
+						// Main.healthbarTank2.setProgress(health);
+					}
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					System.out.println(e.getMessage());
 				}
-			}
-			else if(arg.equals("VsmodeWon")) {
-				if(((Player) o).getPlayerWon().equalsIgnoreCase("won")) {
-					AlertBox.displayResult("Yesss", "WON");
-				}
-			}
-			else if(arg.equals("VsmodeOtherWon")) {
-				if(((Player) o).getOtherWon().equalsIgnoreCase("won")) {
+			} else if (arg.equals("VsmodeWon")) {
+				if (((Player) o).getPlayerWon().equalsIgnoreCase("won")) {
 					AlertBox.displayResult("Sorry", "You LOST");
+				}
+			} else if (arg.equals("VsmodeOtherWon")) {
+				if (((Player) o).getOtherWon().equalsIgnoreCase("won")) {
+					AlertBox.displayResult("Yesss", "WON");
 				}
 			}
 		}
@@ -372,10 +362,8 @@ public class RadarGrid implements Observer {
 	 * class and calls controller to check if user won and tell computer to take its
 	 * turn.
 	 * 
-	 * @param res
-	 *            This parameter contains the response received after state change
-	 * @param o
-	 *            This param contains object reference of the notifying class
+	 * @param res This parameter contains the response received after state change
+	 * @param o   This param contains object reference of the notifying class
 	 */
 	public void afterCompReply(String res, Computer o) {
 		try {
@@ -430,8 +418,7 @@ public class RadarGrid implements Observer {
 	/**
 	 * Method to keep storing the salvos of the user in every round
 	 * 
-	 * @param xy
-	 *            coordinates
+	 * @param xy coordinates
 	 */
 	public void salvaFunc(String[] xy) {
 		int shipsremaining = Main.TOTAL_SHIPS - Player.sunkenShips.size();
@@ -454,8 +441,7 @@ public class RadarGrid implements Observer {
 	/**
 	 * Method to display the enemy ships that have sunk in the latest round
 	 * 
-	 * @param sunkenShips
-	 *            list of sunken ships
+	 * @param sunkenShips list of sunken ships
 	 */
 	public static void salvaAlertCall(ArrayList<String> sunkenShips) {
 		Alert alert = new Alert(AlertType.INFORMATION);
