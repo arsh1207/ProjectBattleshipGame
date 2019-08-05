@@ -230,7 +230,7 @@ public class Main extends Application {
 			v_box3.getChildren().addAll(startBtn, tossBtn);
 			v_box4.getChildren().addAll(menuBar, healthbars, split_pane);
 			v_box1.fillWidthProperty();
-			scene1 = new Scene(v_box4, 850, 850);
+			scene1 = new Scene(v_box4, 750, 750);
 			v_box1.getStylesheets().add("application/Views/application.css");
 			v_box2.getStylesheets().add("application/Views/application.css");
 			split_pane.prefHeightProperty().bind(stage.heightProperty());
@@ -807,7 +807,7 @@ public class Main extends Application {
 		btn1.setStyle("-fx-background-color: #a3a0a0; ");
 		Button btn2 = new Button("Exit Game");
 		btn2.setStyle("-fx-background-color: #a3a0a0; ");
-		Button btn3 = new Button("Vs Computer");
+		Button btn3 = new Button("Classic Mode");
 		btn3.setStyle("-fx-background-color: #a3a0a0; ");
 		Button btn4 = new Button("Salvo Mode");
 		btn4.setStyle("-fx-background-color: #a3a0a0; ");

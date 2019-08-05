@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import application.Controllers.GridUser;
+import application.Models.Computer;
 import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
 import application.Models.LoadClass;
@@ -204,7 +205,6 @@ public class ShipGrid implements Observer {
 				}
 				resulttext1.setText(reply);
 				resulttext4.setText("" + score);
-				ArrayList<String> sunkenShips = player.getSunkenShips();
 				ob.callCheckIfCompWon();
 				if (player.getCompWon().equals("Won")) {
 					AlertBox.displayResult("OOPS:( :(", "Computer Won ");
@@ -384,6 +384,8 @@ public class ShipGrid implements Observer {
 			alert.setContentText(ships);
 		}
 		alert.showAndWait();
+		double health = 1 - Player.sunkenShips.size() * 0.2;
+		Main.healthbarTank1.setProgress(health);
 	}
 
 }

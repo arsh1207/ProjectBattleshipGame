@@ -131,7 +131,7 @@ public class LoadClass extends Observable{
 			}
 			Main.gameMode = in.nextLine().split(" ")[2];
 			Main.gameType = in.nextLine().split(" ")[2];
-			System.out.println("game mode and type are "+Main.gameMode+" "+Main.gameType);
+			//System.out.println("game mode and type are "+Main.gameMode+" "+Main.gameType);
 			in.nextLine();
 			if(Main.gameType.equals("Salvo"))
 				loadComputerGrid(in, computer, strategySalvo);
@@ -144,6 +144,8 @@ public class LoadClass extends Observable{
 			line = in.nextLine();
 			//store shipsmap
 			loadComputerShipsMap(in);
+			line = in.nextLine();
+			loadComputerCoordinatesHit(line);
 			//perform operations for ship grid
 			while(in.hasNextLine()) {
 				line = in.nextLine();
@@ -171,6 +173,8 @@ public class LoadClass extends Observable{
 			loadUserGrid(in, player, computer);
 			line = in.nextLine();
 			loadUserSunkenShips(line);
+			line = in.nextLine();
+			loadUserCoordinatesHit(line);
 			in.close();
 		}
 		catch(Exception e) {
@@ -249,23 +253,14 @@ public class LoadClass extends Observable{
 	 */
 	public void loadComputerSunkenShips(String line) {
 		
-		List<String> sunkenShips = new ArrayList<>();
-		int i;
-		for(i = 0; line.charAt(i) != ':'; i++);
-		i+=3;
-		while(i < line.length()) {
-			int j = i;
-			while(line.charAt(j) != ',') {
-				if(line.charAt(j) == ']')
-					break;
-				j++;
-			}
-			String subline = line.substring(i, j);
-			i = j+2;
-			sunkenShips.add(subline);
+		Computer.sunkenShips = new ArrayList<>();
+		String[] sublines = line.split(" ");
+		for(int i = 3; i < sublines.length; i++) {
+			Computer.sunkenShips.add(sublines[i]);
 		}
-		Computer.sunkenShips = (ArrayList<String>) sunkenShips;
-		System.out.println(Computer.sunkenShips);
+		
+		System.out.println("Loaded Computer sunken ships: "+Computer.sunkenShips);
+		
 	}
 	
 	/**
@@ -278,7 +273,7 @@ public class LoadClass extends Observable{
 		Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 		while(in.hasNextLine()) {
 			line = in.nextLine();
-			if(line.contains("ShipGrid"))
+			if(line.contains("Coordinates hit"))
 				break;
 			else {
 				tempList = new ArrayList<>();
@@ -290,7 +285,35 @@ public class LoadClass extends Observable{
 			}
 		}
 		Computer.shipsMap.putAll(shipsMap);
-		System.out.println(Computer.shipsMap);
+		//System.out.println(Computer.shipsMap);
+	}
+	
+	/**
+	 * Method to load the computer coordinates that were hit
+	 * @param line line in the text file that stored comp hit coordinates
+	 */
+	public void loadComputerCoordinatesHit(String line) {
+		
+		String[] subline = line.split(" ");
+		Computer.coordinatesHit = new ArrayList<>();
+		for(int i = 1; i < subline.length; i++) {
+			Computer.coordinatesHit.add(subline[i]);
+		}
+		
+	}
+	
+	/**
+	 * Method to load the user coordinates that were hit
+	 * @param line line in the text file that stored user hit coordinates
+	 */
+	public void loadUserCoordinatesHit(String line) {
+		
+		String[] subline = line.split(" ");
+		Player.coordinatesHit = new ArrayList<>();
+		for(int i = 1; i < subline.length; i++) {
+			Player.coordinatesHit.add(subline[i]);
+		}
+		
 	}
 	
 	/**
@@ -313,10 +336,10 @@ public class LoadClass extends Observable{
 			}
 			for(int i = 0; i < line.length(); i++) {
 				player.userGrid[j][i] = Integer.parseInt(Character.toString(line.charAt(i)));
-				System.out.print(player.userGrid[j][i]);
+				//System.out.print(player.userGrid[j][i]);
 				setShipGridCoords(j, i, player.userGrid[j][i]);
 			}
-			System.out.println("");
+			//System.out.println("");
 			j++;
 		}
 	}
@@ -331,21 +354,22 @@ public class LoadClass extends Observable{
 		Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 		while(in.hasNextLine()) {
 			line = in.nextLine();
-			if(line.contains("Created on"))
+			if(line.contains("Coordinates hit"))
 				break;
 			else {
 				tempList = new ArrayList<>();
 				String[] sublines = line.split(" ");
-				System.out.println(sublines[0]);
+				//System.out.println(sublines[0]);
 				for(int i = 1; i < sublines.length; i++) {
 					tempList.add(sublines[i]);
+					System.out.println(sublines[i]);
 					String[] sublines2 = sublines[i].split(",");
 					setColoredShipsCoord(sublines2[0], sublines2[1], sublines[0]);
 				}
 				shipsMap.put(sublines[0], tempList);
 			}
 		}
-		
+		Player.shipsMap = new HashMap<>();
 		Player.shipsMap.putAll(shipsMap);
 		System.out.println(Player.shipsMap);
 	}
@@ -355,33 +379,14 @@ public class LoadClass extends Observable{
 	 * @param line sunken ships line in the text file
 	 */
 	public void loadUserSunkenShips(String line) {
-			
-		List<String> sunkenShips = new ArrayList<>();
-		int i;
-		for(i = 0; line.charAt(i) != ':'; i++);
-		i+=3;
-		while(i < line.length()) {
-			int j = i;
-			while(line.charAt(j) != ',') {
-				if(line.charAt(j) == ']')
-					break;
-				j++;
-			}
-			if(j > i+1) {
-				String subline = line.substring(i, j);
-				i = j+2;
-				sunkenShips.add(subline);
-			}
-			else {
-				i++;
-			}
+		
+		Player.sunkenShips = new ArrayList<>();
+		String[] sublines = line.split(" ");
+		for(int i = 3; i < sublines.length; i++) {
+			Player.sunkenShips.add(sublines[i]);
 		}
-		if(!sunkenShips.isEmpty()) {
-			Player.sunkenShips = (ArrayList<String>) sunkenShips;
-		}else {
-			Player.sunkenShips = new ArrayList<>();
-		}
-		System.out.println(Player.sunkenShips);
+		
+		System.out.println("Loaded player sunken ships: "+Player.sunkenShips);
 	}
 	
 }
