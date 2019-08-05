@@ -50,6 +50,10 @@ public class UserDetailsWindow implements Observer{
 		this.userName = name;
 	}
 	
+	public UserDetailsWindow(){
+	
+	}
+	
 	public UserDetailsWindow(GridUser ob, SaveClass saveClass){
 		this.ob = ob;
 		this.saveClass = saveClass;

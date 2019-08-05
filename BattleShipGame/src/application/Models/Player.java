@@ -17,6 +17,7 @@ import java.util.Random;
 
 import application.Views.RadarGrid;
 import application.Views.ShipGrid;
+import application.Views.UserDetailsWindow;
 import main.Main;
 
 /**
@@ -115,7 +116,6 @@ public class Player extends Observable {
 
 	public Player() {
 		try {
-		
 
 			initialize();
 		} catch (Exception e) {
@@ -789,17 +789,17 @@ public class Player extends Observable {
 			// set that user has won
 			int pscore = Computer.scoringComp;
 			int cscore;
-			if(Main.gameType.equals("Salvo"))
+			if (Main.gameType.equals("Salvo"))
 				cscore = HitStrategySalvo.scoring;
 			else
 				cscore = HitStrategy.scoring;
 			boolean scoreReverse = false;
-			
+
 			if ((cscore > pscore) || sunkenShips.size() == Main.TOTAL_SHIPS) {
 				scoreReverse = true;
 				System.out.println("Comp Won");
 				setCompWon("Won");
-			} else { 
+			} else {
 				setCompWon("Lost");
 			}
 		}
@@ -834,7 +834,7 @@ public class Player extends Observable {
 	 * This function checks whether any ships have sunk or not
 	 */
 	public static void checkSunkenShips() {
-		
+
 		Map<String, ArrayList<String>> tempMap;
 		for (String coords : coordinatesHit) {
 			tempMap = new HashMap<>();
@@ -849,7 +849,7 @@ public class Player extends Observable {
 						// and remove the ships from the shipsMap
 						if (shipsMap.get(entry.getKey()).isEmpty()) {
 							setSunkenShips(entry.getKey());
-							System.out.println("Player sunken ships "+sunkenShips);
+							System.out.println("Player sunken ships " + sunkenShips);
 							tempMap.remove(entry.getKey());
 						}
 					}
@@ -876,7 +876,11 @@ public class Player extends Observable {
 				String[] coordinates = msg.split("\\s");
 				// case when the coordinates are received
 				if (coordinates.length == 1) {
-					setOtherWon("Won");
+					if (coordinates[0].contains("Name")) {
+						Main.resultLabel2.setText(coordinates[0].split(":")[1]);
+					} else {
+						setOtherWon("Won");
+					}
 				} else if (coordinates.length == 2) {
 					RadarGrid.enableButtons();
 					int x = Integer.parseInt(coordinates[0]);
@@ -904,6 +908,7 @@ public class Player extends Observable {
 							timeb = 0;
 
 						}
+						setScore(10);
 						sendReply(6792, "It's a Hit!!!!!", "132.205.94.100");
 					} else if (userGrid[x][y] == 0) {
 						userGrid[x][y] = 3;
@@ -953,7 +958,11 @@ public class Player extends Observable {
 				String[] coordinates = msg.split("\\s");
 				// case when the coordinates are received
 				if (coordinates.length == 1) {
-					setOtherWon("Won");
+					if (coordinates[0].contains("Name")) {
+						Main.resultLabel2.setText(coordinates[0].split(":")[1]);
+					} else {
+						setOtherWon("Won");
+					}
 				} else if (coordinates.length == 2) {
 					RadarGrid.enableButtons();
 					int x = Integer.parseInt(coordinates[0]);
@@ -1019,18 +1028,21 @@ public class Player extends Observable {
 	 */
 	public void PlayerMode(int playerNum) {
 		System.out.println("called player mode");
+		UserDetailsWindow userObj = new UserDetailsWindow();
 
 		setPlayerNum(playerNum);
 		if (playerNum == 1) {// launch for the first player
 			Runnable task = () -> {
 				System.out.println("inside player mode");
 				launchServer1();
+				sendReply(6792, "Name:" + userObj.getUserName(), "132.205.94.100");
 			};
 			new Thread(task).start();
 
 		} else if (playerNum == 2) {
 			Runnable task = () -> {
 				launchServer2();
+				sendReply(6795, "Name:" + userObj.getUserName(), "132.205.94.99");
 			};
 			new Thread(task).start();
 		}
@@ -1127,8 +1139,7 @@ public class Player extends Observable {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
-		} finally
-		{
+		} finally {
 			if (aSocket != null)
 				aSocket.close();
 		}
