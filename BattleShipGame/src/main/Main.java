@@ -164,6 +164,7 @@ public class Main extends Application {
 			strategy.addObserver(radarGridObserver);
 			loadClass.addObserver(radarGridObserver);
 			loadClass.addObserver(sg);
+			player.addObserver(radarGridObserver);
 			radarGridObserver.setUserRadarGrid(g_pane1, resulttext2);
 			sg.setUserShipGrid(g_pane2);
 			setShipPlacementActions();

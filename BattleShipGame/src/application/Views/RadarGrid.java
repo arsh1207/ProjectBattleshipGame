@@ -1,9 +1,25 @@
 package application.Views;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
+import application.Controllers.GridUser;
+import application.Models.Computer;
+import application.Models.HitStrategy;
+import application.Models.HitStrategySalvo;
+import application.Models.LoadClass;
+import application.Models.Player;
+import javafx.animation.FadeTransition;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -15,23 +31,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import main.Main;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-import application.Controllers.GridUser;
-import application.Models.Computer;
-import application.Models.HitStrategy;
-import application.Models.HitStrategySalvo;
-import application.Models.LoadClass;
-import application.Models.Player;
-import javafx.animation.FadeTransition;
-import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.event.ActionEvent;
 
 /**
  * This class is a view for computer grid and renders Computer.java model class
@@ -313,8 +312,8 @@ public class RadarGrid implements Observer {
 			if (arg.equals("RadarSet")) {
 				String res = ((Player) o).getReply();
 				int score1 = ((Player) o).getScore();
-				resulttext2.setText("");
-				resulttext3.setText("" + score1);
+				Platform.runLater( () -> resulttext2.setText(""));
+				Platform.runLater( () ->resulttext3.setText("" + score1));
 				Image image;
 				try {
 					image = new Image(new FileInputStream("images/blast.png"));
@@ -328,25 +327,41 @@ public class RadarGrid implements Observer {
 				ft.play();
 				AudioClip audioClip = new AudioClip(Paths.get("Sounds/blast.wav").toUri().toString());
 				if (res.equals("It's a Hit!!!!!")) {
-					radarButton[coordX][coordY].setStyle("-fx-background-color: #FF0000; ");
-					g_pane1.add(imageView, (coordY + 1), (9 - coordX));
-					audioClip.play(100);
+					Platform.runLater( () -> radarButton[coordX][coordY].setStyle("-fx-background-color: #FF0000; "));
+				//	radarButton[coordX][coordY].setStyle("-fx-background-color: #FF0000; ");
+					Platform.runLater( () -> g_pane1.add(imageView, (coordY + 1), (9 - coordX)));
+					//g_pane1.add(imageView, (coordY + 1), (9 - coordX));
+					Platform.runLater( () -> audioClip.play(100));
+					//audioClip.play(100);
 				} else if (res.equals("It's a miss!!!!!")) {
-					radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
+					Platform.runLater( () -> radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; "));
+					//radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
 				}
 				System.out.println("Player ships down:"+ Player.sunkenShips.size());
 				
 				if(((Player) o).getPlayerNum() == 1) {
-					double health = 1 - Player.sunkenShips.size()*0.2;		
-					Main.healthbarTank1.setProgress(health);
+					double health = 1 - Player.sunkenShips.size()*0.2;	
+					Platform.runLater( () -> Main.healthbarTank1.setProgress(health));
+				//	Main.healthbarTank1.setProgress(health);
 				}
 				else {
-					double health = 1 - Player.sunkenShips.size()*0.2;		
-					Main.healthbarTank2.setProgress(health);
+					double health = 1 - Player.sunkenShips.size()*0.2;	
+					Platform.runLater( () -> Main.healthbarTank2.setProgress(health));
+				//	Main.healthbarTank2.setProgress(health);
 				}
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					System.out.println(e.getMessage());
+				}
+			}
+			else if(arg.equals("VsmodeWon")) {
+				if(((Player) o).getPlayerWon().equalsIgnoreCase("won")) {
+					AlertBox.displayResult("Yesss", "WON");
+				}
+			}
+			else if(arg.equals("VsmodeOtherWon")) {
+				if(((Player) o).getOtherWon().equalsIgnoreCase("won")) {
+					AlertBox.displayResult("Sorry", "You LOST");
 				}
 			}
 		}
