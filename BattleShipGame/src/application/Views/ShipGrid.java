@@ -165,7 +165,7 @@ public class ShipGrid implements Observer {
 					AlertBox.displayResult("Hurray!!", "Computer has Won ");
 				}
 			}
-			else {
+			else if (arg.equals("ShipDeploy")){
 				String value = ((Player) o).getReply();
 				int coord[] = ((Player) o).getCoords();
 				String shipType = ((Player) o).getShipType();

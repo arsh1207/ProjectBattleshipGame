@@ -1,5 +1,6 @@
 package application.Models;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.DatagramPacket;
@@ -33,7 +34,7 @@ public class Player extends Observable {
 	public static ArrayList<String> coordinatesHit = new ArrayList<String>();
 	public int hitX, hitY;
 	public static int numOfShipsDep = 0;
-	
+
 	boolean time1 = false, time2 = false;
 	double timea = 0;
 	double timeb = 0;
@@ -52,6 +53,8 @@ public class Player extends Observable {
 
 	public void setOtherWon(String otherWon) {
 		OtherWon = otherWon;
+		setChanged();
+		notifyObservers("VsmodeOtherWon");
 	}
 
 	public String getPlayerWon() {
@@ -60,6 +63,9 @@ public class Player extends Observable {
 
 	public void setPlayerWon(String playerWon) {
 		PlayerWon = playerWon;
+		setChanged();
+		notifyObservers("VsmodeWon");
+
 	}
 
 	// gives that which player is playing
@@ -97,18 +103,23 @@ public class Player extends Observable {
 	static String name = "";
 
 	Properties prop = new Properties();
-	
-	
-	String propFileName="config.properties";
-	InputStream inputStream=getClass().getClassLoader().getResourceAsStream(propFileName);	
-	
+
+	String propFileName = "C:\\Users\\ar_jave\\git\\ProjectBattleshipGame\\BattleShipGame\\src\\config.properties";
+	InputStream inputStream = null;// new FileInputStream(propFileName);
+	// InputStream
+	// inputStream=getClass().getClassLoader().getResourceAsStream(propFileName);
 
 	// original Grid that remains unchanged throughout the game
 	public static Integer[][] userGrid = new Integer[rows][cols];
 
 	public Player() {
+		try {
+		
 
-		initialize();
+			initialize();
+		} catch (Exception e) {
+
+		}
 	}
 
 	public String getShipType() {
@@ -136,7 +147,7 @@ public class Player extends Observable {
 	public int getScore() {
 		return scoring;
 	}
-	
+
 	public boolean isHit() {
 		return Hit;
 	}
@@ -203,8 +214,10 @@ public class Player extends Observable {
 
 	/**
 	 * 
-	 * @param coordinates defines the coordinated to be deployed
-	 * @param shipType    type of the ship
+	 * @param coordinates
+	 *            defines the coordinated to be deployed
+	 * @param shipType
+	 *            type of the ship
 	 */
 	public void deployUserGrid(String coordinates, String shipType) {
 		try {
@@ -337,8 +350,10 @@ public class Player extends Observable {
 	/**
 	 * Method to check whether the ships are placed adjacent to each other or not
 	 * 
-	 * @param i x-axis
-	 * @param j y-axis
+	 * @param i
+	 *            x-axis
+	 * @param j
+	 *            y-axis
 	 * @return Boolean tell if a ship is adjacent or not
 	 */
 	public Boolean adjacentShipCheck(int i, int j) {
@@ -362,8 +377,10 @@ public class Player extends Observable {
 	/**
 	 * methods to check whether the points are not out of the grid
 	 * 
-	 * @param i x - axis
-	 * @param j y - axis
+	 * @param i
+	 *            x - axis
+	 * @param j
+	 *            y - axis
 	 * @return Boolean if the point is valid or not
 	 */
 	public boolean isValid(int i, int j) {
@@ -376,8 +393,10 @@ public class Player extends Observable {
 	 * Checking that the ships are of the exact size
 	 * 
 	 * 
-	 * @param diff     size of the ship
-	 * @param shipType type of the ship
+	 * @param diff
+	 *            size of the ship
+	 * @param shipType
+	 *            type of the ship
 	 * @return returns String defining if the ships have the correct size
 	 */
 	public String areHolesValid(int diff, String shipType) {
@@ -417,7 +436,8 @@ public class Player extends Observable {
 	/**
 	 * function to see whether a particular ship is deployed or not
 	 * 
-	 * @param shipType gives the type of the ship
+	 * @param shipType
+	 *            gives the type of the ship
 	 * @return boolean to check the ship deployed
 	 */
 	public boolean isShipDeployed(String shipType) {
@@ -702,10 +722,14 @@ public class Player extends Observable {
 	/**
 	 * method to check the adjacency in user ships
 	 * 
-	 * @param x         x-coordinate
-	 * @param y         y-coordinate
-	 * @param direction tell the direction horizontal or vertical
-	 * @param points    size of ship points
+	 * @param x
+	 *            x-coordinate
+	 * @param y
+	 *            y-coordinate
+	 * @param direction
+	 *            tell the direction horizontal or vertical
+	 * @param points
+	 *            size of ship points
 	 * @return Boolean returns if it can place or not
 	 */
 	public Boolean checkUserShip(int x, int y, String direction, int points) {
@@ -783,7 +807,8 @@ public class Player extends Observable {
 	/**
 	 * Method to display the computer grid
 	 * 
-	 * @param Grid contains the reference to the grid
+	 * @param Grid
+	 *            contains the reference to the grid
 	 */
 	public void printGrid(Integer[][] Grid) {
 		for (int i = 0; i < rows; i++) {
@@ -827,9 +852,7 @@ public class Player extends Observable {
 							tempMap.remove(entry.getKey());
 						}
 					}
-
 				}
-
 			}
 			shipsMap = new HashMap<>();
 			shipsMap.putAll(tempMap);
@@ -848,7 +871,7 @@ public class Player extends Observable {
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 				aSocket.receive(request);
 				String msg = new String(request.getData(), 0, request.getLength());
-				System.out.println("msg1"+msg);
+				System.out.println("msg1" + msg);
 				String[] coordinates = msg.split("\\s");
 				// case when the coordinates are received
 				if (coordinates.length == 1) {
@@ -879,26 +902,27 @@ public class Player extends Observable {
 							timeb = 0;
 
 						}
-						sendReply(6792, "It's a Hit!!!!!", prop.getProperty("Player2"));
+						sendReply(6792, "It's a Hit!!!!!", "132.205.94.100");
 					} else if (userGrid[x][y] == 0) {
 						userGrid[x][y] = 3;
 						setScore(-1);
-						sendReply(6792, "It's a miss!!!!!", prop.getProperty("Player2"));
-					} else if (userGrid[x][y] == 2) {
-						sendReply(6792, "The location has been hit earlier", prop.getProperty("Player2"));
-					}
-					else {
-						sendReply(6792, "Some other error", prop.getProperty("Player2"));
+						sendReply(6792, "It's a miss!!!!!", "132.205.94.100");
+					} else if (userGrid[x][y] == 2 || userGrid[x][y] == 3) {
+						sendReply(6792, "The location has been hit earlier", "132.205.94.100");
+					} else {
+						sendReply(6792, "Some other error", "132.205.94.100");
 					}
 				} else if (coordinates.length > 2) {
 					// case when some message is received
 					// set the message in the right getter and setter
 					setReply(msg);
-					/*if(msg.contains("Hit")) {
-						RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FF0000; ");
-					} else if(msg.contains("miss")) {
-						RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FFFFFF; ");
-					}	*/				
+					/*
+					 * if(msg.contains("Hit")) {
+					 * RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FF0000; "
+					 * ); } else if(msg.contains("miss")) {
+					 * RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FFFFFF; "
+					 * ); }
+					 */
 				}
 			}
 		} catch (SocketException e) {
@@ -908,7 +932,7 @@ public class Player extends Observable {
 		}
 
 	}
-	
+
 	/*
 	 * 
 	 * launch server for player 2 receives the hit coordinates from other server
@@ -954,25 +978,27 @@ public class Player extends Observable {
 							timeb = 0;
 
 						}
-						sendReply(6795, "It's a Hit!!!!!", prop.getProperty("Player1"));
+						sendReply(6795, "It's a Hit!!!!!", "132.205.94.99");
 					} else if (userGrid[x][y] == 0) {
-						sendReply(6795, "It's a miss!!!!!", prop.getProperty("Player1"));
-					} else if (userGrid[x][y] == 2) {
 						userGrid[x][y] = 3;
 						setScore(-1);
-						sendReply(6795, "The location has been hit earlier", prop.getProperty("Player1"));
+						sendReply(6795, "It's a miss!!!!!", "132.205.94.99");
+					} else if (userGrid[x][y] == 2) {
+						sendReply(6795, "The location has been hit earlier", "132.205.94.99");
 					} else {
-						sendReply(6795, "Some other error", prop.getProperty("Player1"));
+						sendReply(6795, "Some other error", "132.205.94.99");
 					}
 				} else if (coordinates.length > 2) {
 					// case when some message is received
 					// set the message in the right getter and setter
 					setReply(msg);
-					/*if(msg.contains("Hit")) {
-						RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FF0000; ");
-					} else if(msg.contains("miss")) {
-						RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FFFFFF; ");
-					}*/
+					/*
+					 * if(msg.contains("Hit")) {
+					 * RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FF0000; "
+					 * ); } else if(msg.contains("miss")) {
+					 * RadarGrid.radarButton[hitX][hitY].setStyle("-fx-background-color: #FFFFFF; "
+					 * ); }
+					 */
 				}
 			}
 
@@ -990,6 +1016,7 @@ public class Player extends Observable {
 	 */
 	public void PlayerMode(int playerNum) {
 		System.out.println("called player mode");
+
 		setPlayerNum(playerNum);
 		if (playerNum == 1) {// launch for the first player
 			Runnable task = () -> {
@@ -1004,7 +1031,6 @@ public class Player extends Observable {
 			};
 			new Thread(task).start();
 		}
-	
 
 	}
 
@@ -1018,7 +1044,7 @@ public class Player extends Observable {
 
 		hitX = x;
 		hitY = y;
-		
+
 		String rply = x + " " + y;
 		byte[] bytesSend = null;
 		DatagramSocket aSocket = null;
@@ -1026,7 +1052,7 @@ public class Player extends Observable {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
 
-			InetAddress aHost_soen = InetAddress.getByName(prop.getProperty("Player2"));
+			InetAddress aHost_soen = InetAddress.getByName("132.205.94.100");
 			int player2Port = 6792;
 
 			DatagramPacket request_PLayer1 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player2Port);
@@ -1066,7 +1092,7 @@ public class Player extends Observable {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
 
-			InetAddress aHost_soen = InetAddress.getByName(prop.getProperty("Player1"));
+			InetAddress aHost_soen = InetAddress.getByName("132.205.94.99");
 			int player1Port = 6795;
 
 			DatagramPacket request_PLayer2 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player1Port);
@@ -1082,17 +1108,14 @@ public class Player extends Observable {
 	}
 
 	public void sendReply(int port, String msg, String address) {
-
 		String rply = msg;
 		byte[] bytesSend = null;
 		DatagramSocket aSocket = null;
 		try {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
-
 			InetAddress aHost_soen = InetAddress.getByName(address);
 			int player1Port = port;
-
 			DatagramPacket repy_PLayer2or1 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player1Port);
 			aSocket.send(repy_PLayer2or1);
 		} catch (SocketException e) {
@@ -1100,20 +1123,15 @@ public class Player extends Observable {
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
 		} finally
-
 		{
-
 			if (aSocket != null)
 				aSocket.close();
-
 		}
-
 	}
 
 	public void checkPlayerWon() {
 
 		boolean flag = false;
-
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				if (userGrid[i][j] == 1) {
@@ -1121,23 +1139,19 @@ public class Player extends Observable {
 				}
 			}
 		}
-
 		if (!flag) {
-
 			setPlayerWon("Won");
-
 		} else { // do nothing
 			setPlayerWon("Lost");
 		}
-
 		if (getPlayerWon().equals("Won")) {
 			if (PlayerNum == 1) {// send msg to player 2 that player 1 has won
 
-				sendReply(6792, "Won", prop.getProperty("Player1"));
+				sendReply(6792, "Won", "132.205.94.99");
 			} else {
 				// player 2 case
 				// send msg to player 1 that player 2 has won
-				sendReply(6795, "Won", prop.getProperty("Player2"));
+				sendReply(6795, "Won", "132.205.94.100");
 
 			}
 		}

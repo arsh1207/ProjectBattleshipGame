@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
+import application.Exception.LocationHitException;
 import main.Main;
 
 /**
@@ -73,7 +74,7 @@ public class HitStrategySalvo extends Observable {
 	 * method to implement the functionality of the Salvo 
 	 * @param hitResult stores the last result
 	 */
-	public void mediumMode(Boolean hitResult) {
+	public void mediumMode(Boolean hitResult) throws LocationHitException{
 		
 	
 		int[] hitCoord = new int[2];
@@ -226,7 +227,8 @@ public class HitStrategySalvo extends Observable {
 				setScore(-1);
 				setReply("It's a Miss!!!!!");
 			} else if (Player.userGrid[x][y] == 2) {
-				setReply("The location has been hit earlier");
+				//setReply("The location has been hit earlier");
+				 throw new LocationHitException("The location has been hit earlier");
 	
 			}
 			buttonCount--;

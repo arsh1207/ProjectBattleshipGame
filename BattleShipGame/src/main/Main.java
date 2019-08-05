@@ -22,12 +22,15 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -124,7 +127,7 @@ public class Main extends Application {
 			strategySalvo.addObserver(sg);
 			saveClass.addObserver(userDetailsWindow);
 			SplitPane split_pane = new SplitPane();
-			SplitPane split_pane2 = new SplitPane();
+			// SplitPane split_pane2 = new SplitPane();
 			g_pane1 = new GridPane();
 			g_pane2 = new GridPane();
 			v_box3 = new VBox();
@@ -164,6 +167,7 @@ public class Main extends Application {
 			strategy.addObserver(radarGridObserver);
 			loadClass.addObserver(radarGridObserver);
 			loadClass.addObserver(sg);
+			player.addObserver(radarGridObserver);
 			radarGridObserver.setUserRadarGrid(g_pane1, resulttext2);
 			sg.setUserShipGrid(g_pane2);
 			setShipPlacementActions();
@@ -205,6 +209,7 @@ public class Main extends Application {
 					alert.setContentText("Please place them before starting.");
 					alert.showAndWait();
 				}
+				ob.checkingManagedException(" player.deploy()");
 			});
 
 			tossBtn = new Button("Toss");
@@ -731,8 +736,8 @@ public class Main extends Application {
 
 		});
 		menu1Item4.setOnAction(e -> {
-				ob.getSelectedLoadGame();
-				
+			ob.getSelectedLoadGame();
+
 		});
 
 		menu1.getItems().add(menu1Item1);
@@ -795,29 +800,29 @@ public class Main extends Application {
 		Background background = new Background(backgroundimage);
 		root1.setBackground(background);
 		
+		
 		Button btn5 = new Button("Player 1");
 		btn5.setStyle("-fx-background-color: #a3a0a0; ");
 		btn5.setVisible(false);
 		Button btn6 = new Button("Player 2");
 		btn6.setStyle("-fx-background-color: #a3a0a0; ");
 		btn6.setVisible(false);
-		
-		
+
 		Button btn1 = new Button("Vs Player");
 		btn1.setStyle("-fx-background-color: #a3a0a0; ");
 		Button btn2 = new Button("Exit Game");
 		btn2.setStyle("-fx-background-color: #a3a0a0; ");
-		Button btn3 = new Button("Classic Mode");
+		Button btn3 = new Button("Vs Computer Classic Mode");
 		btn3.setStyle("-fx-background-color: #a3a0a0; ");
-		Button btn4 = new Button("Salvo Mode");
+		Button btn4 = new Button("Vs Computer Salvo Mode");
 		btn4.setStyle("-fx-background-color: #a3a0a0; ");
 		btn1.setOnAction((ActionEvent event) -> {
-		//add playr 1 or 2
+			// add playr 1 or 2
 			gameType = "vsmode";
 			btn5.setVisible(true);
 			btn6.setVisible(true);
-			//userDetailsWindow.newUser();
-			//stg.setScene(scene1);
+			// userDetailsWindow.newUser();
+			// stg.setScene(scene1);
 //			}
 //			else {
 //				
@@ -839,24 +844,25 @@ public class Main extends Application {
 //			}
 
 		});
-		
-		btn5.setOnAction((ActionEvent event) -> {			
+
+		btn5.setOnAction((ActionEvent event) -> {
 			player.PlayerMode(1);
 			userDetailsWindow.newUser();
 			stg.setScene(scene1);
 		});
 
-		btn6.setOnAction((ActionEvent event) -> {			
+		btn6.setOnAction((ActionEvent event) -> {
 			player.PlayerMode(2);
 			userDetailsWindow.newUser();
 			stg.setScene(scene1);
 		});
-		
+
 		btn3.setOnAction((ActionEvent event) -> {
 			gameType = "Classic";
-			gameMode = AlertBox.displayDifficulty();
-			userDetailsWindow.newUser();
-			stg.setScene(scene1);
+			
+			 gameMode = AlertBox.displayDifficulty();
+			 userDetailsWindow.newUser();
+			 stg.setScene(scene1);
 		});
 		btn4.setOnAction((ActionEvent event) -> {
 			userDetailsWindow.newUser();
@@ -868,7 +874,7 @@ public class Main extends Application {
 			if (res)
 				stg.close();
 		});
-		
+
 		root1.setAlignment(Pos.CENTER);
 		root1.add(btn1, 0, 1);
 		root1.add(btn5, 2, 1);
@@ -876,6 +882,8 @@ public class Main extends Application {
 		root1.add(btn3, 0, 2);
 		root1.add(btn4, 0, 3);
 		root1.add(btn2, 0, 4);
+	
+		
 		stg.setScene(scene2);
 	}
 
@@ -925,6 +933,8 @@ public class Main extends Application {
 		resultLabel1.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 		resultLabel1.setTextFill(Color.web("#c40831"));
 		resulttext3.setStyle("-fx-background-color: white;");
+		resulttext3.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
+		resulttext3.setTextFill(Color.web("#c40831"));
 		vBox.getChildren().addAll(resultLabel1, resulttext3);
 		h_box1.getChildren().addAll(imageView, vBox);
 
@@ -947,6 +957,8 @@ public class Main extends Application {
 		resultLabel2.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
 		resultLabel2.setTextFill(Color.web("#00bfff"));
 		resulttext4.setStyle("-fx-background-color: white;");
+		resulttext4.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
+		resulttext4.setTextFill(Color.web("#00bfff"));
 		vBox.getChildren().addAll(resultLabel2, resulttext4);
 		h_box2.getChildren().addAll(vBox, imageView);
 

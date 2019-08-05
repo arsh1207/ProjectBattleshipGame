@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 
+import application.Exception.LocationHitException;
 import application.Views.AlertBox;
 
 /**
@@ -97,8 +98,9 @@ public class Computer extends Observable {
 	 * 
 	 * @param x coordinate
 	 * @param y coordinates
+	 * 
 	 */
-	public void userTurn(int x, int y) {
+	public void userTurn(int x, int y)throws LocationHitException {
 
 		// get the X and y coordinate from the input
 		String coordx = Integer.toString(x);
@@ -134,10 +136,10 @@ public class Computer extends Observable {
 			setScoreComp(-1);
 			setReply("It's a miss!!!!!");
 		
-		} else if (computerGrid[x][y] == 2) {
+		} else if (computerGrid[x][y] == 2 || computerGrid[x][y] == 3) {
 
-			setReply("The location has been hit earlier");
-		
+			//setReply("The location has been hit earlier");
+			 throw new LocationHitException("The location has been hit earlier");
 		}
 
 		else {
