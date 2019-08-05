@@ -15,6 +15,7 @@ import java.util.Observable;
 import java.util.Properties;
 import java.util.Random;
 
+import application.Views.RadarGrid;
 import application.Views.ShipGrid;
 import main.Main;
 
@@ -877,6 +878,7 @@ public class Player extends Observable {
 				if (coordinates.length == 1) {
 					setOtherWon("Won");
 				} else if (coordinates.length == 2) {
+					RadarGrid.enableButtons();
 					int x = Integer.parseInt(coordinates[0]);
 					int y = Integer.parseInt(coordinates[1]);
 					String coordx = coordinates[0];
@@ -953,6 +955,7 @@ public class Player extends Observable {
 				if (coordinates.length == 1) {
 					setOtherWon("Won");
 				} else if (coordinates.length == 2) {
+					RadarGrid.enableButtons();
 					int x = Integer.parseInt(coordinates[0]);
 					int y = Integer.parseInt(coordinates[1]);
 					String coordx = coordinates[0];
@@ -1057,6 +1060,7 @@ public class Player extends Observable {
 
 			DatagramPacket request_PLayer1 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player2Port);
 			aSocket.send(request_PLayer1);
+			RadarGrid.disableButtons();
 		} catch (SocketException e) {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
@@ -1097,6 +1101,7 @@ public class Player extends Observable {
 
 			DatagramPacket request_PLayer2 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player1Port);
 			aSocket.send(request_PLayer2);
+			RadarGrid.disableButtons();
 		} catch (SocketException e) {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {

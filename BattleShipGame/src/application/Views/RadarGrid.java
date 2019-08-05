@@ -230,8 +230,20 @@ public class RadarGrid implements Observer {
 	 * @param i Contains the x axis for the radar button
 	 * @param j Contains the y axis for the radar button
 	 */
-	public void disableButtons(int i, int j) {
-		radarButton[i][j].setDisable(false);
+	public static void disableButtons() {
+		for(int i = 0; i < 9; i++) {
+			for(int j = 0; j < 11; j++)
+				radarButton[i][j].setDisable(true);
+		}
+		
+	}
+	
+	public static void enableButtons() {
+		for(int i = 0; i < 9; i++) {
+			for(int j = 0; j < 11; j++)
+				radarButton[i][j].setDisable(false);
+		}
+		
 	}
 
 	/**
