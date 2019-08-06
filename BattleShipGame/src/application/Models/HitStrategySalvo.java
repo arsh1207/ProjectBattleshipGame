@@ -7,6 +7,7 @@ import java.util.Observable;
 import java.util.Random;
 
 import application.Exception.LocationHitException;
+import application.Exception.NegativeScore;
 import main.Main;
 
 /**
@@ -63,7 +64,15 @@ public class HitStrategySalvo extends Observable {
 	}
 
 	public void setScore(int s) {
-		scoring=scoring+s;
+		try {
+			scoring = scoring + s;
+			if (scoring < 0) {
+				throw new NegativeScore("Score can't be negative");
+			}
+		} catch (NegativeScore e) {
+			scoring = 0;
+			System.out.println(e);
+		}
 	}
 	public int getScore() {
 		return scoring;

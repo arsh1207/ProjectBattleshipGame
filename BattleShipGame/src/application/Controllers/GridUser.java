@@ -77,7 +77,7 @@ public class GridUser {
 					strategy.hardMode(hitResult);
 			}
 		} catch (LocationHitException e) {
-			System.out.println(e);
+			System.out.println("1"+ e);
 		}
 
 	}

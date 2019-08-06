@@ -7,6 +7,7 @@ import java.util.Observable;
 import java.util.Random;
 
 import application.Exception.LocationHitException;
+import application.Exception.NegativeScore;
 
 /**
  * Class to implement the easy, medium and hard functionality
@@ -65,7 +66,15 @@ public class HitStrategy extends Observable {
 	}
 
 	public void setScore(int s) {
-		scoring = scoring + s;
+		try {
+			scoring = scoring + s;
+			if (scoring < 0) {
+				throw new NegativeScore("Score can't be negative");
+			}
+		} catch (NegativeScore e) {
+			scoring = 0;
+			System.out.println(e);
+		}
 	}
 
 	public int getScore() {
@@ -265,7 +274,6 @@ public class HitStrategy extends Observable {
 			setReply("The location has been hit earlier");
 			 //throw new LocationHitException("The location has been hit earlier");
 		}
-
 	}
 	
 	/**
@@ -275,9 +283,10 @@ public class HitStrategy extends Observable {
 	 */
 	public void hardMode(Boolean hitResult) throws LocationHitException{
 		int x = 0, y = 0;
-		int mostProbable = probabilityGrid[x][y];
+		int mostProbable;
 
 		if (minMax == 0) {
+			mostProbable = 1;
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 11; j++) {
 					if (probabilityGrid[i][j] > mostProbable) {
@@ -289,7 +298,7 @@ public class HitStrategy extends Observable {
 			}
 			minMax = 1;
 		} else {
-
+			mostProbable = 1000;
 			for (int i = 0; i < 9; i++) {
 				for (int j = 0; j < 11; j++) {
 					if (probabilityGrid[i][j] < mostProbable && probabilityGrid[i][j] > 0) {
@@ -305,8 +314,7 @@ public class HitStrategy extends Observable {
 		if (!hitResult && direction.isEmpty()) {
 			boolean newHit = false;
 			while (!newHit) {
-				System.out.println("YesHard");
-				if (Player.userGrid[x][y] == 2) {
+				if (Player.userGrid[x][y] == 2 || Player.userGrid[x][y] == 3) {
 					if (minMax == 0) {
 						for (int i = 0; i < 9; i++) {
 							for (int j = 0; j < 11; j++) {

@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import java.util.concurrent.TimeUnit;
 import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
@@ -18,19 +18,15 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -48,12 +44,17 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextBoundsType;
 import javafx.stage.Stage;
 
 /**
@@ -88,8 +89,7 @@ public class Main extends Application {
 	public static Button tossBtn;
 	public static boolean newGame = true;
 	public static Label resultLabel1, resultLabel2;
-	Timer timer;
-
+	public static Text text; 
 	/**
 	 * It is the main method
 	 * 
@@ -111,9 +111,10 @@ public class Main extends Application {
 			Stage stage = primaryStage;
 			stage.setTitle(" Battle Ship Game");
 			launchStartupWindow(stage);
-			player = new Player();
-			computer = new Computer();
 			SaveClass saveClass = new SaveClass();
+			player = new Player(saveClass);
+			computer = new Computer();
+
 			LoadClass loadClass = new LoadClass();
 			HitStrategy strategy = new HitStrategy();
 			HitStrategySalvo strategySalvo = new HitStrategySalvo();
@@ -121,8 +122,9 @@ public class Main extends Application {
 			resulttext1 = new Label();
 			resulttext3 = new Label();
 			resulttext4 = new Label();
+			resulttext2 = new Label();
 			ob = new GridUser(player, computer, strategy, strategySalvo, saveClass, loadClass);
-			sg = new ShipGrid(player, ob, resulttext1, resulttext4, resulttext3);
+			sg = new ShipGrid(player, ob, resulttext1, resulttext4, resulttext3, resulttext2);
 			userDetailsWindow = new UserDetailsWindow(ob, saveClass);
 			player.addObserver(sg);
 			strategy.addObserver(sg);
@@ -155,7 +157,7 @@ public class Main extends Application {
 			menuBar = battleMenu(v_box1, stage);
 			g_pane1.setVgap(10);
 			g_pane1.setHgap(10);
-			//g_pane1.setVisible(false);
+			// g_pane1.setVisible(false);
 			g_pane2.setVgap(10);
 			g_pane2.setHgap(10);
 			Label l1 = new Label();
@@ -176,7 +178,7 @@ public class Main extends Application {
 			setShipPlacementActions();
 			Button userRandomShips = new Button("Feelin' Lazy?");
 			VBox v_box4 = new VBox();
-			//v_box1.getChildren().addAll(g_pane1, userRandomShips, g_pane2);
+			// v_box1.getChildren().addAll(g_pane1, userRandomShips, g_pane2);
 			v_box1.getChildren().addAll(userRandomShips, g_pane2);
 			v_box1.setSpacing(20.0);
 			userRandomShips.setOnAction((ActionEvent event) -> {
@@ -198,7 +200,7 @@ public class Main extends Application {
 							RadarGrid.radarButton[i][j].setDisable(false);
 						}
 					}
-				//	g_pane1.setVisible(true);
+					// g_pane1.setVisible(true);
 					gameStartScene(stage);
 					stage.setScene(scene3);
 					//deploy the computer ships only when vs player mode is inactive
@@ -206,11 +208,9 @@ public class Main extends Application {
 					if (!gameMode.equalsIgnoreCase("vsmode") && newGame) {
 						ob.deployCompShips();
 					}
-					timer = new Timer();
-					timer.schedule(new RemindTask(), 30 * 1000);
 
 					// Label timerLabel = new Label(timer.toString());
-					System.out.println(timer.toString());
+
 				} else {
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Battleship Game");
@@ -219,10 +219,12 @@ public class Main extends Application {
 					alert.showAndWait();
 				}
 				//ob.checkingManagedException(" player.deploy()");
+
+				// ob.checkingManagedException(" player.deploy()");
 			});
 
 			tossBtn = new Button("Toss");
-			//radarGridObserver.addTossAction();
+			// radarGridObserver.addTossAction();
 			addTossAction(stage);
 			for (Node node : g_pane2.getChildren()) {
 				node.setOnMouseEntered((MouseEvent t) -> {
@@ -236,9 +238,26 @@ public class Main extends Application {
 
 			h_box1.getChildren().addAll(healthbarTank1);
 			// split_pane2.getItems().addAll(h_box1, h_box2);
+			text = new Text("0");
+			text.setBoundsType(TextBoundsType.VISUAL);
+			text.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 20));
+			
+			Sphere sphere = new Sphere();
+			PhongMaterial material = new PhongMaterial();
+			material.setDiffuseColor(Color.LIGHTSKYBLUE);
+			material.setSpecularColor(Color.BLACK);
+			// Setting the properties of the Sphere
+			sphere.setRadius(40.0);
+			sphere.setMaterial(material);
+			StackPane stack = new StackPane();
+			stack.setTranslateX(510);
+			//stack.setTranslateY(0);
+			
+			stack.getChildren().addAll(sphere, text);
+			
 			healthbars = new AnchorPane();
 
-			healthbars.getChildren().addAll(h_box1, h_box2);
+			healthbars.getChildren().addAll(h_box1, h_box2, stack);
 			AnchorPane.setBottomAnchor(h_box1, 8.0);
 			AnchorPane.setRightAnchor(h_box2, 5.0);
 			// AnchorPane.setRightAnchor(timerLabel, 10.0);
@@ -257,7 +276,7 @@ public class Main extends Application {
 		}
 
 	}
-	
+
 	/**
 	 * This method adds action listener to the button toss. It calculates the winner
 	 * of the toss as per user choice and allows the user to play.
@@ -301,20 +320,19 @@ public class Main extends Application {
 
 				}
 			}
-			
+
 			gameStartScene(stage);
 			stage.setScene(scene3);
 		});
 	}
-	
 
 	public void gameStartScene(Stage stage) {
-		//AnchorPane root = new AnchorPane();
+		// AnchorPane root = new AnchorPane();
 		SplitPane root = new SplitPane();
 		VBox v_box = new VBox();
 		root.setId("glass-grey");
 		v_box.setId("glass-grey");
-		
+
 		root.setDividerPositions(0.5);
 		root.getItems().add(g_pane2);
 		root.getItems().add(g_pane1);
@@ -327,14 +345,7 @@ public class Main extends Application {
 		root.prefHeightProperty().bind(stage.heightProperty());
 		v_box.getChildren().addAll(menuBar, healthbars, root);
 		scene3 = new Scene(v_box, 1100, 600);
-		
-	}
 
-	class RemindTask extends TimerTask {
-		public void run() {
-			System.out.println("Time's up!");
-			timer.cancel(); // Terminate the timer thread
-		}
 	}
 
 	/**
@@ -1015,7 +1026,6 @@ public class Main extends Application {
 		// resulttext3.setStyle("-fx-background-color: white;");
 		resulttext3.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
 		resulttext3.setTextFill(Color.web("#c40831"));
-		resulttext2 = new Label();
 		// resulttext2.setStyle("-fx-background-color: white;");
 		resulttext2.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
 		resulttext2.setTextFill(Color.web("#c40831"));
@@ -1043,7 +1053,6 @@ public class Main extends Application {
 		// resulttext4.setStyle("-fx-background-color: white;");
 		resulttext4.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
 		resulttext4.setTextFill(Color.web("#00bfff"));
-		resulttext1 = new Label();
 		// resulttext1.setStyle("-fx-background-color: white;");
 		resulttext1.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 16));
 		resulttext1.setTextFill(Color.web("#00bfff"));

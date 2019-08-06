@@ -7,6 +7,7 @@ import java.util.Observable;
 import java.util.Random;
 
 import application.Exception.LocationHitException;
+import application.Exception.NegativeScore;
 import application.Views.AlertBox;
 
 /**
@@ -50,8 +51,18 @@ public class Computer extends Observable {
 		notifyObservers("HITORMISS");
 	}
 
+	
+	
 	public void setScoreComp(int s) {
-		scoringComp = scoringComp + s;
+		try {
+			scoringComp = scoringComp + s;
+			if (scoringComp < 0) {
+				throw new NegativeScore("Score can't be negative");
+			}
+		} catch (NegativeScore e) {
+			scoringComp = 0;
+			System.out.println(e);
+		}
 	}
 
 	public int getScoreComp() {

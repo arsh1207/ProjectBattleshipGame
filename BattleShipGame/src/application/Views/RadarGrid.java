@@ -6,8 +6,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 import application.Controllers.GridUser;
+import application.Exception.NegativeScore;
 import application.Models.Computer;
 import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
@@ -51,6 +54,9 @@ public class RadarGrid implements Observer {
 	GridPane g_pane1;
 	GridUser ob;
 	String userWon = "";
+	int vsModeScore = 0;
+	Timer timer;
+	Thread newThread;
 
 	public String getUserWon() {
 		return userWon;
@@ -130,7 +136,6 @@ public class RadarGrid implements Observer {
 
 				}
 			}
-			
 
 		});
 	}
@@ -179,6 +184,23 @@ public class RadarGrid implements Observer {
 				b.setOnAction((ActionEvent event) -> {
 					System.out.println("Button clicked");
 					b.setStyle("-fx-background-color: #FFFFFF; ");
+					
+					Runnable task = () -> {
+						gameTimer();
+					};
+					if (newThread == null) {
+						newThread = new Thread(task);
+						timer = new Timer();
+						timer.schedule(new RemindTask(newThread, timer), 30 * 1000);
+					} else {
+						newThread.stop();
+						newThread = new Thread(task);
+						timer.cancel();
+						timer = new Timer();
+						timer.schedule(new RemindTask(newThread, timer), 30 * 1000);
+					}
+					newThread.start();
+
 					if (Main.gameType.equals("Salvo")) {
 						salvaFunc(xy);
 					} else if (Main.gameType.equalsIgnoreCase("Classic")) {
@@ -209,7 +231,7 @@ public class RadarGrid implements Observer {
 			Text text1 = new Text(Character.toString(ch));
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
-		//System.out.println("New game is " + Main.newGame);
+		// System.out.println("New game is " + Main.newGame);
 	}
 
 	public static void loadRadarGrid() {
@@ -233,8 +255,20 @@ public class RadarGrid implements Observer {
 	 * @param i Contains the x axis for the radar button
 	 * @param j Contains the y axis for the radar button
 	 */
-	public void disableButtons(int i, int j) {
-		radarButton[i][j].setDisable(false);
+	public static void disableButtons() {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 11; j++)
+				radarButton[i][j].setDisable(true);
+		}
+
+	}
+
+	public static void enableButtons() {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 11; j++)
+				radarButton[i][j].setDisable(false);
+		}
+
 	}
 
 	/**
@@ -253,8 +287,8 @@ public class RadarGrid implements Observer {
 				resulttext2.setText("");
 				resulttext3.setText("" + score1);
 				afterCompReply(res, (Computer) o);
-				//System.out.println("Player ships down:"+ Player.sunkenShips.size());
-							
+				// System.out.println("Player ships down:"+ Player.sunkenShips.size());
+
 			}
 		} else if (o instanceof HitStrategy) {
 			if (arg.equals("Won")) {
@@ -313,9 +347,8 @@ public class RadarGrid implements Observer {
 		} else if (o instanceof Player) {
 			if (arg.equals("RadarSet")) {
 				String res = ((Player) o).getReply();
-				int score1 = ((Player) o).getScore();
-				Platform.runLater(() -> resulttext2.setText(""));
-				Platform.runLater(() -> resulttext3.setText("" + score1));
+				// int score1 = ((Player) o).getScore();
+
 				Image image;
 				try {
 					image = new Image(new FileInputStream("images/blast.png"));
@@ -334,11 +367,24 @@ public class RadarGrid implements Observer {
 						Platform.runLater(() -> g_pane1.add(imageView, (coordY + 1), (9 - coordX)));
 						// g_pane1.add(imageView, (coordY + 1), (9 - coordX));
 						Platform.runLater(() -> audioClip.play(100));
+						vsModeScore = vsModeScore + 10;
 						// audioClip.play(100);
 					} else if (res.equals("It's a miss!!!!!")) {
 						Platform.runLater(
 								() -> radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; "));
 						// radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
+						vsModeScore = vsModeScore - 1;
+
+						try {
+
+							if (vsModeScore < 0) {
+								throw new NegativeScore("Score can't be negative");
+							}
+						} catch (NegativeScore e) {
+							vsModeScore = 0;
+							System.out.println(e);
+						}
+
 					}
 					System.out.println("Player ships down:" + Player.sunkenShips.size());
 
@@ -351,17 +397,26 @@ public class RadarGrid implements Observer {
 						Platform.runLater(() -> Main.healthbarTank2.setProgress(health));
 						// Main.healthbarTank2.setProgress(health);
 					}
+					if (Player.PlayerNum == 1) {
+						Platform.runLater(() -> resulttext3.setText("" + vsModeScore));
+						Platform.runLater(() -> resulttext2.setText(res));
+					} else {
+						Platform.runLater(() -> resulttext4.setText("" + vsModeScore));
+						Platform.runLater(() -> resulttext1.setText(res));
+					}
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					System.out.println(e.getMessage());
 				}
 			} else if (arg.equals("VsmodeWon")) {
-				if (((Player) o).getPlayerWon().equalsIgnoreCase("won")) {
-					AlertBox.displayResult("Sorry", "You LOST");
+				if (((Player) o).getPlayerWon().equalsIgnoreCase("Lost")) {
+					Platform.runLater(() -> AlertBox.displayResult("Sorry", "You LOST"));
+					// AlertBox.displayResult("Yesss", "WON");
 				}
 			} else if (arg.equals("VsmodeOtherWon")) {
 				if (((Player) o).getOtherWon().equalsIgnoreCase("won")) {
-					AlertBox.displayResult("Yesss", "WON");
+					Platform.runLater(() -> AlertBox.displayResult("Result", "You WON"));
+					// AlertBox.displayResult("Sorry", "You LOST");
 				}
 			}
 		}
@@ -401,7 +456,7 @@ public class RadarGrid implements Observer {
 					ob.callSunkenShips(o);
 					// call the method for getting sunken ships from computer model here
 					sunkenShips = o.getSunkenShips();
-					//place the health bar calls of salvo in salvaAlertCall
+					// place the health bar calls of salvo in salvaAlertCall
 					salvaAlertCall(sunkenShips);
 					ob.callCheckIfUserWon();
 					if (((Computer) o).getUserWon().equals("Won")) {
@@ -423,6 +478,20 @@ public class RadarGrid implements Observer {
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+		}
+	}
+
+	public void gameTimer() {
+		for (int i = 1; i <= 30; i++) {
+			String str = Integer.toString(i);
+			Platform.runLater(() -> Main.text.setText(str));
+			System.out.println(i);
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -15,7 +15,12 @@ import java.util.Observable;
 import java.util.Properties;
 import java.util.Random;
 
+import application.Exception.NegativeScore;
+import application.Exception.PortException;
+import application.Views.RadarGrid;
 import application.Views.ShipGrid;
+import application.Views.UserDetailsWindow;
+import javafx.application.Platform;
 import main.Main;
 
 /**
@@ -34,6 +39,8 @@ public class Player extends Observable {
 	public static ArrayList<String> coordinatesHit = new ArrayList<String>();
 	public int hitX, hitY;
 	public static int numOfShipsDep = 0;
+	
+	Boolean server1Flag = true, server2Flag = true;
 
 	boolean time1 = false, time2 = false;
 	double timea = 0;
@@ -101,7 +108,7 @@ public class Player extends Observable {
 	final static int rows = 9;
 	final static int cols = 11;
 	static String name = "";
-
+	SaveClass saveObj;
 	Properties prop = new Properties();
 
 	String propFileName = "C:\\Users\\ar_jave\\git\\ProjectBattleshipGame\\BattleShipGame\\src\\config.properties";
@@ -112,14 +119,12 @@ public class Player extends Observable {
 	// original Grid that remains unchanged throughout the game
 	public static Integer[][] userGrid = new Integer[rows][cols];
 
-	public Player() {
-		try {
-		
+	
+	public Player(SaveClass saveObj) {
+		this.saveObj = saveObj;
 
-			initialize();
-		} catch (Exception e) {
+		initialize();
 
-		}
 	}
 
 	public String getShipType() {
@@ -140,8 +145,26 @@ public class Player extends Observable {
 		notifyObservers("RadarSet");
 	}
 
+	public String getShipGridReply() {
+		return reply;
+	}
+
+	public void setShipGridReply(String reply) {
+		this.reply = reply;
+		setChanged();
+		notifyObservers("ShipGridSet");
+	}
+
 	public void setScore(int s) {
-		scoring = scoring + s;
+		try {
+			scoring = scoring + s;
+			if (scoring < 0) {
+				throw new NegativeScore("Score can't be negative");
+			}
+		} catch (NegativeScore e) {
+			scoring = 0;
+			System.out.println(e);
+		}
 	}
 
 	public int getScore() {
@@ -214,10 +237,8 @@ public class Player extends Observable {
 
 	/**
 	 * 
-	 * @param coordinates
-	 *            defines the coordinated to be deployed
-	 * @param shipType
-	 *            type of the ship
+	 * @param coordinates defines the coordinated to be deployed
+	 * @param shipType    type of the ship
 	 */
 	public void deployUserGrid(String coordinates, String shipType) {
 		try {
@@ -350,10 +371,8 @@ public class Player extends Observable {
 	/**
 	 * Method to check whether the ships are placed adjacent to each other or not
 	 * 
-	 * @param i
-	 *            x-axis
-	 * @param j
-	 *            y-axis
+	 * @param i x-axis
+	 * @param j y-axis
 	 * @return Boolean tell if a ship is adjacent or not
 	 */
 	public Boolean adjacentShipCheck(int i, int j) {
@@ -377,10 +396,8 @@ public class Player extends Observable {
 	/**
 	 * methods to check whether the points are not out of the grid
 	 * 
-	 * @param i
-	 *            x - axis
-	 * @param j
-	 *            y - axis
+	 * @param i x - axis
+	 * @param j y - axis
 	 * @return Boolean if the point is valid or not
 	 */
 	public boolean isValid(int i, int j) {
@@ -393,10 +410,8 @@ public class Player extends Observable {
 	 * Checking that the ships are of the exact size
 	 * 
 	 * 
-	 * @param diff
-	 *            size of the ship
-	 * @param shipType
-	 *            type of the ship
+	 * @param diff     size of the ship
+	 * @param shipType type of the ship
 	 * @return returns String defining if the ships have the correct size
 	 */
 	public String areHolesValid(int diff, String shipType) {
@@ -436,8 +451,7 @@ public class Player extends Observable {
 	/**
 	 * function to see whether a particular ship is deployed or not
 	 * 
-	 * @param shipType
-	 *            gives the type of the ship
+	 * @param shipType gives the type of the ship
 	 * @return boolean to check the ship deployed
 	 */
 	public boolean isShipDeployed(String shipType) {
@@ -722,14 +736,10 @@ public class Player extends Observable {
 	/**
 	 * method to check the adjacency in user ships
 	 * 
-	 * @param x
-	 *            x-coordinate
-	 * @param y
-	 *            y-coordinate
-	 * @param direction
-	 *            tell the direction horizontal or vertical
-	 * @param points
-	 *            size of ship points
+	 * @param x         x-coordinate
+	 * @param y         y-coordinate
+	 * @param direction tell the direction horizontal or vertical
+	 * @param points    size of ship points
 	 * @return Boolean returns if it can place or not
 	 */
 	public Boolean checkUserShip(int x, int y, String direction, int points) {
@@ -788,17 +798,17 @@ public class Player extends Observable {
 			// set that user has won
 			int pscore = Computer.scoringComp;
 			int cscore;
-			if(Main.gameType.equals("Salvo"))
+			if (Main.gameType.equals("Salvo"))
 				cscore = HitStrategySalvo.scoring;
 			else
 				cscore = HitStrategy.scoring;
 			boolean scoreReverse = false;
-			
+
 			if ((cscore > pscore) || sunkenShips.size() == Main.TOTAL_SHIPS) {
 				scoreReverse = true;
 				System.out.println("Comp Won");
 				setCompWon("Won");
-			} else { 
+			} else {
 				setCompWon("Lost");
 			}
 		}
@@ -807,8 +817,7 @@ public class Player extends Observable {
 	/**
 	 * Method to display the computer grid
 	 * 
-	 * @param Grid
-	 *            contains the reference to the grid
+	 * @param Grid contains the reference to the grid
 	 */
 	public void printGrid(Integer[][] Grid) {
 		for (int i = 0; i < rows; i++) {
@@ -833,7 +842,7 @@ public class Player extends Observable {
 	 * This function checks whether any ships have sunk or not
 	 */
 	public static void checkSunkenShips() {
-		
+
 		Map<String, ArrayList<String>> tempMap;
 		for (String coords : coordinatesHit) {
 			tempMap = new HashMap<>();
@@ -848,7 +857,7 @@ public class Player extends Observable {
 						// and remove the ships from the shipsMap
 						if (shipsMap.get(entry.getKey()).isEmpty()) {
 							setSunkenShips(entry.getKey());
-							//System.out.println("Player sunken ships "+sunkenShips);
+							System.out.println("Player sunken ships " + sunkenShips);
 							tempMap.remove(entry.getKey());
 						}
 					}
@@ -862,24 +871,40 @@ public class Player extends Observable {
 
 	}
 
-	public void launchServer1() {
+	public void launchServer1(int port) {
 		System.out.println("launch 1");
 		DatagramSocket aSocket = null;
 		try {
-			aSocket = new DatagramSocket(6795);
-			byte[] buffer = new byte[1000];
+			if(port != 6795) {
+				port = 6795;
+				throw new PortException("Port error! Correct Port: " +port);				
+			}				
+			aSocket = new DatagramSocket(port);
+			//aSocket = new DatagramSocket(100.100);
 			while (true) {
+				byte[] buffer = new byte[1000];
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 				aSocket.receive(request);
 				String msg = new String(request.getData(), 0, request.getLength());
-				System.out.println("msg1" + msg);
+				System.out.println("msg1 " + msg);
 				String[] coordinates = msg.split("\\s");
 				// case when the coordinates are received
 				if (coordinates.length == 1) {
-					setOtherWon("Won");
+					if (coordinates[0].contains("Name")) {
+						Platform.runLater(() -> Main.resultLabel2.setText(coordinates[0].split(":")[1]));
+						//Main.resultLabel2.setText(coordinates[0].split(":")[1]);
+					} else {
+						setOtherWon("Won");
+					}
 				} else if (coordinates.length == 2) {
+					RadarGrid.enableButtons();
+					if(server1Flag) {
+						sendReply(6792, "Name:" + saveObj.getuName(), "132.205.94.100");
+						server1Flag = false;
+					}
 					int x = Integer.parseInt(coordinates[0]);
 					int y = Integer.parseInt(coordinates[1]);
+					int xy[] = {x,y};
 					String coordx = coordinates[0];
 					String coordy = coordinates[1];
 					if (userGrid[x][y] == 1) {
@@ -895,18 +920,25 @@ public class Player extends Observable {
 						} else {
 							double t = timeb - timea;
 							if (t < 3000) {
-								setScore(20);
+								//setScore(20);
 							}
 							time1 = false;
 							time2 = false;
 							timea = 0;
 							timeb = 0;
 
-						}
+						}						
+						setScore(10);						
+						setCoords(xy);
+						setShipGridReply("It's a Hit!!!!!");
 						sendReply(6792, "It's a Hit!!!!!", "132.205.94.100");
+						checkPlayerWon();
 					} else if (userGrid[x][y] == 0) {
 						userGrid[x][y] = 3;
+						
+						setCoords(xy);
 						setScore(-1);
+						setShipGridReply("It's a miss!!!!!");
 						sendReply(6792, "It's a miss!!!!!", "132.205.94.100");
 					} else if (userGrid[x][y] == 2 || userGrid[x][y] == 3) {
 						sendReply(6792, "The location has been hit earlier", "132.205.94.100");
@@ -930,6 +962,9 @@ public class Player extends Observable {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
+		} catch (PortException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
 		}
 
 	}
@@ -940,22 +975,37 @@ public class Player extends Observable {
 	 * check if its a hit or miss
 	 * 
 	 */
-	public void launchServer2() {
+	public void launchServer2(int port) {
 		DatagramSocket aSocket = null;
 		try {
-			aSocket = new DatagramSocket(6792);
-			byte[] buffer = new byte[1000];
+			if(port != 6792) {
+				port = 6792;
+				throw new PortException("Port error! Correct Port: " +port);				
+			}	
+			aSocket = new DatagramSocket(6792);			
 			while (true) {
+				byte[] buffer = new byte[1000];
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 				aSocket.receive(request);
 				String msg = new String(request.getData(), 0, request.getLength());
 				String[] coordinates = msg.split("\\s");
 				// case when the coordinates are received
 				if (coordinates.length == 1) {
-					setOtherWon("Won");
+					if (coordinates[0].contains("Name")) {
+						Platform.runLater(() -> Main.resultLabel1.setText(coordinates[0].split(":")[1]));
+					//	Main.resultLabel2.setText(coordinates[0].split(":")[1]);
+					} else {
+						setOtherWon("Won");
+					}
 				} else if (coordinates.length == 2) {
+					RadarGrid.enableButtons();
+					if(server2Flag) {
+						sendReply(6795, "Name:" + saveObj.getuName(), "132.205.94.99");
+						server2Flag = false;
+					}
 					int x = Integer.parseInt(coordinates[0]);
 					int y = Integer.parseInt(coordinates[1]);
+					int xy[] = {x,y};
 					String coordx = coordinates[0];
 					String coordy = coordinates[1];
 					if (userGrid[x][y] == 1) {
@@ -971,18 +1021,24 @@ public class Player extends Observable {
 						} else {
 							double t = timeb - timea;
 							if (t < 3000) {
-								setScore(20);
+								//setScore(20);
 							}
 							time1 = false;
 							time2 = false;
 							timea = 0;
 							timeb = 0;
 
-						}
+						}					
+						setScore(10);
+						setCoords(xy);
+						setShipGridReply("It's a Hit!!!!!");
 						sendReply(6795, "It's a Hit!!!!!", "132.205.94.99");
+						checkPlayerWon();
 					} else if (userGrid[x][y] == 0) {
-						userGrid[x][y] = 3;
+						userGrid[x][y] = 3;						
 						setScore(-1);
+						setCoords(xy);
+						setShipGridReply("It's a miss!!!!!");
 						sendReply(6795, "It's a miss!!!!!", "132.205.94.99");
 					} else if (userGrid[x][y] == 2) {
 						sendReply(6795, "The location has been hit earlier", "132.205.94.99");
@@ -1007,6 +1063,9 @@ public class Player extends Observable {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
+		} catch (PortException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
 		}
 
 	}
@@ -1016,19 +1075,16 @@ public class Player extends Observable {
 	 * @param playerType
 	 */
 	public void PlayerMode(int playerNum) {
-		System.out.println("called player mode");
-
 		setPlayerNum(playerNum);
 		if (playerNum == 1) {// launch for the first player
 			Runnable task = () -> {
-				System.out.println("inside player mode");
-				launchServer1();
+				launchServer1(6796);			
 			};
 			new Thread(task).start();
 
 		} else if (playerNum == 2) {
 			Runnable task = () -> {
-				launchServer2();
+				launchServer2(0);			
 			};
 			new Thread(task).start();
 		}
@@ -1058,6 +1114,7 @@ public class Player extends Observable {
 
 			DatagramPacket request_PLayer1 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player2Port);
 			aSocket.send(request_PLayer1);
+			RadarGrid.disableButtons();
 		} catch (SocketException e) {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
@@ -1098,6 +1155,7 @@ public class Player extends Observable {
 
 			DatagramPacket request_PLayer2 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player1Port);
 			aSocket.send(request_PLayer2);
+			RadarGrid.disableButtons();
 		} catch (SocketException e) {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
@@ -1123,8 +1181,7 @@ public class Player extends Observable {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
-		} finally
-		{
+		} finally {
 			if (aSocket != null)
 				aSocket.close();
 		}
@@ -1141,18 +1198,18 @@ public class Player extends Observable {
 			}
 		}
 		if (!flag) {
-			setPlayerWon("Won");
-		} else { // do nothing
 			setPlayerWon("Lost");
+		} else { // do nothing
+			setPlayerWon("Won");
 		}
-		if (getPlayerWon().equals("Won")) {
+		if (getPlayerWon().equals("Lost")) {
 			if (PlayerNum == 1) {// send msg to player 2 that player 1 has won
 
-				sendReply(6792, "Won", "132.205.94.99");
+				sendReply(6792, "Won", "132.205.94.100");
 			} else {
 				// player 2 case
 				// send msg to player 1 that player 2 has won
-				sendReply(6795, "Won", "132.205.94.100");
+				sendReply(6795, "Won", "132.205.94.99");
 
 			}
 		}
