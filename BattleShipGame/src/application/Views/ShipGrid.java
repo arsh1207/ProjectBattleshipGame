@@ -9,6 +9,7 @@ import application.Models.HitStrategy;
 import application.Models.HitStrategySalvo;
 import application.Models.LoadClass;
 import application.Models.Player;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -45,7 +46,7 @@ public class ShipGrid implements Observer {
 	static String gameMode = "Medium";
 	public static Boolean lastCompResult = false;
 	private GridUser ob;
-	Label resulttext1, resulttext4, resulttext3;
+	Label resulttext1, resulttext4, resulttext3, resulttext2;
 	private Player player;
 
 	/**
@@ -56,12 +57,13 @@ public class ShipGrid implements Observer {
 	 * @param resulttext1 Its a reference for label for setting user result
 	 * @param resulttext4 Its a reference for label for setting user score
 	 */
-	public ShipGrid(Player player, GridUser ob, Label resulttext1, Label resulttext4, Label resulttext3) {
+	public ShipGrid(Player player, GridUser ob, Label resulttext1, Label resulttext4, Label resulttext3, Label resulttext2) {
 		this.player = player;
 		this.ob = ob;
 		this.resulttext1 = resulttext1;
 		this.resulttext4 = resulttext4;
 		this.resulttext3 = resulttext3;
+		this.resulttext2 = resulttext2;
 	}
 
 	
@@ -174,6 +176,28 @@ public class ShipGrid implements Observer {
 				if (!(value.equals("Done")) && !value.isEmpty()) {
 					userButton[xInitialCo][yInitialCo].setStyle("-fx-background-color: black;");
 					AlertBox.displayError(Main.shipType, value);
+				}
+			}
+			else if(arg.equals("ShipGridSet")) {
+				String reply = ((Player) o).getReply();
+				int coord[] = ((Player) o).getCoords();
+				int score = ((Player) o).getScore();
+
+				if (reply.contains("Hit")) {
+					setUserShipCoordinates(coord[0], coord[1], "Hit");
+				} else {
+					setUserShipCoordinates(coord[0], coord[1], "Miss");
+				}
+				if (Player.PlayerNum == 2) {
+					double health = 1 - Player.sunkenShips.size() * 0.2;
+					Platform.runLater(() -> Main.healthbarTank1.setProgress(health));
+					Platform.runLater(() -> resulttext3.setText("" + score));
+					Platform.runLater(() -> resulttext2.setText(reply));
+				}else {
+					Platform.runLater(() -> resulttext4.setText("" + score));
+					Platform.runLater(() -> resulttext1.setText(reply));
+					double health = 1 - Player.sunkenShips.size() * 0.2;
+					Platform.runLater(() -> Main.healthbarTank2.setProgress(health));
 				}
 			}
 		} else if (o instanceof HitStrategy) {
