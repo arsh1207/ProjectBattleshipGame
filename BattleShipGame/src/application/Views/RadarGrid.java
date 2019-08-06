@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 import application.Controllers.GridUser;
 import application.Exception.NegativeScore;
@@ -53,6 +55,8 @@ public class RadarGrid implements Observer {
 	GridUser ob;
 	String userWon = "";
 	int vsModeScore = 0;
+	Timer timer;
+	Thread newThread;
 
 	public String getUserWon() {
 		return userWon;
@@ -179,6 +183,23 @@ public class RadarGrid implements Observer {
 				String xy[] = b.getId().split(":");
 				b.setOnAction((ActionEvent event) -> {
 					b.setStyle("-fx-background-color: #FFFFFF; ");
+					
+					Runnable task = () -> {
+						gameTimer();
+					};
+					if (newThread == null) {
+						newThread = new Thread(task);
+						timer = new Timer();
+						timer.schedule(new RemindTask(newThread, timer), 30 * 1000);
+					} else {
+						newThread.stop();
+						newThread = new Thread(task);
+						timer.cancel();
+						timer = new Timer();
+						timer.schedule(new RemindTask(newThread, timer), 30 * 1000);
+					}
+					newThread.start();
+
 					if (Main.gameType.equals("Salvo")) {
 						salvaFunc(xy);
 					} else if (Main.gameType.equalsIgnoreCase("Classic")) {
@@ -451,6 +472,20 @@ public class RadarGrid implements Observer {
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+		}
+	}
+
+	public void gameTimer() {
+		for (int i = 1; i <= 30; i++) {
+			String str = Integer.toString(i);
+			Platform.runLater(() -> Main.text.setText(str));
+			System.out.println(i);
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

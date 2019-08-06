@@ -16,6 +16,7 @@ import java.util.Properties;
 import java.util.Random;
 
 import application.Exception.NegativeScore;
+import application.Exception.PortException;
 import application.Views.RadarGrid;
 import application.Views.ShipGrid;
 import application.Views.UserDetailsWindow;
@@ -870,11 +871,16 @@ public class Player extends Observable {
 
 	}
 
-	public void launchServer1() {
+	public void launchServer1(int port) {
 		System.out.println("launch 1");
 		DatagramSocket aSocket = null;
 		try {
-			aSocket = new DatagramSocket(6795);			
+			if(port != 6795) {
+				port = 6795;
+				throw new PortException("Port error! Correct Port: " +port);				
+			}				
+			aSocket = new DatagramSocket(port);
+			//aSocket = new DatagramSocket(100.100);
 			while (true) {
 				byte[] buffer = new byte[1000];
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
@@ -956,6 +962,9 @@ public class Player extends Observable {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
+		} catch (PortException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
 		}
 
 	}
@@ -966,9 +975,13 @@ public class Player extends Observable {
 	 * check if its a hit or miss
 	 * 
 	 */
-	public void launchServer2() {
+	public void launchServer2(int port) {
 		DatagramSocket aSocket = null;
 		try {
+			if(port != 6792) {
+				port = 6792;
+				throw new PortException("Port error! Correct Port: " +port);				
+			}	
 			aSocket = new DatagramSocket(6792);			
 			while (true) {
 				byte[] buffer = new byte[1000];
@@ -1050,6 +1063,9 @@ public class Player extends Observable {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
+		} catch (PortException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
 		}
 
 	}
@@ -1059,22 +1075,16 @@ public class Player extends Observable {
 	 * @param playerType
 	 */
 	public void PlayerMode(int playerNum) {
-		System.out.println("called player mode");
-
 		setPlayerNum(playerNum);
 		if (playerNum == 1) {// launch for the first player
 			Runnable task = () -> {
-				System.out.println("inside player mode");
-				launchServer1();
-			
+				launchServer1(6796);			
 			};
 			new Thread(task).start();
-		
 
 		} else if (playerNum == 2) {
 			Runnable task = () -> {
-				launchServer2();
-			
+				launchServer2(0);			
 			};
 			new Thread(task).start();
 		}
