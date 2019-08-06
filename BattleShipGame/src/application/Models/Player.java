@@ -15,6 +15,7 @@ import java.util.Observable;
 import java.util.Properties;
 import java.util.Random;
 
+import application.Exception.NegativeScore;
 import application.Views.ShipGrid;
 import main.Main;
 
@@ -114,7 +115,6 @@ public class Player extends Observable {
 
 	public Player() {
 		try {
-		
 
 			initialize();
 		} catch (Exception e) {
@@ -141,7 +141,15 @@ public class Player extends Observable {
 	}
 
 	public void setScore(int s) {
-		scoring = scoring + s;
+		try {
+			scoring = scoring + s;
+			if (scoring < 0) {
+				throw new NegativeScore("Score can't be negative");
+			}
+		} catch (NegativeScore e) {
+			scoring = 0;
+			System.out.println(e);
+		}
 	}
 
 	public int getScore() {
@@ -214,10 +222,8 @@ public class Player extends Observable {
 
 	/**
 	 * 
-	 * @param coordinates
-	 *            defines the coordinated to be deployed
-	 * @param shipType
-	 *            type of the ship
+	 * @param coordinates defines the coordinated to be deployed
+	 * @param shipType    type of the ship
 	 */
 	public void deployUserGrid(String coordinates, String shipType) {
 		try {
@@ -350,10 +356,8 @@ public class Player extends Observable {
 	/**
 	 * Method to check whether the ships are placed adjacent to each other or not
 	 * 
-	 * @param i
-	 *            x-axis
-	 * @param j
-	 *            y-axis
+	 * @param i x-axis
+	 * @param j y-axis
 	 * @return Boolean tell if a ship is adjacent or not
 	 */
 	public Boolean adjacentShipCheck(int i, int j) {
@@ -377,10 +381,8 @@ public class Player extends Observable {
 	/**
 	 * methods to check whether the points are not out of the grid
 	 * 
-	 * @param i
-	 *            x - axis
-	 * @param j
-	 *            y - axis
+	 * @param i x - axis
+	 * @param j y - axis
 	 * @return Boolean if the point is valid or not
 	 */
 	public boolean isValid(int i, int j) {
@@ -393,10 +395,8 @@ public class Player extends Observable {
 	 * Checking that the ships are of the exact size
 	 * 
 	 * 
-	 * @param diff
-	 *            size of the ship
-	 * @param shipType
-	 *            type of the ship
+	 * @param diff     size of the ship
+	 * @param shipType type of the ship
 	 * @return returns String defining if the ships have the correct size
 	 */
 	public String areHolesValid(int diff, String shipType) {
@@ -436,8 +436,7 @@ public class Player extends Observable {
 	/**
 	 * function to see whether a particular ship is deployed or not
 	 * 
-	 * @param shipType
-	 *            gives the type of the ship
+	 * @param shipType gives the type of the ship
 	 * @return boolean to check the ship deployed
 	 */
 	public boolean isShipDeployed(String shipType) {
@@ -722,14 +721,10 @@ public class Player extends Observable {
 	/**
 	 * method to check the adjacency in user ships
 	 * 
-	 * @param x
-	 *            x-coordinate
-	 * @param y
-	 *            y-coordinate
-	 * @param direction
-	 *            tell the direction horizontal or vertical
-	 * @param points
-	 *            size of ship points
+	 * @param x         x-coordinate
+	 * @param y         y-coordinate
+	 * @param direction tell the direction horizontal or vertical
+	 * @param points    size of ship points
 	 * @return Boolean returns if it can place or not
 	 */
 	public Boolean checkUserShip(int x, int y, String direction, int points) {
@@ -788,17 +783,17 @@ public class Player extends Observable {
 			// set that user has won
 			int pscore = Computer.scoringComp;
 			int cscore;
-			if(Main.gameType.equals("Salvo"))
+			if (Main.gameType.equals("Salvo"))
 				cscore = HitStrategySalvo.scoring;
 			else
 				cscore = HitStrategy.scoring;
 			boolean scoreReverse = false;
-			
+
 			if ((cscore > pscore) || sunkenShips.size() == Main.TOTAL_SHIPS) {
 				scoreReverse = true;
 				System.out.println("Comp Won");
 				setCompWon("Won");
-			} else { 
+			} else {
 				setCompWon("Lost");
 			}
 		}
@@ -807,8 +802,7 @@ public class Player extends Observable {
 	/**
 	 * Method to display the computer grid
 	 * 
-	 * @param Grid
-	 *            contains the reference to the grid
+	 * @param Grid contains the reference to the grid
 	 */
 	public void printGrid(Integer[][] Grid) {
 		for (int i = 0; i < rows; i++) {
@@ -833,7 +827,7 @@ public class Player extends Observable {
 	 * This function checks whether any ships have sunk or not
 	 */
 	public static void checkSunkenShips() {
-		
+
 		Map<String, ArrayList<String>> tempMap;
 		for (String coords : coordinatesHit) {
 			tempMap = new HashMap<>();
@@ -848,7 +842,7 @@ public class Player extends Observable {
 						// and remove the ships from the shipsMap
 						if (shipsMap.get(entry.getKey()).isEmpty()) {
 							setSunkenShips(entry.getKey());
-							System.out.println("Player sunken ships "+sunkenShips);
+							System.out.println("Player sunken ships " + sunkenShips);
 							tempMap.remove(entry.getKey());
 						}
 					}
@@ -1122,8 +1116,7 @@ public class Player extends Observable {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
-		} finally
-		{
+		} finally {
 			if (aSocket != null)
 				aSocket.close();
 		}
