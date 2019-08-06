@@ -18,6 +18,7 @@ import java.util.Random;
 import application.Views.RadarGrid;
 import application.Views.ShipGrid;
 import application.Views.UserDetailsWindow;
+import javafx.application.Platform;
 import main.Main;
 
 /**
@@ -876,18 +877,19 @@ public class Player extends Observable {
 		System.out.println("launch 1");
 		DatagramSocket aSocket = null;
 		try {
-			aSocket = new DatagramSocket(6795);
-			byte[] buffer = new byte[1000];
+			aSocket = new DatagramSocket(6795);			
 			while (true) {
+				byte[] buffer = new byte[1000];
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 				aSocket.receive(request);
 				String msg = new String(request.getData(), 0, request.getLength());
-				System.out.println("msg1" + msg);
+				System.out.println("msg1 " + msg);
 				String[] coordinates = msg.split("\\s");
 				// case when the coordinates are received
 				if (coordinates.length == 1) {
 					if (coordinates[0].contains("Name")) {
-						Main.resultLabel2.setText(coordinates[0].split(":")[1]);
+						Platform.runLater(() -> Main.resultLabel2.setText(coordinates[0].split(":")[1]));
+						//Main.resultLabel2.setText(coordinates[0].split(":")[1]);
 					} else {
 						setOtherWon("Won");
 					}
@@ -922,16 +924,18 @@ public class Player extends Observable {
 							timea = 0;
 							timeb = 0;
 
-						}
-						setShipGridReply("It's a Hit!!!!!");
+						}						
 						setScore(10);						
 						setCoords(xy);
+						setShipGridReply("It's a Hit!!!!!");
 						sendReply(6792, "It's a Hit!!!!!", "132.205.94.100");
+						checkPlayerWon();
 					} else if (userGrid[x][y] == 0) {
 						userGrid[x][y] = 3;
-						setShipGridReply("It's a miss!!!!!");
+						
 						setCoords(xy);
 						setScore(-1);
+						setShipGridReply("It's a miss!!!!!");
 						sendReply(6792, "It's a miss!!!!!", "132.205.94.100");
 					} else if (userGrid[x][y] == 2 || userGrid[x][y] == 3) {
 						sendReply(6792, "The location has been hit earlier", "132.205.94.100");
@@ -968,9 +972,9 @@ public class Player extends Observable {
 	public void launchServer2() {
 		DatagramSocket aSocket = null;
 		try {
-			aSocket = new DatagramSocket(6792);
-			byte[] buffer = new byte[1000];
+			aSocket = new DatagramSocket(6792);			
 			while (true) {
+				byte[] buffer = new byte[1000];
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 				aSocket.receive(request);
 				String msg = new String(request.getData(), 0, request.getLength());
@@ -978,7 +982,8 @@ public class Player extends Observable {
 				// case when the coordinates are received
 				if (coordinates.length == 1) {
 					if (coordinates[0].contains("Name")) {
-						Main.resultLabel2.setText(coordinates[0].split(":")[1]);
+						Platform.runLater(() -> Main.resultLabel1.setText(coordinates[0].split(":")[1]));
+					//	Main.resultLabel2.setText(coordinates[0].split(":")[1]);
 					} else {
 						setOtherWon("Won");
 					}
@@ -1013,16 +1018,17 @@ public class Player extends Observable {
 							timea = 0;
 							timeb = 0;
 
-						}
-						setShipGridReply("It's a Hit!!!!!");
+						}					
 						setScore(10);
 						setCoords(xy);
+						setShipGridReply("It's a Hit!!!!!");
 						sendReply(6795, "It's a Hit!!!!!", "132.205.94.99");
+						checkPlayerWon();
 					} else if (userGrid[x][y] == 0) {
-						userGrid[x][y] = 3;
-						setShipGridReply("It's a miss!!!!!");
+						userGrid[x][y] = 3;						
 						setScore(-1);
 						setCoords(xy);
+						setShipGridReply("It's a miss!!!!!");
 						sendReply(6795, "It's a miss!!!!!", "132.205.94.99");
 					} else if (userGrid[x][y] == 2) {
 						sendReply(6795, "The location has been hit earlier", "132.205.94.99");
@@ -1185,18 +1191,18 @@ public class Player extends Observable {
 			}
 		}
 		if (!flag) {
-			setPlayerWon("Won");
-		} else { // do nothing
 			setPlayerWon("Lost");
+		} else { // do nothing
+			setPlayerWon("Won");
 		}
-		if (getPlayerWon().equals("Won")) {
+		if (getPlayerWon().equals("Lost")) {
 			if (PlayerNum == 1) {// send msg to player 2 that player 1 has won
 
-				sendReply(6792, "Won", "132.205.94.99");
+				sendReply(6792, "Won", "132.205.94.100");
 			} else {
 				// player 2 case
 				// send msg to player 1 that player 2 has won
-				sendReply(6795, "Won", "132.205.94.100");
+				sendReply(6795, "Won", "132.205.94.99");
 
 			}
 		}

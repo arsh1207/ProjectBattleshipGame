@@ -381,12 +381,14 @@ public class RadarGrid implements Observer {
 					System.out.println(e.getMessage());
 				}
 			} else if (arg.equals("VsmodeWon")) {
-				if (((Player) o).getPlayerWon().equalsIgnoreCase("won")) {
-					AlertBox.displayResult("Sorry", "You LOST");
+				if (((Player) o).getPlayerWon().equalsIgnoreCase("Lost")) {
+					Platform.runLater(() -> AlertBox.displayResult("Sorry", "You LOST"));
+					//AlertBox.displayResult("Yesss", "WON");
 				}
 			} else if (arg.equals("VsmodeOtherWon")) {
 				if (((Player) o).getOtherWon().equalsIgnoreCase("won")) {
-					AlertBox.displayResult("Yesss", "WON");
+					Platform.runLater(() -> AlertBox.displayResult("Result", "You WON"));
+					//AlertBox.displayResult("Sorry", "You LOST");
 				}
 			}
 		}
