@@ -848,7 +848,7 @@ public class Player extends Observable {
 						// and remove the ships from the shipsMap
 						if (shipsMap.get(entry.getKey()).isEmpty()) {
 							setSunkenShips(entry.getKey());
-							System.out.println("Player sunken ships "+sunkenShips);
+							//System.out.println("Player sunken ships "+sunkenShips);
 							tempMap.remove(entry.getKey());
 						}
 					}
@@ -857,7 +857,8 @@ public class Player extends Observable {
 			shipsMap = new HashMap<>();
 			shipsMap.putAll(tempMap);
 		}
-		ShipGrid.salvaAlertCall(sunkenShips);
+		if(Main.gameType.equals("Salvo"))
+			ShipGrid.salvaAlertCall(sunkenShips);
 
 	}
 

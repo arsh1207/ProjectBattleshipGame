@@ -215,6 +215,7 @@ public class SaveClass extends Observable {
 	 * @param out PrintWriter Object
 	 */
 	public void saveUserShipsMap(PrintWriter out) {
+		System.out.println("PLayer ships map "+Player.shipsMap);
 		for (Map.Entry<String, ArrayList<String>> entry : Player.shipsMap.entrySet()) {
 			out.print(entry.getKey());
 			for(String it : entry.getValue()) {

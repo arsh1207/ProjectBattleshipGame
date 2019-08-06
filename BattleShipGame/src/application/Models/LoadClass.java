@@ -144,9 +144,7 @@ public class LoadClass extends Observable{
 			line = in.nextLine();
 			//store shipsmap
 			loadComputerShipsMap(in);
-			line = in.nextLine();
-			loadComputerCoordinatesHit(line);
-			//perform operations for ship grid
+			
 			while(in.hasNextLine()) {
 				line = in.nextLine();
 				if(line.contains("Player ships status")) {
@@ -174,7 +172,7 @@ public class LoadClass extends Observable{
 			line = in.nextLine();
 			loadUserSunkenShips(line);
 			line = in.nextLine();
-			loadUserCoordinatesHit(line);
+			Player.numOfShipsDep = 5;
 			in.close();
 		}
 		catch(Exception e) {
@@ -232,9 +230,9 @@ public class LoadClass extends Observable{
 				String[] line2 = line.split(" ");
 				setScore(Integer.parseInt(line2[2]));
 				if(o instanceof HitStrategySalvo)
-					((HitStrategySalvo) o).setScore(Integer.parseInt(line2[2]));
+					((HitStrategySalvo) o).scoring = Integer.parseInt(line2[2]);
 				else
-					((HitStrategy) o).setScore(Integer.parseInt(line2[2]));
+					((HitStrategy) o).scoring = Integer.parseInt(line2[2]);
 				break;
 			}
 			for(int i = 0; i < line.length(); i++) {
@@ -273,8 +271,10 @@ public class LoadClass extends Observable{
 		Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 		while(in.hasNextLine()) {
 			line = in.nextLine();
-			if(line.contains("Coordinates hit"))
+			if(line.contains("Coordinates hit")) {
+				loadComputerCoordinatesHit(line);
 				break;
+			}
 			else {
 				tempList = new ArrayList<>();
 				String[] sublines = line.split(" ");
@@ -296,10 +296,10 @@ public class LoadClass extends Observable{
 		
 		String[] subline = line.split(" ");
 		Computer.coordinatesHit = new ArrayList<>();
-		for(int i = 1; i < subline.length; i++) {
+		for(int i = 2; i < subline.length; i++) {
 			Computer.coordinatesHit.add(subline[i]);
 		}
-		
+		System.out.println("Comp coords hit load "+Computer.coordinatesHit);
 	}
 	
 	/**
@@ -310,7 +310,7 @@ public class LoadClass extends Observable{
 		
 		String[] subline = line.split(" ");
 		Player.coordinatesHit = new ArrayList<>();
-		for(int i = 1; i < subline.length; i++) {
+		for(int i = 2; i < subline.length; i++) {
 			Player.coordinatesHit.add(subline[i]);
 		}
 		
@@ -331,7 +331,7 @@ public class LoadClass extends Observable{
 			if(line.contains("Player Score")) {
 				String[] line2 = line.split(" ");
 				setUserScore(Integer.parseInt(line2[2]));
-				computer.setScoreComp(Integer.parseInt(line2[2]));
+				computer.scoringComp = Integer.parseInt(line2[2]);
 				break;
 			}
 			for(int i = 0; i < line.length(); i++) {
@@ -354,8 +354,10 @@ public class LoadClass extends Observable{
 		Map<String, ArrayList<String>> shipsMap = new HashMap<>();
 		while(in.hasNextLine()) {
 			line = in.nextLine();
-			if(line.contains("Coordinates hit"))
+			if(line.contains("Coordinates hit")) {
+				loadUserCoordinatesHit(line);
 				break;
+			}
 			else {
 				tempList = new ArrayList<>();
 				String[] sublines = line.split(" ");

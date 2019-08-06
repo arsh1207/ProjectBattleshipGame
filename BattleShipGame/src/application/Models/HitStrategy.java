@@ -90,7 +90,8 @@ public class HitStrategy extends Observable {
 		}
 		int hitCoord[] = { x, y };
 		setCoords(hitCoord);
-
+		String coordx = Integer.toString(x);
+		String coordy = Integer.toString(y);
 		if (Player.userGrid[x][y] == 1) {
 			// change the grid value from 1 to 2 to signify hit
 			Player.userGrid[x][y] = 2;
@@ -113,8 +114,7 @@ public class HitStrategy extends Observable {
 				
 			}//if time between consecutive hit is less than 3 seconds ,then bonus score
 			setScore(10);
-			
-			
+			Player.coordinatesHit.add(coordx + "," + coordy);
 			setReply("It's a Hit!!!!!");
 
 		} else if (Player.userGrid[x][y] == 0) {
@@ -124,8 +124,8 @@ public class HitStrategy extends Observable {
 			setScore(-1);
 			setReply("It's a miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2 || Player.userGrid[x][y] == 3) {
-			//setReply("The location has been hit earlier");
-			 throw new LocationHitException("The location has been hit earlier");
+			setReply("The location has been hit earlier");
+			 //throw new LocationHitException("The location has been hit earlier");
 		}
 	}
 	
@@ -230,6 +230,8 @@ public class HitStrategy extends Observable {
 
 		hitX = x;
 		hitY = y;
+		String coordx = Integer.toString(x);
+		String coordy = Integer.toString(y);
 		int hitCoord[] = { x, y };
 		setCoords(hitCoord);
 		if (Player.userGrid[x][y] == 1) {
@@ -253,14 +255,15 @@ public class HitStrategy extends Observable {
 				
 			}//if time between consecutive hit is less than 3 seconds ,then bonus score
 			setScore(10);
+			Player.coordinatesHit.add(coordx + "," + coordy);
 			setReply("It's a Hit!!!!!");
 		} else if (Player.userGrid[x][y] == 0) {
 			Player.userGrid[x][y] = 3;
 			setScore(-1);
 			setReply("It's a miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2 || Player.userGrid[x][y] == 3) {
-			//setReply("The location has been hit earlier");
-			 throw new LocationHitException("The location has been hit earlier");
+			setReply("The location has been hit earlier");
+			 //throw new LocationHitException("The location has been hit earlier");
 		}
 
 	}
@@ -302,6 +305,7 @@ public class HitStrategy extends Observable {
 		if (!hitResult && direction.isEmpty()) {
 			boolean newHit = false;
 			while (!newHit) {
+				System.out.println("YesHard");
 				if (Player.userGrid[x][y] == 2) {
 					if (minMax == 0) {
 						for (int i = 0; i < 9; i++) {
@@ -522,8 +526,8 @@ public class HitStrategy extends Observable {
 			setScore(-1);
 			setReply("It's a miss!!!!!");
 		} else if (Player.userGrid[x][y] == 2 || Player.userGrid[x][y] == 3) {
-			//setReply("The location has been hit earlier");
-			 throw new LocationHitException("The location has been hit earlier");
+			setReply("The location has been hit earlier");
+			//throw new LocationHitException("The location has been hit earlier");
 
 		}
 

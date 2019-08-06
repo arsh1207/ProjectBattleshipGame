@@ -177,12 +177,15 @@ public class RadarGrid implements Observer {
 				b.setMaxSize(2 * r, 2 * r);
 				String xy[] = b.getId().split(":");
 				b.setOnAction((ActionEvent event) -> {
+					System.out.println("Button clicked");
 					b.setStyle("-fx-background-color: #FFFFFF; ");
 					if (Main.gameType.equals("Salvo")) {
 						salvaFunc(xy);
 					} else if (Main.gameType.equalsIgnoreCase("Classic")) {
 						coordX = Integer.parseInt(xy[0]);
 						coordY = Integer.parseInt(xy[1]);
+						if(Player.userGrid[coordX][coordY] == 1)
+							System.out.println("Radar grid hit");
 						ob.callUserTurn(coordX, coordY);
 					} else {
 						coordX = Integer.parseInt(xy[0]);
@@ -293,8 +296,11 @@ public class RadarGrid implements Observer {
 				// loadRadarGrid[coordState[0]][coordState[1]] = coordState[2];
 				// System.out.print("Buttons "+coordState[1]+" "+coordState[1]+"
 				// "+coordState[2]);
-				if (coordState[2] == 1 || coordState[2] == 0)
+				if (coordState[2] == 1 || coordState[2] == 0) {
+					if (coordState[2] == 1)
+						System.out.println("coordState is "+coordState[2]);
 					radarButton[coordState[0]][coordState[1]].setStyle("-fx-background-color: black; ");
+				}
 				else if (coordState[2] == 2)
 					radarButton[coordState[0]][coordState[1]].setStyle("-fx-background-color: #FF0000; ");
 				else

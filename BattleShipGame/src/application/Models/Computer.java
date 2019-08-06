@@ -138,8 +138,8 @@ public class Computer extends Observable {
 		
 		} else if (computerGrid[x][y] == 2 || computerGrid[x][y] == 3) {
 
-			//setReply("The location has been hit earlier");
-			 throw new LocationHitException("The location has been hit earlier");
+			setReply("The location has been hit earlier");
+			 //throw new LocationHitException("The location has been hit earlier");
 		}
 
 		else {
@@ -514,12 +514,14 @@ public class Computer extends Observable {
 	 * 
 	 */
 	public void checkSunkenShips() {
-
+		//System.out.println(coordinatesHit.size());
 		Map<String, ArrayList<String>> tempMap;
 		for (String coords : coordinatesHit) {
+			//System.out.println("Yes2");
 			tempMap = new HashMap<>();
 			tempMap.putAll(shipsMap);
 			for (Map.Entry<String, ArrayList<String>> entry : shipsMap.entrySet()) {
+				//System.out.println("Yes3");
 				if (!shipsMap.get(entry.getKey()).isEmpty()) {
 					// if any ship has been placed on the assigned coordinate
 					if (shipsMap.get(entry.getKey()).contains(coords)) {

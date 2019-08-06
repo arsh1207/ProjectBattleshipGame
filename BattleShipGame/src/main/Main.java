@@ -195,13 +195,15 @@ public class Main extends Application {
 				if (Player.numOfShipsDep == 5) {
 					for (int i = 0; i < 9; i++) {
 						for (int j = 0; j < 11; j++) {
-							radarGridObserver.radarButton[i][j].setDisable(false);
+							RadarGrid.radarButton[i][j].setDisable(false);
 						}
 					}
 				//	g_pane1.setVisible(true);
 					gameStartScene(stage);
 					stage.setScene(scene3);
-					if (!gameMode.equalsIgnoreCase("vsmode")) {
+					//deploy the computer ships only when vs player mode is inactive
+					//or load games is not selected
+					if (!gameMode.equalsIgnoreCase("vsmode") && newGame) {
 						ob.deployCompShips();
 					}
 					timer = new Timer();
@@ -216,7 +218,7 @@ public class Main extends Application {
 					alert.setContentText("Please place them before starting.");
 					alert.showAndWait();
 				}
-				ob.checkingManagedException(" player.deploy()");
+				//ob.checkingManagedException(" player.deploy()");
 			});
 
 			tossBtn = new Button("Toss");
@@ -815,7 +817,7 @@ public class Main extends Application {
 		});
 		menu1Item4.setOnAction(e -> {
 			ob.getSelectedLoadGame();
-
+			newGame = false;
 		});
 
 		menu1.getItems().add(menu1Item1);
