@@ -313,6 +313,7 @@ public class HitStrategy extends Observable {
 			boolean newHit = false;
 			while (!newHit) {
 				if (Player.userGrid[x][y] == 2 || Player.userGrid[x][y] == 3) {
+					probabilityGrid[x][y] = -1;
 					if (minMax == 0) {
 						for (int i = 0; i < 9; i++) {
 							for (int j = 0; j < 11; j++) {
