@@ -63,6 +63,10 @@ public class Player extends Observable {
 		setChanged();
 		notifyObservers("VsmodeOtherWon");
 	}
+	
+	public void setOtherWonT(String otherWon) {
+		OtherWon = otherWon;
+	}
 
 	public String getPlayerWon() {
 		return PlayerWon;
