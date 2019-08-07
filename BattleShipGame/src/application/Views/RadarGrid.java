@@ -488,7 +488,7 @@ public class RadarGrid implements Observer {
 				TimeUnit.SECONDS.sleep(1);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+			System.out.println(e.getMessage());
 			}
 		}
 	}
