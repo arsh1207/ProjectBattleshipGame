@@ -95,7 +95,7 @@ public class SaveClass extends Observable {
 					check = true;
 					System.out.println("Username found");
 					setuName(userName);
-					if(Player.PlayerNum == 2)
+					if(Main.playerNum == 2)
 						Main.resultLabel2.setText(userName);
 					else
 						Main.resultLabel1.setText(userName);

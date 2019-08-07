@@ -2,9 +2,6 @@ package main;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 import application.Controllers.GridUser;
 import application.Models.Computer;
 import application.Models.HitStrategy;
@@ -81,6 +78,7 @@ public class Main extends Application {
 	int rowButtonCount;
 	int columnButtonCount;
 	int buttonRowIndex;
+	public static int playerNum;
 	public static ProgressBar healthbarTank1, healthbarTank2;
 	static Label resulttext1, resulttext2, resulttext3, resulttext4;
 	public static String gameType = "None";
@@ -206,8 +204,12 @@ public class Main extends Application {
 					stage.setScene(scene3);
 					//deploy the computer ships only when vs player mode is inactive
 					//or load games is not selected
-					if (!gameMode.equalsIgnoreCase("vsmode") && newGame) {
+					if (!gameType.equalsIgnoreCase("vsmode") || newGame) {
 						ob.deployCompShips();
+					}
+					if(gameType.equalsIgnoreCase("vsmode")) {
+						RadarGrid.disableButtons();
+						player.PlayerMode(playerNum);
 					}
 
 					// Label timerLabel = new Label(timer.toString());
@@ -925,13 +927,15 @@ public class Main extends Application {
 		});
 
 		btn5.setOnAction((ActionEvent event) -> {
-			player.PlayerMode(1);
+			playerNum = 1;
+			//player.PlayerMode(1);
 			userDetailsWindow.newUser();
 			stg.setScene(scene1);
 		});
 
 		btn6.setOnAction((ActionEvent event) -> {
-			player.PlayerMode(2);
+			playerNum = 2;
+			//player.PlayerMode(2);
 			userDetailsWindow.newUser();
 			stg.setScene(scene1);
 		});
