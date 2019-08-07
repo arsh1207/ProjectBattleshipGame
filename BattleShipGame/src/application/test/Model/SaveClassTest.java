@@ -47,7 +47,7 @@ public class SaveClassTest {
 	@Test
 	public void getFolderPathTest() {
 		
-		assertEquals("User-Data\\", saveClass.getFilePath());
+		assertEquals("User-Data\\", saveClass.getFolderPath());
 		
 	}
 	
@@ -74,7 +74,7 @@ public class SaveClassTest {
 	}
 	
 	/**
-	 * Test to verify if the computer's hit coordinates were saved correctly or not
+	 * Test to verify if the user's hit coordinates were saved correctly or not
 	 */
 	@Test
 	public void getUserCoordinatesHitTest() {

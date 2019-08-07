@@ -204,7 +204,7 @@ public class Main extends Application {
 					stage.setScene(scene3);
 					//deploy the computer ships only when vs player mode is inactive
 					//or load games is not selected
-					if (!gameType.equalsIgnoreCase("vsmode") || newGame) {
+					if (!gameType.equalsIgnoreCase("vsmode") && newGame) {
 						ob.deployCompShips();
 					}
 					if(gameType.equalsIgnoreCase("vsmode")) {
