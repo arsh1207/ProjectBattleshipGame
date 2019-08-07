@@ -113,9 +113,7 @@ public class Player extends Observable {
 
 	String propFileName = "C:\\Users\\ar_jave\\git\\ProjectBattleshipGame\\BattleShipGame\\src\\config.properties";
 	InputStream inputStream = null;// new FileInputStream(propFileName);
-	// InputStream
-	// inputStream=getClass().getClassLoader().getResourceAsStream(propFileName);
-
+	
 	// original Grid that remains unchanged throughout the game
 	public static Integer[][] userGrid = new Integer[rows][cols];
 
@@ -394,7 +392,7 @@ public class Player extends Observable {
 	}
 
 	/**
-	 * methods to check whether the points are not out of the grid
+	 * Method to check whether the points are not out of the grid
 	 * 
 	 * @param i x - axis
 	 * @param j y - axis
@@ -408,8 +406,7 @@ public class Player extends Observable {
 
 	/**
 	 * Checking that the ships are of the exact size
-	 * 
-	 * 
+	 *  
 	 * @param diff     size of the ship
 	 * @param shipType type of the ship
 	 * @return returns String defining if the ships have the correct size
@@ -782,7 +779,6 @@ public class Player extends Observable {
 	 * case if User won
 	 * 
 	 */
-
 	public void checkIfCompWon() {
 		boolean flagcomp = false;
 
@@ -816,7 +812,6 @@ public class Player extends Observable {
 
 	/**
 	 * Method to display the computer grid
-	 * 
 	 * @param Grid contains the reference to the grid
 	 */
 	public void printGrid(Integer[][] Grid) {
@@ -870,15 +865,20 @@ public class Player extends Observable {
 			ShipGrid.salvaAlertCall(sunkenShips);
 
 	}
-
+	
+	/**
+	 * Method to launch the server for player-1
+	 * @param port port number
+	 */
 	public void launchServer1(int port) {
 		System.out.println("launch 1");
 		DatagramSocket aSocket = null;
+		port = 6795;
 		try {
-			if(port != 6795) {
-				port = 6795;
-				throw new PortException("Port error! Correct Port: " +port);				
-			}				
+//			if(port != 6795) {
+//				port = 6795;
+//				throw new PortException("Port error! Correct Port: " +port);				
+//			}				
 			aSocket = new DatagramSocket(port);
 			//aSocket = new DatagramSocket(100.100);
 			while (true) {
@@ -899,7 +899,8 @@ public class Player extends Observable {
 				} else if (coordinates.length == 2) {
 					RadarGrid.enableButtons();
 					if(server1Flag) {
-						sendReply(6792, "Name:" + saveObj.getuName(), "132.205.94.100");
+						//sendReply(6792, "Name:" + saveObj.getuName(), "132.205.94.100");
+						sendReply(6792, "Name:" + saveObj.getuName(), "127.0.0.1");
 						server1Flag = false;
 					}
 					int x = Integer.parseInt(coordinates[0]);
@@ -930,20 +931,29 @@ public class Player extends Observable {
 						}						
 						setScore(10);						
 						setCoords(xy);
-						setShipGridReply("It's a Hit!!!!!");
-						sendReply(6792, "It's a Hit!!!!!", "132.205.94.100");
+						checkSunkenShips();
+						String playerHealth = Integer.toString(Player.sunkenShips.size());
+						System.out.println(Player.PlayerNum+" health drop is is "+playerHealth);
+						setShipGridReply("It's a Hit!!!!!");						
+						//sendReply(6792, "It's a Hit!!!!!", "132.205.94.100");
+						sendReply(6792, "It's a Hit!!!!! "+playerHealth, "127.0.0.1");
 						checkPlayerWon();
 					} else if (userGrid[x][y] == 0) {
 						userGrid[x][y] = 3;
-						
+						checkSunkenShips();
+						String playerHealth = Integer.toString(Player.sunkenShips.size());
+						System.out.println(Player.PlayerNum+" health drop is is "+playerHealth);
 						setCoords(xy);
 						setScore(-1);
-						setShipGridReply("It's a miss!!!!!");
-						sendReply(6792, "It's a miss!!!!!", "132.205.94.100");
+						setShipGridReply("It's a miss!!!!! ");
+						//sendReply(6792, "It's a miss!!!!!", "132.205.94.100");
+						sendReply(6792, "It's a miss!!!!! "+playerHealth, "127.0.0.1");
 					} else if (userGrid[x][y] == 2 || userGrid[x][y] == 3) {
-						sendReply(6792, "The location has been hit earlier", "132.205.94.100");
+						//sendReply(6792, "The location has been hit earlier", "132.205.94.100");
+						sendReply(6792, "The location has been hit earlier", "127.0.0.1");
 					} else {
-						sendReply(6792, "Some other error", "132.205.94.100");
+						//sendReply(6792, "Some other error", "132.205.94.100");
+						sendReply(6792, "Some other error", "127.0.0.1");
 					}
 				} else if (coordinates.length > 2) {
 					// case when some message is received
@@ -962,27 +972,27 @@ public class Player extends Observable {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
-		} catch (PortException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e);
 		}
+//		} catch (PortException e) {
+//			// TODO Auto-generated catch block
+//			System.out.println(e);
+//		}
 
 	}
 
-	/*
-	 * 
-	 * launch server for player 2 receives the hit coordinates from other server
-	 * check if its a hit or miss
-	 * 
+	/**
+	 * Method to launch the server for player-2
+	 * @param port wrong port number for exception
 	 */
 	public void launchServer2(int port) {
 		DatagramSocket aSocket = null;
+		port = 6792;
 		try {
-			if(port != 6792) {
-				port = 6792;
-				throw new PortException("Port error! Correct Port: " +port);				
-			}	
-			aSocket = new DatagramSocket(6792);			
+//			if(port != 6792) {
+//				port = 6792;
+//				throw new PortException("Port error! Correct Port: " +port);				
+//			}	
+			aSocket = new DatagramSocket(6792);
 			while (true) {
 				byte[] buffer = new byte[1000];
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
@@ -998,9 +1008,11 @@ public class Player extends Observable {
 						setOtherWon("Won");
 					}
 				} else if (coordinates.length == 2) {
+					System.out.println(coordinates);
 					RadarGrid.enableButtons();
 					if(server2Flag) {
-						sendReply(6795, "Name:" + saveObj.getuName(), "132.205.94.99");
+						//sendReply(6795, "Name:" + saveObj.getuName(), "132.205.94.99");
+						sendReply(6795, "Name:" + saveObj.getuName(), "127.0.0.1");
 						server2Flag = false;
 					}
 					int x = Integer.parseInt(coordinates[0]);
@@ -1031,19 +1043,29 @@ public class Player extends Observable {
 						}					
 						setScore(10);
 						setCoords(xy);
+						checkSunkenShips();
+						String playerHealth = Integer.toString(Player.sunkenShips.size());
+						System.out.println(Player.PlayerNum+" health drop is is "+playerHealth);
 						setShipGridReply("It's a Hit!!!!!");
-						sendReply(6795, "It's a Hit!!!!!", "132.205.94.99");
+						//sendReply(6795, "It's a Hit!!!!!", "132.205.94.99");
+						sendReply(6795, "It's a Hit!!!!! "+playerHealth, "127.0.0.1");
 						checkPlayerWon();
 					} else if (userGrid[x][y] == 0) {
 						userGrid[x][y] = 3;						
 						setScore(-1);
 						setCoords(xy);
+						checkSunkenShips();
+						String playerHealth = Integer.toString(Player.sunkenShips.size());
+						System.out.println(Player.PlayerNum+" health drop is is "+playerHealth);
 						setShipGridReply("It's a miss!!!!!");
-						sendReply(6795, "It's a miss!!!!!", "132.205.94.99");
+						//sendReply(6795, "It's a miss!!!!!", "132.205.94.99");
+						sendReply(6795, "It's a miss!!!!! "+playerHealth, "127.0.0.1");
 					} else if (userGrid[x][y] == 2) {
-						sendReply(6795, "The location has been hit earlier", "132.205.94.99");
+						//sendReply(6795, "The location has been hit earlier", "132.205.94.99");
+						sendReply(6795, "The location has been hit earlier", "127.0.0.1");
 					} else {
-						sendReply(6795, "Some other error", "132.205.94.99");
+						//sendReply(6795, "Some other error", "132.205.94.99");
+						sendReply(6795, "Some other error", "127.0.0.1");
 					}
 				} else if (coordinates.length > 2) {
 					// case when some message is received
@@ -1063,16 +1085,17 @@ public class Player extends Observable {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
-		} catch (PortException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e);
 		}
+//		} catch (PortException e) {
+//			// TODO Auto-generated catch block
+//			System.out.println(e);
+//		}
 
 	}
-
+	
 	/**
-	 * 
-	 * @param playerType
+	 * Method that is called when the Vs. player network mode is chosen
+	 * @param playerNum 1 or 2
 	 */
 	public void PlayerMode(int playerNum) {
 		setPlayerNum(playerNum);
@@ -1094,8 +1117,8 @@ public class Player extends Observable {
 	/**
 	 * Front end will call this method whenever there is PLayer 1 hits player 2
 	 * 
-	 * @param x
-	 * @param y
+	 * @param x row-coordinate of the grid
+	 * @param y column-coordinate of the grid
 	 */
 	public void Player1Hit2Send(int x, int y) {
 
@@ -1109,10 +1132,12 @@ public class Player extends Observable {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
 
-			InetAddress aHost_soen = InetAddress.getByName("132.205.94.100");
+			//InetAddress aHost_soen = InetAddress.getByName("132.205.94.100");
+			InetAddress aHost_soen = InetAddress.getByName("127.0.0.1");
 			int player2Port = 6792;
 
 			DatagramPacket request_PLayer1 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player2Port);
+			System.out.println("Message sent");
 			aSocket.send(request_PLayer1);
 			RadarGrid.disableButtons();
 		} catch (SocketException e) {
@@ -1133,12 +1158,9 @@ public class Player extends Observable {
 
 	/**
 	 * Front end will call this method whenever Player 2 hits player 1
-	 * 
-	 * 
-	 * @param x
-	 * @param y
+	 * @param x row-coordinate of the grid
+	 * @param y column-coordinate of the grid
 	 */
-
 	public void Player2Hit1Send(int x, int y) {
 
 		hitX = x;
@@ -1150,7 +1172,8 @@ public class Player extends Observable {
 			bytesSend = rply.getBytes();
 			aSocket = new DatagramSocket();
 
-			InetAddress aHost_soen = InetAddress.getByName("132.205.94.99");
+			//InetAddress aHost_soen = InetAddress.getByName("132.205.94.99");
+			InetAddress aHost_soen = InetAddress.getByName("127.0.0.1");
 			int player1Port = 6795;
 
 			DatagramPacket request_PLayer2 = new DatagramPacket(bytesSend, rply.length(), aHost_soen, player1Port);
@@ -1165,7 +1188,13 @@ public class Player extends Observable {
 				aSocket.close();
 		}
 	}
-
+	
+	/**
+	 * Method to send the reply to the other player
+	 * @param port port number that is required
+	 * @param msg message to be sent
+	 * @param address address of the player
+	 */
 	public void sendReply(int port, String msg, String address) {
 		String rply = msg;
 		byte[] bytesSend = null;
@@ -1186,7 +1215,10 @@ public class Player extends Observable {
 				aSocket.close();
 		}
 	}
-
+	
+	/**
+	 * Method to check if the player won
+	 */
 	public void checkPlayerWon() {
 
 		boolean flag = false;
@@ -1205,11 +1237,13 @@ public class Player extends Observable {
 		if (getPlayerWon().equals("Lost")) {
 			if (PlayerNum == 1) {// send msg to player 2 that player 1 has won
 
-				sendReply(6792, "Won", "132.205.94.100");
+				//sendReply(6792, "Won", "132.205.94.100");
+				sendReply(6792, "Won", "127.0.0.1");
 			} else {
 				// player 2 case
 				// send msg to player 1 that player 2 has won
-				sendReply(6795, "Won", "132.205.94.99");
+				//sendReply(6795, "Won", "132.205.94.99");
+				sendReply(6795, "Won", "127.0.0.1");
 
 			}
 		}

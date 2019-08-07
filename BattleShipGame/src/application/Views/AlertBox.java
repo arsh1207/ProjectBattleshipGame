@@ -12,12 +12,22 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * Class to display the Alert box for required message
+ * @author Sagar Bhatia
+ *
+ */
 public class AlertBox {
 	static ToggleGroup radioGroup;
 	static String difficulty;
 	static RadioButton selectedRadioButton;
 	static String gameType;
-
+	
+	/**
+	 * Method to display the alert in case of an error
+	 * @param title title of the window
+	 * @param msg message to be displayed in the box
+	 */
 	public static void displayError(String title, String msg) {
 		Stage stage = new Stage();
 
@@ -43,7 +53,12 @@ public class AlertBox {
 		stage.showAndWait();
 
 	}
-
+	
+	/**
+	 * Method to display any sort of result in the alert box
+	 * @param title title of the window
+	 * @param msg message to be displayed
+	 */
 	public static void displayResult(String title, String msg) {
 		Stage stage = new Stage();
 
@@ -70,7 +85,11 @@ public class AlertBox {
 		stage.showAndWait();
 
 	}
-
+	
+	/**
+	 * Method to display the difficult
+	 * @return difficulty mode in the form string
+	 */
 	public static String displayDifficulty() {
 		Stage stage = new Stage();
 		radioGroup = new ToggleGroup();
@@ -117,6 +136,11 @@ public class AlertBox {
 
 	}
 	
+	/**
+	 * Method display the display the alert 
+	 * to choose a type of the game(Classic/ Salvo)
+	 * @return gameType returned in the form of a String
+	 */
 	public static String displayGameType() {
 		Stage stage = new Stage();
 		radioGroup = new ToggleGroup();

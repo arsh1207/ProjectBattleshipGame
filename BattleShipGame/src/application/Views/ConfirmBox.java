@@ -18,6 +18,12 @@ public class ConfirmBox {
 	
 	static Boolean result;
 	
+	/**
+	 * Method to display a confirm box to ensure a result
+	 * @param title title of the confirm box
+	 * @param msg message to be displayed in it
+	 * @return boolean value based on Yes/No selected by the user
+	 */
 	public static Boolean display(String title, String msg ) {
 	Stage stage = new Stage();
 	

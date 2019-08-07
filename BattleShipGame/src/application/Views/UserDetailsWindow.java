@@ -54,6 +54,11 @@ public class UserDetailsWindow implements Observer{
 	
 	}
 	
+	/**
+	 * Parameterized constructor to initialize some objects 
+	 * @param ob	Object of GridUser
+	 * @param saveClass	Object of SaveClass
+	 */
 	public UserDetailsWindow(GridUser ob, SaveClass saveClass){
 		this.ob = ob;
 		this.saveClass = saveClass;
@@ -130,15 +135,12 @@ public class UserDetailsWindow implements Observer{
 				this.userName = userTextField.getText();
 				
 				this.password = pwBox.getText();
-				System.out.println("User name is: "+userName);
-				System.out.println("User psswd is: "+password);
 				selectedRadioButton = (RadioButton) radioGroup.getSelectedToggle();
 				this.user = selectedRadioButton.getText();
 				ob.checkUserName(userName, this.user);
 				if(this.user.equals("New Player")) {
 					System.out.println(this.user+" "+this.getVerifyUserName());
 					if(!this.getVerifyUserName()) {
-						//AlertBox.displayResult("Success", "Have a good game.");
 						setUser("new");
 						stage.close();
 					}
@@ -154,7 +156,6 @@ public class UserDetailsWindow implements Observer{
 				else {
 					
 					if(this.getVerifyUserName()) {
-						//AlertBox.displayResult("Success", "Have a good game.");
 						setUser("existing");
 						stage.close();
 					}
@@ -185,7 +186,9 @@ public class UserDetailsWindow implements Observer{
 		
 	}
 	
-
+	/**
+	 * Overridden method of the Observer interface 
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub

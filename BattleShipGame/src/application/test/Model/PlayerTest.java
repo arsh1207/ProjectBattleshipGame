@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import application.Models.Computer;
 import application.Models.Player;
+import application.Models.SaveClass;
 
 public class PlayerTest {
 
@@ -16,7 +17,8 @@ public class PlayerTest {
 
 	@Before
 	public void setUp() {
-		ob = new Player();
+		SaveClass saveClass = new SaveClass();
+		ob = new Player(saveClass);
 
 	}
 

@@ -89,7 +89,8 @@ public class Main extends Application {
 	public static Button tossBtn;
 	public static boolean newGame = true;
 	public static Label resultLabel1, resultLabel2;
-	public static Text text; 
+	public static Text text;
+	
 	/**
 	 * It is the main method
 	 * 
@@ -280,7 +281,7 @@ public class Main extends Application {
 	/**
 	 * This method adds action listener to the button toss. It calculates the winner
 	 * of the toss as per user choice and allows the user to play.
-	 * 
+	 * @param stage stage object for setting up the scene
 	 */
 	public void addTossAction(Stage stage) {
 		tossBtn.setOnAction((ActionEvent event) -> {
@@ -325,7 +326,11 @@ public class Main extends Application {
 			stage.setScene(scene3);
 		});
 	}
-
+	
+	/**
+	 * Method to start the game 
+	 * @param stage stage object to set the scene
+	 */
 	public void gameStartScene(Stage stage) {
 		// AnchorPane root = new AnchorPane();
 		SplitPane root = new SplitPane();
@@ -752,7 +757,12 @@ public class Main extends Application {
 			});
 		}
 	}
-
+	
+	/**
+	 * Set the images of the ships in the window
+	 * @param v_box2 vertical box object
+	 * @param shipName name of the ships that are to be displayed
+	 */
 	public void setShipImages(VBox v_box2, String shipName) {
 		try {
 			Image image = new Image(new FileInputStream("images/ships/" + shipName + ".png"));
@@ -912,28 +922,6 @@ public class Main extends Application {
 			tossBtn.setVisible(false);
 			btn5.setVisible(true);
 			btn6.setVisible(true);
-			// userDetailsWindow.newUser();
-			// stg.setScene(scene1);
-//			}
-//			else {
-//				
-//				String useroption = userDetailsWindow.existingUser();
-//				
-//				//if the existing user wishes to start a new game
-//				if(useroption.equals("newgame")) {
-//					gameType = AlertBox.displayGameType();
-//					if (gameType.equals("Classic"))
-//						gameMode = AlertBox.displayDifficulty();
-//					stg.setScene(scene1);
-//				}
-//				//add the code for loading data
-//				else {
-//					newGame = false;
-//					ob.loadGame();
-//					stg.setScene(scene1);
-//				}
-//			}
-
 		});
 
 		btn5.setOnAction((ActionEvent event) -> {
@@ -977,35 +965,7 @@ public class Main extends Application {
 		stg.setScene(scene2);
 	}
 
-	/**
-	 * Places the result of the user on the screen
-	 * 
-	 * @param title To display name of caller (User or CPU).
-	 */
-	/*
-	 * public void seeResultUser(String title) { Label resultLabel = new Label(title
-	 * + "Turn: "); resultLabel.setFont(Font.font("verdana", FontWeight.BOLD,
-	 * FontPosture.ITALIC, 18)); resultLabel.setTextFill(Color.web("#c40831"));
-	 * resulttext1.setStyle("-fx-background-color: white;");
-	 * v_box3.getChildren().addAll(resultLabel, resulttext1);
-	 * 
-	 * }
-	 */
-
-	/**
-	 * Places the result of the computer on the screen
-	 * 
-	 * @param title To display name of caller (User or CPU).
-	 */
-	/*
-	 * public void seeResultComp(String title) { Label resultLabel = new Label(title
-	 * + "Turn: "); resultLabel.setFont(Font.font("verdana", FontWeight.BOLD,
-	 * FontPosture.ITALIC, 18)); resultLabel.setTextFill(Color.web("#c40831"));
-	 * resulttext2 = new Label();
-	 * resulttext2.setStyle("-fx-background-color: white;");
-	 * v_box3.getChildren().addAll(resultLabel, resulttext2); }
-	 */
-
+	
 	/**
 	 * Places the Score of the user on the screen
 	 * 

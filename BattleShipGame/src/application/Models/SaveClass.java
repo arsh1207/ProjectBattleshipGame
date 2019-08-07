@@ -61,7 +61,8 @@ public class SaveClass extends Observable {
 
 	/**
 	 * This function will save the username for the new user
-	 * @throws Exception 
+	 * @param userName name chosen by the user
+	 * @throws Exception file not found
 	 */
 	public void saveUserName(String userName) throws Exception {
 		System.out.println("writing name in file "+userName);
@@ -77,6 +78,8 @@ public class SaveClass extends Observable {
 	/**
 	 * This function checks whether there is any other user of the same name
 	 * @param userName user name passed from the view
+	 * @param playerType type of player
+	 * @throws Exception file not Found
 	 */
 	public void checkUserName(String userName, String playerType) throws Exception{
 		
@@ -107,9 +110,11 @@ public class SaveClass extends Observable {
 	
 	/**
 	 * method to save the current state of the game in a new file
-	 * @param player	Object of Player class
-	 * @param computer	Object of Computer class
-	 * @param userName	user's name
+	 * @param player Player Object
+	 * @param computer Computer Object
+	 * @param strategy HitStrategy Object
+	 * @param gameMode Easy/ Medium/ Difficult
+	 * @param gameType Classic/Salvo
 	 */
 	public void saveGame(Player player, Computer computer, 
 			Object strategy, String gameMode, String gameType) {
@@ -121,8 +126,7 @@ public class SaveClass extends Observable {
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
 		    Date date = new Date();
 		    formatter.format(date);
-		    //System.out.println(formatter.format(date));
-			FileWriter fw = new FileWriter(folderPath+this.uName+".txt", true);
+		    FileWriter fw = new FileWriter(folderPath+this.uName+".txt", true);
 		    BufferedWriter bw = new BufferedWriter(fw);
 		    PrintWriter out = new PrintWriter(bw);
 		    out.println("Created on: "+date);
@@ -183,6 +187,10 @@ public class SaveClass extends Observable {
 		saveUserCoordinatesHit(out);		
 	}
 	
+	/**
+	 * Method to store the coordinatesHit ArrayList in Computer class
+	 * @param out PrintWriter Object
+	 */
 	public void saveComputerCoordinatesHit(PrintWriter out){
 		
 		for (int i = 0; i < Computer.coordinatesHit.size(); i++) {
@@ -191,6 +199,10 @@ public class SaveClass extends Observable {
 		out.println("");		
 	}
 	
+	/**
+	 * Method to store the coordinatesHit ArrayList in Player class
+	 * @param out PrintWriter Object
+	 */
 	public void saveUserCoordinatesHit(PrintWriter out){
 		
 		for (int i = 0; i < Player.coordinatesHit.size(); i++) {
@@ -228,6 +240,10 @@ public class SaveClass extends Observable {
 		}
 	}
 	
+	/**
+	 * Method to store the sunken ships of the Computer
+	 * @param out PrintWriter
+	 */
 	public void saveComputerSunkenShips(PrintWriter out) {
 		for(int i = 0; i < Computer.sunkenShips.size(); i++) {
 			out.print(" "+Computer.sunkenShips.get(i));
@@ -236,6 +252,10 @@ public class SaveClass extends Observable {
 		out.println("");
 	}
 	
+	/**
+	 * Method to store the sunken ships of the User
+	 * @param out PrintWriter
+	 */
 	public void saveUserSunkenShips(PrintWriter out) {
 		for(int i = 0; i < Player.sunkenShips.size(); i++) {
 			out.print(" "+Player.sunkenShips.get(i));

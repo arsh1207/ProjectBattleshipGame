@@ -127,8 +127,6 @@ public class HitStrategy extends Observable {
 			setReply("It's a Hit!!!!!");
 
 		} else if (Player.userGrid[x][y] == 0) {
-			//Sagar
-			//marked this 3 to signify a miss to help in loading the game
 			Player.userGrid[x][y] = 3;
 			setScore(-1);
 			setReply("It's a miss!!!!!");
@@ -528,8 +526,6 @@ public class HitStrategy extends Observable {
 			Player.coordinatesHit.add(coordx + "," + coordy);
 			setReply("It's a Hit!!!!!");
 		} else if (Player.userGrid[x][y] == 0) {
-			//Sagar
-			//marked this 3 to signify a miss to help in loading the game
 			Player.userGrid[x][y] = 3;
 			setScore(-1);
 			setReply("It's a miss!!!!!");
@@ -626,8 +622,7 @@ public class HitStrategy extends Observable {
 			for (Map.Entry<Integer, Integer> entry : BattleShip.entrySet()) {
 
 				randomGrid[entry.getKey()][entry.getValue()] = 1;
-				// computerGrid[entry.getValue()][entry.getKey()] = 1;
-
+		
 			}
 
 			int cruiserX = rand.nextInt(9);

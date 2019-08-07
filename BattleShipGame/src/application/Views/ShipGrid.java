@@ -48,6 +48,7 @@ public class ShipGrid implements Observer {
 	private GridUser ob;
 	Label resulttext1, resulttext4, resulttext3, resulttext2;
 	private Player player;
+	double otherPlayerHealth;
 
 	/**
 	 * It is the constructor for this class
@@ -56,6 +57,8 @@ public class ShipGrid implements Observer {
 	 * @param ob          Its a reference for Grid user object
 	 * @param resulttext1 Its a reference for label for setting user result
 	 * @param resulttext4 Its a reference for label for setting user score
+	 * @param resulttext3 Its a reference for label for setting computer result
+	 * @param resulttext2 Its a reference for label for setting computer score
 	 */
 	public ShipGrid(Player player, GridUser ob, Label resulttext1, Label resulttext4, Label resulttext3, Label resulttext2) {
 		this.player = player;
@@ -182,7 +185,6 @@ public class ShipGrid implements Observer {
 				String reply = ((Player) o).getReply();
 				int coord[] = ((Player) o).getCoords();
 				int score = ((Player) o).getScore();
-
 				if (reply.contains("Hit")) {
 					setUserShipCoordinates(coord[0], coord[1], "Hit");
 				} else {
@@ -190,14 +192,15 @@ public class ShipGrid implements Observer {
 				}
 				if (Player.PlayerNum == 2) {
 					double health = 1 - Player.sunkenShips.size() * 0.2;
-					Platform.runLater(() -> Main.healthbarTank1.setProgress(health));
+					Platform.runLater(() -> Main.healthbarTank2.setProgress(health));
 					Platform.runLater(() -> resulttext3.setText("" + score));
 					Platform.runLater(() -> resulttext2.setText(reply));
 				}else {
+					System.out.println("Setting player 1's health");
+					double health = 1 - Player.sunkenShips.size() * 0.2;
+					Platform.runLater(() -> Main.healthbarTank1.setProgress(health));
 					Platform.runLater(() -> resulttext4.setText("" + score));
 					Platform.runLater(() -> resulttext1.setText(reply));
-					double health = 1 - Player.sunkenShips.size() * 0.2;
-					Platform.runLater(() -> Main.healthbarTank2.setProgress(health));
 				}
 			}
 		} else if (o instanceof HitStrategy) {
@@ -238,8 +241,6 @@ public class ShipGrid implements Observer {
 		}else if (o instanceof LoadClass){
 			if(arg.equals("setcoordsuser")) {
 				int[] coordState = ((LoadClass) o).getShipGridCoords();
-				//loadRadarGrid[coordState[0]][coordState[1]] = coordState[2];
-				//System.out.println("Buttons "+coordState[1]+" "+coordState[1]+" "+coordState[2]);
 				if(coordState[2] == 0)
 					userButton[coordState[0]][coordState[1]].setStyle("-fx-background-color: black; ");
 				else if(coordState[2] == 3)

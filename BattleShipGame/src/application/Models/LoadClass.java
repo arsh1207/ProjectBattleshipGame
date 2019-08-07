@@ -131,7 +131,6 @@ public class LoadClass extends Observable{
 			}
 			Main.gameMode = in.nextLine().split(" ")[2];
 			Main.gameType = in.nextLine().split(" ")[2];
-			//System.out.println("game mode and type are "+Main.gameMode+" "+Main.gameType);
 			in.nextLine();
 			if(Main.gameType.equals("Salvo"))
 				loadComputerGrid(in, computer, strategySalvo);
@@ -139,7 +138,6 @@ public class LoadClass extends Observable{
 				loadComputerGrid(in, computer, strategy);
 			//store sunken ships
 			line = in.nextLine();
-			//System.out.println(line);
 			loadComputerSunkenShips(line);
 			line = in.nextLine();
 			//store shipsmap
@@ -194,7 +192,6 @@ public class LoadClass extends Observable{
 			File file = new File(folderPath+username+".txt");
 			if(file.exists() && !file.isDirectory()) {
 				Scanner in  = new Scanner(new File(folderPath+username+".txt"));
-				//System.out.println("created on: "+createdOn);
 				while(in.hasNextLine()) {
 					line = in.nextLine();
 					if(line.contains("Created on")) {
@@ -237,10 +234,8 @@ public class LoadClass extends Observable{
 			}
 			for(int i = 0; i < line.length(); i++) {
 				computer.computerGrid[j][i] = Integer.parseInt(Character.toString(line.charAt(i)));
-				//System.out.print(computer.computerGrid[j][i]);
 				setRadarGridCoords(j, i, computer.computerGrid[j][i]);
 			}
-			//System.out.println("");
 			j++;
 		}
 	}
@@ -256,9 +251,7 @@ public class LoadClass extends Observable{
 		for(int i = 3; i < sublines.length; i++) {
 			Computer.sunkenShips.add(sublines[i]);
 		}
-		
-		System.out.println("Loaded Computer sunken ships: "+Computer.sunkenShips);
-		
+			
 	}
 	
 	/**
@@ -285,7 +278,6 @@ public class LoadClass extends Observable{
 			}
 		}
 		Computer.shipsMap.putAll(shipsMap);
-		//System.out.println(Computer.shipsMap);
 	}
 	
 	/**
@@ -299,7 +291,6 @@ public class LoadClass extends Observable{
 		for(int i = 2; i < subline.length; i++) {
 			Computer.coordinatesHit.add(subline[i]);
 		}
-		System.out.println("Comp coords hit load "+Computer.coordinatesHit);
 	}
 	
 	/**
@@ -336,10 +327,8 @@ public class LoadClass extends Observable{
 			}
 			for(int i = 0; i < line.length(); i++) {
 				player.userGrid[j][i] = Integer.parseInt(Character.toString(line.charAt(i)));
-				//System.out.print(player.userGrid[j][i]);
 				setShipGridCoords(j, i, player.userGrid[j][i]);
 			}
-			//System.out.println("");
 			j++;
 		}
 	}
@@ -361,7 +350,6 @@ public class LoadClass extends Observable{
 			else {
 				tempList = new ArrayList<>();
 				String[] sublines = line.split(" ");
-				//System.out.println(sublines[0]);
 				for(int i = 1; i < sublines.length; i++) {
 					tempList.add(sublines[i]);
 					System.out.println(sublines[i]);
@@ -388,7 +376,6 @@ public class LoadClass extends Observable{
 			Player.sunkenShips.add(sublines[i]);
 		}
 		
-		System.out.println("Loaded player sunken ships: "+Player.sunkenShips);
 	}
 	
 }

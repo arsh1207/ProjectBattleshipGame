@@ -158,7 +158,6 @@ public class Computer extends Observable {
 			setReply("Some other error");
 		}
 		
-		//printGrid();
 	
 	}
 
@@ -301,8 +300,7 @@ public class Computer extends Observable {
 			for (Map.Entry<Integer, Integer> entry : Submarine.entrySet()) {
 
 				computerGrid[entry.getKey()][entry.getValue()] = 1;
-				// computerGrid[entry.getValue()][entry.getKey()] = 1;
-
+		
 			}
 
 			int destroyerX = rand.nextInt(9);
@@ -482,7 +480,6 @@ public class Computer extends Observable {
 	/**
 	 * Method to display the computer grid
 	 */
-
 	public void printGrid() {
 
 
@@ -525,24 +522,17 @@ public class Computer extends Observable {
 	 * 
 	 */
 	public void checkSunkenShips() {
-		//System.out.println(coordinatesHit.size());
 		Map<String, ArrayList<String>> tempMap;
 		for (String coords : coordinatesHit) {
-			//System.out.println("Yes2");
 			tempMap = new HashMap<>();
 			tempMap.putAll(shipsMap);
 			for (Map.Entry<String, ArrayList<String>> entry : shipsMap.entrySet()) {
-				//System.out.println("Yes3");
 				if (!shipsMap.get(entry.getKey()).isEmpty()) {
-					// if any ship has been placed on the assigned coordinate
 					if (shipsMap.get(entry.getKey()).contains(coords)) {
 						if (!shipsMap.get(entry.getKey()).isEmpty()) {
-							// if any ship has been placed on the assigned coordinate
 							if (shipsMap.get(entry.getKey()).contains(coords)) {
 								tempMap.get(entry.getKey()).remove(coords);
 
-								// if no coordinates are remaining to be hit then add the ship to sunken ships
-								// and remove the ships from the shipsMap
 								if (shipsMap.get(entry.getKey()).isEmpty()) {
 									setSunkenShips(entry.getKey());
 									tempMap.remove(entry.getKey());

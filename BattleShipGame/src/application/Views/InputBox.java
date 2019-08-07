@@ -15,10 +15,21 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * Class to display the input box for the user
+ * @author Sagar Bhatia
+ *
+ */
 public class InputBox {
 
 	static String result;
-
+	
+	/**
+	 * Method to return the input of any kind that is
+	 * selected in the box
+	 * @param title title to be displayed on the box
+	 * @return String type value that is to be used in other method
+	 */
 	public static String display(String title) {
 		Stage stage = new Stage();
 		

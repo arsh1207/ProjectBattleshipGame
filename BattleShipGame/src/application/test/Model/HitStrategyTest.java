@@ -10,6 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import application.Models.HitStrategy;
 import application.Models.Player;
+import application.Models.SaveClass;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HitStrategyTest {
@@ -20,7 +21,8 @@ public class HitStrategyTest {
 
 	@Before
 	public void setUp() {
-		ob = new Player();
+		SaveClass saveClass = new SaveClass();
+		ob = new Player(saveClass);
 		hitstat = new HitStrategy();
 
 	}

@@ -57,7 +57,8 @@ public class RadarGrid implements Observer {
 	int vsModeScore = 0;
 	Timer timer;
 	Thread newThread;
-
+	Double otherPlayerHealth;
+	
 	public String getUserWon() {
 		return userWon;
 	}
@@ -231,7 +232,6 @@ public class RadarGrid implements Observer {
 			Text text1 = new Text(Character.toString(ch));
 			g_pane.add(text1, columnButtonCount, rowButtonCount);
 		}
-		// System.out.println("New game is " + Main.newGame);
 	}
 
 	public static void loadRadarGrid() {
@@ -250,10 +250,7 @@ public class RadarGrid implements Observer {
 	}
 
 	/**
-	 * This class makes the radar grid visible on appropriate calling.
-	 * 
-	 * @param i Contains the x axis for the radar button
-	 * @param j Contains the y axis for the radar button
+	 * This method makes the radar grid visible on appropriate calling.
 	 */
 	public static void disableButtons() {
 		for (int i = 0; i < 9; i++) {
@@ -262,7 +259,10 @@ public class RadarGrid implements Observer {
 		}
 
 	}
-
+	
+	/**
+	 * This method will enable the buttons on the correct input
+	 */
 	public static void enableButtons() {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 11; j++)
@@ -287,7 +287,6 @@ public class RadarGrid implements Observer {
 				resulttext2.setText("");
 				resulttext3.setText("" + score1);
 				afterCompReply(res, (Computer) o);
-				// System.out.println("Player ships down:"+ Player.sunkenShips.size());
 
 			}
 		} else if (o instanceof HitStrategy) {
@@ -306,7 +305,6 @@ public class RadarGrid implements Observer {
 			resulttext4.setText("" + score);
 			ob.callPlayerSunkenShips();
 			double health = 1 - Player.sunkenShips.size() * 0.2;
-			// Main.healthbarTank1.setWidth(40*health);
 			Main.healthbarTank1.setProgress(health);
 			ob.callCheckIfCompWon();
 
@@ -327,9 +325,6 @@ public class RadarGrid implements Observer {
 		} else if (o instanceof LoadClass) {
 			if (arg.equals("setcoordscomp")) {
 				int[] coordState = ((LoadClass) o).getRadarGridCoords();
-				// loadRadarGrid[coordState[0]][coordState[1]] = coordState[2];
-				// System.out.print("Buttons "+coordState[1]+" "+coordState[1]+"
-				// "+coordState[2]);
 				if (coordState[2] == 1 || coordState[2] == 0) {
 					if (coordState[2] == 1)
 						System.out.println("coordState is "+coordState[2]);
@@ -347,7 +342,6 @@ public class RadarGrid implements Observer {
 		} else if (o instanceof Player) {
 			if (arg.equals("RadarSet")) {
 				String res = ((Player) o).getReply();
-				// int score1 = ((Player) o).getScore();
 
 				Image image;
 				try {
@@ -360,19 +354,25 @@ public class RadarGrid implements Observer {
 					ft.setToValue(0.0);
 					ft.play();
 					AudioClip audioClip = new AudioClip(Paths.get("Sounds/blast.wav").toUri().toString());
-					if (res.equals("It's a Hit!!!!!")) {
+					if (res.contains("It's a Hit!!!!!")) {
+						String[] reply = res.split(" ");
+						
+						this.otherPlayerHealth = Double.parseDouble(reply[3]);
+						this.otherPlayerHealth = 1 - this.otherPlayerHealth * 0.2;
+						if(Player.PlayerNum == 2)
+							Platform.runLater(() -> Main.healthbarTank1.setProgress(otherPlayerHealth));
+						else
+							Platform.runLater(() -> Main.healthbarTank2.setProgress(otherPlayerHealth));
+							
 						Platform.runLater(
 								() -> radarButton[coordX][coordY].setStyle("-fx-background-color: #FF0000; "));
-						// radarButton[coordX][coordY].setStyle("-fx-background-color: #FF0000; ");
 						Platform.runLater(() -> g_pane1.add(imageView, (coordY + 1), (9 - coordX)));
-						// g_pane1.add(imageView, (coordY + 1), (9 - coordX));
 						Platform.runLater(() -> audioClip.play(100));
 						vsModeScore = vsModeScore + 10;
 						// audioClip.play(100);
-					} else if (res.equals("It's a miss!!!!!")) {
+					} else if (res.contains("It's a miss!!!!!")) {
 						Platform.runLater(
 								() -> radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; "));
-						// radarButton[coordX][coordY].setStyle("-fx-background-color: #FFFFFF; ");
 						vsModeScore = vsModeScore - 1;
 
 						try {
@@ -391,11 +391,9 @@ public class RadarGrid implements Observer {
 					if (((Player) o).getPlayerNum() == 1) {
 						double health = 1 - Player.sunkenShips.size() * 0.2;
 						Platform.runLater(() -> Main.healthbarTank1.setProgress(health));
-						// Main.healthbarTank1.setProgress(health);
 					} else {
 						double health = 1 - Player.sunkenShips.size() * 0.2;
 						Platform.runLater(() -> Main.healthbarTank2.setProgress(health));
-						// Main.healthbarTank2.setProgress(health);
 					}
 					if (Player.PlayerNum == 1) {
 						Platform.runLater(() -> resulttext3.setText("" + vsModeScore));
@@ -411,12 +409,10 @@ public class RadarGrid implements Observer {
 			} else if (arg.equals("VsmodeWon")) {
 				if (((Player) o).getPlayerWon().equalsIgnoreCase("Lost")) {
 					Platform.runLater(() -> AlertBox.displayResult("Sorry", "You LOST"));
-					// AlertBox.displayResult("Yesss", "WON");
 				}
 			} else if (arg.equals("VsmodeOtherWon")) {
 				if (((Player) o).getOtherWon().equalsIgnoreCase("won")) {
 					Platform.runLater(() -> AlertBox.displayResult("Result", "You WON"));
-					// AlertBox.displayResult("Sorry", "You LOST");
 				}
 			}
 		}
@@ -480,12 +476,14 @@ public class RadarGrid implements Observer {
 			System.out.println(e.getMessage());
 		}
 	}
-
+	
+	/**
+	 * Method to display the timer in the game
+	 */
 	public void gameTimer() {
 		for (int i = 1; i <= 30; i++) {
 			String str = Integer.toString(i);
 			Platform.runLater(() -> Main.text.setText(str));
-			System.out.println(i);
 			try {
 				TimeUnit.SECONDS.sleep(1);
 			} catch (InterruptedException e) {
