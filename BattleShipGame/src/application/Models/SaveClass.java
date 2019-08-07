@@ -29,12 +29,23 @@ public class SaveClass extends Observable {
 	String filePath;
 	String folderPath;
 	String uName = "";
-
+	ArrayList<String> computerCoordinatesHit;
+	ArrayList<String> userCoordinatesHit;
 	
 	public SaveClass(){
 		filePath = "User-Data\\Users-List.txt";
 		folderPath = "User-Data\\";
+		this.computerCoordinatesHit = new ArrayList<>();
+		this.userCoordinatesHit = new ArrayList<>();
 		
+	}
+	
+	public String getFilePath() {
+		return filePath;
+	}
+	
+	public String getFolderPath() {
+		return folderPath;
 	}
 	
 	public boolean isnameSame() {
@@ -57,6 +68,23 @@ public class SaveClass extends Observable {
 
 	public void setuName(String uName) {
 		this.uName = uName;
+	}
+	
+	public ArrayList<String> getComputerCoordinatesHit() {
+		return computerCoordinatesHit;
+	}
+
+	public void setComputerCoordinatesHit(ArrayList<String> computerCoordinatesHit) {
+		this.computerCoordinatesHit = computerCoordinatesHit;
+	}
+	
+
+	public ArrayList<String> getUserCoordinatesHit() {
+		return userCoordinatesHit;
+	}
+
+	public void setUserCoordinatesHit(ArrayList<String> userCoordinatesHit) {
+		this.userCoordinatesHit = userCoordinatesHit;
 	}
 
 	/**
@@ -167,6 +195,7 @@ public class SaveClass extends Observable {
 		out.println("Computer ships status: ");
 		saveComputerShipsMap(out);
 		out.print("Coordinates hit:");
+		setComputerCoordinatesHit(Computer.coordinatesHit);
 		saveComputerCoordinatesHit(out);
 		out.println("ShipGrid:");
 		int[][] saveUserGrid = new int[Player.userGrid.length][Player.userGrid[0].length];
@@ -184,6 +213,7 @@ public class SaveClass extends Observable {
 		out.println("Player ships status: ");
 		saveUserShipsMap(out);
 		out.print("Coordinates hit:");
+		setComputerCoordinatesHit(Computer.coordinatesHit);
 		saveUserCoordinatesHit(out);		
 	}
 	

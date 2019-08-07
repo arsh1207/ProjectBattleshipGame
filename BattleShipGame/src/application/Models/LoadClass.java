@@ -41,6 +41,12 @@ public class LoadClass extends Observable{
 		notifyObservers("setcoordscomp");
 	}
 	
+	public void setRadarGridCoordsT(int j, int i, int coordstate) {
+		this.rowNum = j;
+		this.colNum = i;
+		this.coordState = coordstate;
+	}
+	
 	public int[] getRadarGridCoords() {
 		int coords[] = {this.rowNum, this.colNum, this.coordState};
 		return coords;
@@ -55,6 +61,10 @@ public class LoadClass extends Observable{
 		this.score = score;
 		setChanged();
 		notifyObservers("setscorecomp");
+	}
+	
+	public void setScoreT(int score) {
+		this.score = score;
 	}
 	
 	public void setShipGridCoords(int j, int i, int coordstate) {
@@ -76,6 +86,11 @@ public class LoadClass extends Observable{
 		notifyObservers("listofsaves");
 	}
 	
+	public void setListOfSavesT(String[] listOfSaves) {
+		this.listOfSaves = listOfSaves;
+	
+	}
+	
 	public String[] getListOfSaves() {
 		return this.listOfSaves;
 	}
@@ -90,6 +105,11 @@ public class LoadClass extends Observable{
 		notifyObservers("setscoreuser");
 	}
 	
+	public void setUserScoreT(int score) {
+		this.score = score;
+		
+	}
+	
 	public void setColoredShipsCoord(String rowCoord, String colCoord, String shipType) {
 		
 		this.rowCoord = rowCoord;
@@ -100,9 +120,25 @@ public class LoadClass extends Observable{
 		
 	}
 	
+	public void setColoredShipsCoordT(String rowCoord, String colCoord, String shipType) {
+		
+		this.rowCoord = rowCoord;
+		this.colCoord = colCoord;
+		this.shipType = shipType;
+		
+	}
+
 	public String[] getColoredShipsCoord() {
 		String[] coords = {this.rowCoord, this.colCoord, this.shipType}; 
 		return coords;
+	}
+	
+	public String getCreatedOn() {
+		return createdOn;
+	}
+
+	public void setCreatedOn(String createdOn) {
+		this.createdOn = createdOn;
 	}
 	
 	/**

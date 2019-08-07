@@ -272,5 +272,42 @@ public class PlayerTest {
 		assertEquals(3, ob.getSunkenShips().size());
 
 	}
-
+	
+	/**
+	 * Test Case to check whether the other player is winning or not
+	 */
+	@Test
+	public void otherPlayerWonTest() {
+		ob.setOtherWonT("Won");
+		assertEquals("Won", ob.getOtherWon());
+	}
+	
+	/**
+	 * Test Case to check whether the correct 
+	 * player number is getting set or not
+	 */
+	@Test
+	public void playerNumTest() {
+		ob.setPlayerNum(2);
+		assertEquals(2, ob.getPlayerNum());
+	}
+	
+	/**
+	 * Test Case whether the name of the player is getting set
+	 * correctly in the network or not
+	 */
+	@Test
+	public void playerNameTest() {
+		ob.setName("Sagar");
+		assertEquals("Sagar", ob.getName());
+	}
+	
+	/**
+	 * Test whether the coordinate is being hit correctly in the network or not
+	 */
+	@Test
+	public void hitTest() {
+		ob.setHit(true);
+		assertEquals(true, ob.isHit());
+	}
 }
