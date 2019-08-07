@@ -43,7 +43,7 @@ public class Player extends Observable {
 	public static int numOfShipsDep = 0;
 
 	Boolean server1Flag = true, server2Flag = true, handshake1 = false, handshake2 = false;
-
+	String ipAddress1 = "132.205.94.99", ipAddress2 = "132.205.94.100";
 	boolean time1 = false, time2 = false;
 	double timea = 0;
 	double timeb = 0;
@@ -65,7 +65,7 @@ public class Player extends Observable {
 		setChanged();
 		notifyObservers("VsmodeOtherWon");
 	}
-	
+
 	public void setOtherWonT(String otherWon) {
 		OtherWon = otherWon;
 	}
@@ -902,7 +902,7 @@ public class Player extends Observable {
 						RadarGrid.enableButtons();
 						Platform.runLater(() -> AlertBox.displayError("Connection",
 								"Connection Established With " + coordinates[0].split(":")[1]));
-						sendReply(6792, "Name:" + saveObj.getuName(), "127.0.0.1");
+						sendReply(6792, "Name:" + saveObj.getuName(), ipAddress2);
 						handshake1 = true;
 					} else {
 						setOtherWon("Won");
@@ -942,7 +942,7 @@ public class Player extends Observable {
 						System.out.println(Player.PlayerNum + " health drop is is " + playerHealth);
 						setShipGridReply("It's a Hit!!!!!");
 						// sendReply(6792, "It's a Hit!!!!!", "132.205.94.100");
-						sendReply(6792, "It's a Hit!!!!! " + playerHealth, "127.0.0.1");
+						sendReply(6792, "It's a Hit!!!!! " + playerHealth, ipAddress2);
 						checkPlayerWon();
 					} else if (userGrid[x][y] == 0) {
 						userGrid[x][y] = 3;
@@ -953,13 +953,13 @@ public class Player extends Observable {
 						setScore(-1);
 						setShipGridReply("It's a miss!!!!! ");
 						// sendReply(6792, "It's a miss!!!!!", "132.205.94.100");
-						sendReply(6792, "It's a miss!!!!! " + playerHealth, "127.0.0.1");
+						sendReply(6792, "It's a miss!!!!! " + playerHealth, ipAddress2);
 					} else if (userGrid[x][y] == 2 || userGrid[x][y] == 3) {
 						// sendReply(6792, "The location has been hit earlier", "132.205.94.100");
-						sendReply(6792, "The location has been hit earlier", "127.0.0.1");
+						sendReply(6792, "The location has been hit earlier", ipAddress2);
 					} else {
 						// sendReply(6792, "Some other error", "132.205.94.100");
-						sendReply(6792, "Some other error", "127.0.0.1");
+						sendReply(6792, "Some other error", ipAddress2);
 					}
 				} else if (coordinates.length > 2) {
 					// case when some message is received
@@ -1006,7 +1006,7 @@ public class Player extends Observable {
 						Platform.runLater(() -> AlertBox.displayError("Connection",
 								"Connection Established With " + coordinates[0].split(":")[1]));
 						// sendReply(6795, "Connected", "127.0.0.1");
-						sendReply(6795, "Name:" + saveObj.getuName(), "127.0.0.1");
+						sendReply(6795, "Name:" + saveObj.getuName(), ipAddress1);
 						handshake2 = true;
 					} else {
 						setOtherWon("Won");
@@ -1047,7 +1047,7 @@ public class Player extends Observable {
 						System.out.println(Player.PlayerNum + " health drop is is " + playerHealth);
 						setShipGridReply("It's a Hit!!!!!");
 						// sendReply(6795, "It's a Hit!!!!!", "132.205.94.99");
-						sendReply(6795, "It's a Hit!!!!! " + playerHealth, "127.0.0.1");
+						sendReply(6795, "It's a Hit!!!!! " + playerHealth, ipAddress1);
 						checkPlayerWon();
 					} else if (userGrid[x][y] == 0) {
 						userGrid[x][y] = 3;
@@ -1058,13 +1058,13 @@ public class Player extends Observable {
 						System.out.println(Player.PlayerNum + " health drop is is " + playerHealth);
 						setShipGridReply("It's a miss!!!!!");
 						// sendReply(6795, "It's a miss!!!!!", "132.205.94.99");
-						sendReply(6795, "It's a miss!!!!! " + playerHealth, "127.0.0.1");
+						sendReply(6795, "It's a miss!!!!! " + playerHealth, ipAddress1);
 					} else if (userGrid[x][y] == 2) {
 						// sendReply(6795, "The location has been hit earlier", "132.205.94.99");
-						sendReply(6795, "The location has been hit earlier", "127.0.0.1");
+						sendReply(6795, "The location has been hit earlier", ipAddress1);
 					} else {
 						// sendReply(6795, "Some other error", "132.205.94.99");
-						sendReply(6795, "Some other error", "127.0.0.1");
+						sendReply(6795, "Some other error", ipAddress1);
 					}
 				} else if (coordinates.length > 2) {
 					// case when some message is received
@@ -1129,14 +1129,14 @@ public class Player extends Observable {
 	 * @param playerNum 1 or 2
 	 */
 	public void PlayerMode(int playerNum) {
-		setPlayerNum(playerNum); 
+		setPlayerNum(playerNum);
 		managedExceptionHandling(1111);
 		/*
 		 * try { setPlayerNum(playerNum); managedExceptionHandling(1111); //int port;
-		 */			
-			//setPlayerNum(playerNum);
-		//	throw new PortException("Sorry wrong port number!" + port);	
-			//port = 2.2;
+		 */
+		// setPlayerNum(playerNum);
+		// throw new PortException("Sorry wrong port number!" + port);
+		// port = 2.2;
 		/*
 		 * } catch (PortException e) { managedExceptionHandling(1111);
 		 * System.out.println(e); } catch (Exception e) { // TODO: handle exception
@@ -1153,14 +1153,14 @@ public class Player extends Observable {
 			if (getPlayerNum() == 1) {
 				while (!handshake1) {
 					// sendReply(6792, "The location has been hit earlier", "132.205.94.100");
-					sendReply(6792, "Ready:" + saveObj.getuName(), "127.0.0.1");
+					sendReply(6792, "Ready:" + saveObj.getuName(), ipAddress2);
 					TimeUnit.SECONDS.sleep(1);
 					System.out.println("Ready");
 				}
 			} else {
 				while (!handshake2) {
 					// sendReply(6795, "The location has been hit earlier", "132.205.94.99");
-					sendReply(6795, "Ready:" + saveObj.getuName(), "127.0.0.1");
+					sendReply(6795, "Ready:" + saveObj.getuName(), ipAddress1);
 					TimeUnit.SECONDS.sleep(1);
 					System.out.println("Ready2");
 				}
