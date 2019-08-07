@@ -876,12 +876,7 @@ public class Player extends Observable {
 	public void launchServer1(int port) {
 		System.out.println("launch 1");
 		DatagramSocket aSocket = null;
-		// port = 6795;
 		try {
-			if (port != 6795) {
-				port = 6795;
-				throw new PortException("Port error! Correct Port: " + port);
-			}
 			aSocket = new DatagramSocket(port);
 			while (true) {
 				byte[] buffer = new byte[1000];
@@ -894,17 +889,18 @@ public class Player extends Observable {
 				if (coordinates.length == 1) {
 					if (coordinates[0].contains("Name")) {
 						Platform.runLater(() -> Main.resultLabel2.setText(coordinates[0].split(":")[1]));
-						Platform.runLater(() ->  AlertBox.displayError("Connection", "Connection Established With "+coordinates[0].split(":")[1] ));
+						Platform.runLater(() -> AlertBox.displayError("Connection",
+								"Connection Established With " + coordinates[0].split(":")[1]));
 						RadarGrid.enableButtons();
 						handshake1 = true;
 					} else if (coordinates[0].contains("Ready")) {
 						Platform.runLater(() -> Main.resultLabel2.setText(coordinates[0].split(":")[1]));
 						RadarGrid.enableButtons();
-						Platform.runLater(() ->  AlertBox.displayError("Connection", "Connection Established With "+coordinates[0].split(":")[1] ));
+						Platform.runLater(() -> AlertBox.displayError("Connection",
+								"Connection Established With " + coordinates[0].split(":")[1]));
 						sendReply(6792, "Name:" + saveObj.getuName(), "127.0.0.1");
 						handshake1 = true;
-					}
-					else {
+					} else {
 						setOtherWon("Won");
 					}
 				} else if (coordinates.length == 2) {
@@ -972,11 +968,7 @@ public class Player extends Observable {
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
 
-		} catch (PortException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e);
 		}
-
 	}
 
 	/**
@@ -986,13 +978,10 @@ public class Player extends Observable {
 	 */
 	public void launchServer2(int port) {
 		DatagramSocket aSocket = null;
-		// port = 6792;
+
 		try {
-			if (port != 6792) {
-				port = 6792;
-				throw new PortException("Port error! Correct Port: " + port);
-			}
-			aSocket = new DatagramSocket(6792);
+
+			aSocket = new DatagramSocket(port);
 			while (true) {
 				byte[] buffer = new byte[1000];
 				DatagramPacket request = new DatagramPacket(buffer, buffer.length);
@@ -1003,13 +992,15 @@ public class Player extends Observable {
 				if (coordinates.length == 1) {
 					if (coordinates[0].contains("Name")) {
 						Platform.runLater(() -> Main.resultLabel1.setText(coordinates[0].split(":")[1]));
-						Platform.runLater(() ->  AlertBox.displayError("Connection", "Connection Established With "+coordinates[0].split(":")[1] ));
+						Platform.runLater(() -> AlertBox.displayError("Connection",
+								"Connection Established With " + coordinates[0].split(":")[1]));
 						RadarGrid.enableButtons();
 						handshake2 = true;
 					} else if (coordinates[0].contains("Ready")) {
 						Platform.runLater(() -> Main.resultLabel1.setText(coordinates[0].split(":")[1]));
 						RadarGrid.enableButtons();
-						 Platform.runLater(() ->  AlertBox.displayError("Connection", "Connection Established With "+coordinates[0].split(":")[1] ));
+						Platform.runLater(() -> AlertBox.displayError("Connection",
+								"Connection Established With " + coordinates[0].split(":")[1]));
 						// sendReply(6795, "Connected", "127.0.0.1");
 						sendReply(6795, "Name:" + saveObj.getuName(), "127.0.0.1");
 						handshake2 = true;
@@ -1083,51 +1074,82 @@ public class Player extends Observable {
 		} catch (IOException e) {
 			System.out.println("IO: " + e.getMessage());
 
-		} catch (PortException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e);
 		}
 
 	}
 
 	/**
-	 * Method that is called when the Vs. player network mode is chosen
+	 * This method check the build 3 requirement for managed exceptions
+	 * 
+	 * @param port This parameter receives the port number to be called
+	 */
+	public void managedExceptionHandling(int port) {
+		try {
+			if (PlayerNum == 1) {
+				if (port != 6795) {
+					port = 6795;
+					Runnable task = () -> {
+						launchServer1(6795);
+					};
+					new Thread(task).start();
+					Runnable task2 = () -> {
+						handshake();
+					};
+					new Thread(task2).start();
+					throw new PortException("Port error! Correct Port: " + port);
+				}
+			} else {
+				if (port != 6792) {
+					port = 6792;
+					Runnable task = () -> {
+						launchServer2(6792);
+					};
+					new Thread(task).start();
+					Runnable task2 = () -> {
+						handshake();
+					};
+					new Thread(task2).start();
+					throw new PortException("Port error! Correct Port: " + port);
+				}
+			}
+		} catch (
+
+		PortException e) {
+			System.out.println(e);
+		}
+	}
+
+	/**
+	 * Method that is called when the Vs player network mode is chosen
 	 * 
 	 * @param playerNum 1 or 2
 	 */
 	public void PlayerMode(int playerNum) {
-		setPlayerNum(playerNum);
-
-		if (playerNum == 1) {// launch for the first player
-
-			Runnable task = () -> {
-				launchServer1(6795);
-			};
-			new Thread(task).start();
-			Runnable task2 = () -> {
-				handshake();
-			};
-			new Thread(task2).start();
-
-		} else if (playerNum == 2) {
-			Runnable task = () -> {
-				launchServer2(6792);
-			};
-			new Thread(task).start();
-			Runnable task2 = () -> {
-				handshake();
-			};
-			new Thread(task2).start();
-		}
-
+		setPlayerNum(playerNum); 
+		managedExceptionHandling(1111);
+		/*
+		 * try { setPlayerNum(playerNum); managedExceptionHandling(1111); //int port;
+		 */			
+			//setPlayerNum(playerNum);
+		//	throw new PortException("Sorry wrong port number!" + port);	
+			//port = 2.2;
+		/*
+		 * } catch (PortException e) { managedExceptionHandling(1111);
+		 * System.out.println(e); } catch (Exception e) { // TODO: handle exception
+		 * System.out.println(e.getMessage()); }
+		 */
 	}
 
+	/**
+	 * This method is made to sending notifications to the other server once it get
+	 * started.
+	 */
 	public void handshake() {
 		try {
 			if (getPlayerNum() == 1) {
 				while (!handshake1) {
 					// sendReply(6792, "The location has been hit earlier", "132.205.94.100");
-					sendReply(6792, "Ready:" + saveObj.getuName() , "127.0.0.1");
+					sendReply(6792, "Ready:" + saveObj.getuName(), "127.0.0.1");
 					TimeUnit.SECONDS.sleep(1);
 					System.out.println("Ready");
 				}
@@ -1140,7 +1162,6 @@ public class Player extends Observable {
 				}
 			}
 		} catch (InterruptedException e) {
-
 			System.out.println(e.getMessage());
 		}
 	}
